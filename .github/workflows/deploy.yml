@@ -37,6 +37,7 @@ jobs:
         run: npm run build
         env:
           VITE_FORMSPREE_ID: ${{ secrets.VITE_FORMSPREE_ID }}
+          VITE_RECAPTCHA_SITE_KEY: ${{ secrets.VITE_RECAPTCHA_SITE_KEY }}
       
       - name: Setup Pages
         uses: actions/configure-pages@v4

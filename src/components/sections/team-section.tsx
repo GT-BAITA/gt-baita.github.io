@@ -1,6 +1,7 @@
 export function TeamSection() {
   const members = [
     { name: 'Frederico Schardong', role: 'Coordenador de Projeto' },
+    { name: 'Ricardo Custódio', role: 'Vice-Coordenador de Projeto' },
     { name: 'Brendon Vicente', role: 'Assistente de Inovação' },
     { name: 'Eduardo Perottoni', role: 'Assistente de Inovação' },
     { name: 'Giulia Manno', role: 'Designer de Produto' },
@@ -17,7 +18,7 @@ export function TeamSection() {
         <img
           src="/svgs/ascii-globe.svg"
           alt="ASCII globe background"
-          className="absolute right-0 z-10 object-contain h-full pointer-events-none hidden md:block"
+          className="absolute right-0 z-10 w-1/2 h-full pointer-events-none hidden md:block"
         />
 
         <div className="absolute inset-y-0 left-0 w-full lg:w-2/3 bg-gradient-to-r from-neutral-800/60 via-neutral-800/30 to-transparent backdrop-blur-[6px]" />
@@ -29,7 +30,7 @@ export function TeamSection() {
               className="bg-neutral-900 rounded-2xl p-6 flex flex-col justify-center shadow-inner hover:bg-neutral-800 transition-colors cursor-pointer"
             >
               <h4 className="font-geist text-base font-normal">{member.name}</h4>
-              <p className="text-neutral-300 text-[11px] font-geist">{member.role}</p>
+              <p className="text-neutral-300 text-[12px] font-geist">{member.role}</p>
             </div>
           ))}
         </div>

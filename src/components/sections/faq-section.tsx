@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { CustomLink } from '../atoms/custom-link';
 
 function CustomAccordionItem(props: { value: string; children: React.ReactNode }) {
   return (
@@ -24,10 +25,11 @@ function CustomAccordionTrigger({ text }: { text: string }) {
   );
 }
 
-function CustomAccordionContent({ text }: { text: string }) {
+function CustomAccordionContent({ text, children }: { text?: string; children?: React.ReactNode }) {
   return (
     <AccordionContent className="text-neutral-900 p-0 text-base font-[400] leading-5 px-4 pb-4 font-geist">
       {text}
+      {children}
     </AccordionContent>
   );
 }
@@ -63,6 +65,23 @@ export function FAQSection() {
             <CustomAccordionItem value="item-5">
               <CustomAccordionTrigger text="Como entro em contato com o suporte?" />
               <CustomAccordionContent text="Em breve disponibilizaremos canais de suporte dedicados." />
+            </CustomAccordionItem>
+            <CustomAccordionItem value="item-6">
+              <CustomAccordionTrigger text="Quais iniciativas internacionais estão alinhadas com a CAFe 2.0?" />
+              <CustomAccordionContent>
+                A eduGAIN tem adotado o OpenID Federation como novo protocolo para{' '}
+                <CustomLink
+                  href="https://wiki.geant.org/spaces/eduGAIN/pages/1072398451/eduGAIN+-+Open+ID+Federation+Pilot"
+                  text="implementação da interfederação"
+                />
+                . A{' '}
+                <CustomLink
+                  href="https://italia.github.io/eid-wallet-it-docs/versione-corrente/en/trust-infrastructure.html"
+                  text="Itália"
+                />{' '}
+                e a <CustomLink href="https://sandbox.swedenconnect.se/oidfed/home" text="Suécia" />{' '}
+                também estão usando o OpenID Federation como solução de interoperabilidade.
+              </CustomAccordionContent>
             </CustomAccordionItem>
           </Accordion>
         </div>

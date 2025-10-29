@@ -1,21 +1,17 @@
 import { Button } from '@/components/ui/button';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
-interface CustomHrefProps {
+type CustomHrefProps = {
   href: string;
   children: React.ReactNode;
   className?: string;
   offset?: number;
-}
+};
 
 export function CustomHref({ href, children, className = '', offset = -100 }: CustomHrefProps) {
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    const section = document.querySelector(href);
-    if (section) {
-      const y = section.getBoundingClientRect().top + window.pageYOffset + offset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
+    scrollToSection(href, offset);
   };
 
   return (
@@ -29,48 +25,64 @@ export function CustomHref({ href, children, className = '', offset = -100 }: Cu
   );
 }
 
+function scrollToSection(href: string, offset = -100) {
+  const section = document.querySelector(href);
+  if (section) {
+    const y = section.getBoundingClientRect().top + window.pageYOffset + offset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+    window.history.pushState(null, '', href);
+  }
+}
+
+function ScrollToSectionOnLoad() {
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) scrollToSection(hash);
+  }, []);
+  return null;
+}
+
 export function Header() {
   const navRef = useRef<HTMLDivElement | null>(null);
 
-  const handleScroll = (e: React.MouseEvent<HTMLElement>, id: string) => {
-    e.preventDefault();
-    const section = document.querySelector(id);
-    if (section) {
-      const yOffset = -100;
-      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
-
   return (
-    <header className="fixed top-7 left-1/2 -translate-x-1/2 z-50 w-full max-w-[1264px] px-4">
-      <nav
-        ref={navRef}
-        className="flex items-center justify-between px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 ease-in-out hover:bg-white/70"
-      >
-        <div className="flex items-center gap-12">
-          <h1
-            onClick={(e) => handleScroll(e, '#init')}
-            className="text-2xl font-bold font-domine text-neutral-900 transition-all duration-300 hover:opacity-90 cursor-pointer"
-          >
-            GTBaita
-          </h1>
-
-          <div className="hidden md:flex items-center gap-6">
-            <CustomHref href="#sobre">Sobre</CustomHref>
-            <CustomHref href="#roadmap">Roadmap</CustomHref>
-            <CustomHref href="#equipe">Equipe</CustomHref>
-            <CustomHref href="#faq">Perguntas Frequentes</CustomHref>
-          </div>
-        </div>
-
-        <Button
-          onClick={(e) => handleScroll(e, '#newsletter')}
-          className="bg-neutral-900 text-white rounded-lg font-geist transition-all duration-300 ease-in-out hover:bg-neutral-800  hover:shadow-lg"
+    <>
+      <ScrollToSectionOnLoad />
+      <header className="fixed top-7 left-1/2 -translate-x-1/2 z-50 w-full max-w-[1264px] px-4">
+        <nav
+          ref={navRef}
+          className="flex items-center justify-between px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 ease-in-out hover:bg-white/70"
         >
-          Inscreva-se
-        </Button>
-      </nav>
-    </header>
+          <div className="flex items-center gap-12">
+            <h1
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection('#init');
+              }}
+              className="text-2xl font-bold font-domine text-neutral-900 transition-all duration-300 hover:opacity-90 cursor-pointer"
+            >
+              GTBaita
+            </h1>
+
+            <div className="hidden md:flex items-center gap-6">
+              <CustomHref href="#sobre">Sobre</CustomHref>
+              <CustomHref href="#roadmap">Roadmap</CustomHref>
+              <CustomHref href="#equipe">Equipe</CustomHref>
+              <CustomHref href="#faq">Perguntas Frequentes</CustomHref>
+            </div>
+          </div>
+
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection('#newsletter');
+            }}
+            className="bg-neutral-900 text-white rounded-lg font-geist transition-all duration-300 ease-in-out hover:bg-neutral-800 hover:shadow-lg"
+          >
+            Inscreva-se
+          </Button>
+        </nav>
+      </header>
+    </>
   );
 }
