@@ -10,4 +10,4 @@ npm install
 npm run dev
 ```
 
-Lembre de primeiro, declarar as variáveis de ambiente
+Lembre de primeiro, declarar as variáveis de ambiente (arquivo `.env`)
