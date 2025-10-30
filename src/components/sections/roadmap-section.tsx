@@ -44,20 +44,6 @@ export function RoadmapSection() {
 
         <div className="grid md:grid-cols-3 gap-6">
           <motion.div
-            initial={{ opacity: 0, x: -80 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            viewport={{ once: true }}
-          >
-            <RoadmapCard
-              title={'Portal\nWhere Are You From'}
-              quarter="Q1/2026"
-              description="Portal de autenticação com redirecionamento para o IdP institucional"
-              image="/svgs/roadmap-wayf.svg"
-            />
-          </motion.div>
-
-          <motion.div
             initial={{ opacity: 0, y: 80 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -68,6 +54,19 @@ export function RoadmapSection() {
               quarter="Q2/2025"
               description="Sistema de gerenciamento completo para administradores de instituições federadas"
               image="/svgs/roadmap-painel.svg"
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            viewport={{ once: true }}
+          >
+            <RoadmapCard
+              title={'Portal\nWhere Are You From'}
+              quarter="Q1/2026"
+              description="Portal de autenticação com redirecionamento para o IdP institucional"
+              image="/svgs/roadmap-wayf.svg"
             />
           </motion.div>
 
