@@ -61,7 +61,7 @@ export function Header() {
               }}
               className="text-2xl font-bold font-domine text-neutral-900 transition-all duration-300 hover:opacity-90 cursor-pointer"
             >
-              GTBaita
+              GT-Baita
             </h1>
 
             <div className="hidden md:flex items-center gap-6">
