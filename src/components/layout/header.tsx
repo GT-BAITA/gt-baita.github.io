@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { useEffect, useRef } from 'react';
+import { LanguageToggle } from './language-toggle';
+import { useTranslation } from 'react-i18next';
 
 type CustomHrefProps = {
   href: string;
@@ -8,7 +10,12 @@ type CustomHrefProps = {
   offset?: number;
 };
 
-export function CustomHref({ href, children, className = '', offset = -100 }: CustomHrefProps) {
+export function CustomHref({
+  href,
+  children,
+  className = '',
+  offset = -100,
+}: CustomHrefProps) {
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     scrollToSection(href, offset);
@@ -43,6 +50,7 @@ function ScrollToSectionOnLoad() {
 }
 
 export function Header() {
+  const { t } = useTranslation();
   const navRef = useRef<HTMLDivElement | null>(null);
 
   return (
@@ -61,14 +69,15 @@ export function Header() {
               }}
               className="text-2xl font-bold font-domine text-neutral-900 transition-all duration-300 hover:opacity-90 cursor-pointer"
             >
-              GT-Baita
+              {t('header.brand')}
             </h1>
 
             <div className="hidden md:flex items-center gap-6">
-              <CustomHref href="#sobre">Sobre</CustomHref>
-              <CustomHref href="#roadmap">Roadmap</CustomHref>
-              <CustomHref href="#equipe">Equipe</CustomHref>
-              <CustomHref href="#faq">Perguntas Frequentes</CustomHref>
+              <CustomHref href="#sobre">{t('header.nav-1')}</CustomHref>
+              <CustomHref href="#roadmap">{t('header.nav-2')}</CustomHref>
+              <CustomHref href="#equipe">{t('header.nav-3')}</CustomHref>
+              <CustomHref href="#faq">{t('header.nav-4')}</CustomHref>
+              <LanguageToggle />
             </div>
           </div>
 
@@ -79,7 +88,7 @@ export function Header() {
             }}
             className="bg-neutral-900 text-white rounded-lg font-geist transition-all duration-300 ease-in-out hover:bg-neutral-800 hover:shadow-lg"
           >
-            Inscreva-se
+            {t('header.cta')}
           </Button>
         </nav>
       </header>

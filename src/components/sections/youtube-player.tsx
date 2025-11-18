@@ -1,6 +1,9 @@
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 export default function YouTubeEmbed() {
+  const { t } = useTranslation();
+
   return (
     <section id="journey" className="text-center py-24 overflow-hidden">
       <div className="max-w-[840px] mx-auto px-6">
@@ -11,7 +14,7 @@ export default function YouTubeEmbed() {
           transition={{ duration: 0.8, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
-          Nossa jornada até aqui
+          {t('journey.title')}
         </motion.h2>
 
         <motion.p
@@ -21,9 +24,9 @@ export default function YouTubeEmbed() {
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
           viewport={{ once: true }}
         >
-          Durante a <strong>Fase 1 do Programa de Serviços Avançados da RNP</strong>, o GT-Baita
-          vivenciou uma jornada intensa de <strong>capacitação empreendedora</strong>. Este vídeo
-          conta um pouco dessa trajetória e do aprendizado que guiou o grupo até aqui.
+          {t('journey.p1.prefix')} <strong>{t('journey.p1.strong1')}</strong>,{' '}
+          {t('journey.p1.middle')} <strong>{t('journey.p1.strong2')}</strong>.{' '}
+          {t('journey.p1.suffix')}
         </motion.p>
 
         <motion.div
@@ -37,7 +40,7 @@ export default function YouTubeEmbed() {
             width="100%"
             height="100%"
             src="https://www.youtube.com/embed/m_gvrV80jUs"
-            title="Nossa jornada até aqui — GT-Baita"
+            title={t('journey.videoTitle')}
             allowFullScreen
             className="rounded-2xl"
           ></iframe>

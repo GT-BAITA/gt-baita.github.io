@@ -1,10 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 export function InitSection() {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, -50]);
+
+  const { t } = useTranslation();
 
   const handleScrollToAbout = () => {
     const section = document.querySelector('#sobre');
@@ -13,6 +16,7 @@ export function InitSection() {
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
   return (
     <>
       <section id="init" className="pt-24 pb-12 md:pt-40 md:pb-50 mx-auto">
@@ -20,27 +24,32 @@ export function InitSection() {
           <div className="space-y-14 max-w-[517px]">
             <div className="space-y-10">
               <h2 className="text-5xl md:text-6xl lg:text-[64px] font-domine leading-none text-neutral-900">
-                A maior federação do Brasil: agora moderna
+                {t('init.title')}
               </h2>
               <p className="text-xl text-neutral-600 leading-tight font-geist">
-                A CAFe 2.0 chegou para revolucionar o acesso digital entre institutos e
-                universidades.
+                {t('init.subtitle')}
               </p>
             </div>
+
             <Button
               className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px]"
-              onClick={() => handleScrollToAbout()}
+              onClick={handleScrollToAbout}
             >
-              Saiba Mais <ChevronRight className="w-4 h-4" />
+              {t('init.cta')} <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </section>
+
       <motion.div
         className="absolute right-0 top-8 -z-[1] hidden opacity-50 lg:flex justify-end"
         style={{ y }}
       >
-        <img src="/svgs/ascii-brasil.svg" alt="Hero Image" className="w-[80%] h-auto" />
+        <img
+          src="/svgs/ascii-brasil.svg"
+          alt="Hero Image"
+          className="w-[80%] h-auto"
+        />
       </motion.div>
     </>
   );

@@ -1,9 +1,12 @@
 import { splitText } from '@/utils/split-text';
 import { CustomLink } from '../atoms/custom-link';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 export function AboutSection() {
-  const text = 'A CAFe conecta uma rede de mais de 300 instituições federadas.';
+  const { t } = useTranslation();
+
+  const text = t('about.title');
 
   return (
     <section id="sobre">
@@ -55,18 +58,14 @@ export function AboutSection() {
         </div>
 
         <div className="space-y-8 flex-1">
+          <p className="text-neutral-200 font-geist">{t('about.p1')}</p>
           <p className="text-neutral-200 font-geist">
-            Mantida pela RNP, a atual CAFe operacionaliza a infraestrutura tecnológica para conectar
-            centenas de universidades, institutos e centros de pesquisa brasileiros.
-          </p>
-          <p className="text-neutral-200 font-geist">
-            A proposta da CAFe 2.0 busca modernizar o modelo atual, por meio do protocolo{' '}
+            {t('about.p2.prefix')}{' '}
             <CustomLink
               href="https://openid.net/specs/openid-federation-1_0.html"
               text="OpenID Federation 1.0"
-            />
-            , ampliando o alcance da rede federada e aumentando a qualidade dos benefícios para
-            todas as partes.
+            />{' '}
+            {t('about.p2.suffix')}
           </p>
         </div>
       </div>

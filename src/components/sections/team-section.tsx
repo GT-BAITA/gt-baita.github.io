@@ -1,15 +1,19 @@
+import { useTranslation } from 'react-i18next';
+
 export function TeamSection() {
+  const { t } = useTranslation();
+
   const members = [
-    { name: 'Frederico Schardong', role: 'Coordenador de Projeto' },
-    { name: 'Ricardo Custódio', role: 'Vice-Coordenador de Projeto' },
-    { name: 'Brendon Vicente', role: 'Assistente de Inovação' },
-    { name: 'Eduardo Perottoni', role: 'Assistente de Inovação' },
-    { name: 'Giulia Manno', role: 'Designer de Produto' },
-    { name: 'Álison Batista', role: 'Desenvolvedor' },
-    { name: 'Charlie Terra', role: 'Desenvolvedora' },
-    { name: 'Rayane Melo', role: 'Desenvolvedora' },
-    { name: 'Leonardo Passos', role: 'Desenvolvedor' },
-    { name: 'Raissa Lima', role: 'Desenvolvedora' },
+    { name: 'Frederico Schardong', role: t('team.roles.coordinator') },
+    { name: 'Ricardo Custódio', role: t('team.roles.viceCoordinator') },
+    { name: 'Brendon Vicente', role: t('team.roles.innovationAssistant') },
+    { name: 'Eduardo Perottoni', role: t('team.roles.innovationAssistant') },
+    { name: 'Giulia Manno', role: t('team.roles.productDesigner') },
+    { name: 'Álison Batista', role: t('team.roles.developerM') },
+    { name: 'Charlie Terra', role: t('team.roles.developerF') },
+    { name: 'Rayane Melo', role: t('team.roles.developerF') },
+    { name: 'Leonardo Passos', role: t('team.roles.developerM') },
+    { name: 'Raissa Lima', role: t('team.roles.developerF') },
   ];
 
   return (
@@ -29,15 +33,19 @@ export function TeamSection() {
               key={index}
               className="bg-neutral-900 rounded-2xl p-6 flex flex-col justify-center shadow-inner hover:bg-neutral-800 transition-colors cursor-pointer"
             >
-              <h4 className="font-geist text-base font-normal">{member.name}</h4>
-              <p className="text-neutral-300 text-[12px] font-geist">{member.role}</p>
+              <h4 className="font-geist text-base font-normal">
+                {member.name}
+              </h4>
+              <p className="text-neutral-300 text-[12px] font-geist">
+                {member.role}
+              </p>
             </div>
           ))}
         </div>
 
         <div className="relative w-full lg:w-1/3 flex items-center lg:items-end justify-center lg:justify-end p-8 lg:p-14 z-10">
           <h2 className="text-[48px] sm:text-[56px] lg:text-[64px] font-domine text-center lg:text-right">
-            A Equipe
+            {t('team.title')}
           </h2>
         </div>
       </div>

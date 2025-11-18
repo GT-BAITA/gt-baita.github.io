@@ -5,8 +5,12 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { CustomLink } from '../atoms/custom-link';
+import { useTranslation } from 'react-i18next';
 
-function CustomAccordionItem(props: { value: string; children: React.ReactNode }) {
+function CustomAccordionItem(props: {
+  value: string;
+  children: React.ReactNode;
+}) {
   return (
     <AccordionItem
       value={props.value}
@@ -25,7 +29,13 @@ function CustomAccordionTrigger({ text }: { text: string }) {
   );
 }
 
-function CustomAccordionContent({ text, children }: { text?: string; children?: React.ReactNode }) {
+function CustomAccordionContent({
+  text,
+  children,
+}: {
+  text?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <AccordionContent className="text-neutral-900 p-0 text-base font-[400] leading-5 px-4 pb-4 font-geist">
       {text}
@@ -35,52 +45,61 @@ function CustomAccordionContent({ text, children }: { text?: string; children?: 
 }
 
 export function FAQSection() {
+  const { t } = useTranslation();
+
   return (
     <section id="faq">
       <div className="py-20 space-y-10">
-        <h2 className="text-5xl md:text-6xl font-domine text-neutral-900 text-center">FAQ</h2>
+        <h2 className="text-5xl md:text-6xl font-domine text-neutral-900 text-center">
+          {t('faq.title')}
+        </h2>
 
         <div className="max-w-[976px] mx-auto">
           <Accordion type="single" collapsible defaultValue="item-1">
             <CustomAccordionItem value="item-1">
-              <CustomAccordionTrigger text="O Portal já está no ar?" />
-              <CustomAccordionContent text="Ainda não. Temos lançamento previsto para 2027; você pode se inscrever em nosso banco de voluntários para participar do nosso programa de testes beta." />
+              <CustomAccordionTrigger text={t('faq.q1')} />
+              <CustomAccordionContent text={t('faq.a1')} />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-2">
-              <CustomAccordionTrigger text="Quais os critérios para participar?" />
-              <CustomAccordionContent text="Em breve divulgaremos os critérios de participação." />
+              <CustomAccordionTrigger text={t('faq.q2')} />
+              <CustomAccordionContent text={t('faq.a2')} />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-3">
-              <CustomAccordionTrigger text="Como encontro os melhores benefícios?" />
-              <CustomAccordionContent text="Através do Portal de Benefícios, você poderá descobrir todos os serviços disponíveis." />
+              <CustomAccordionTrigger text={t('faq.q3')} />
+              <CustomAccordionContent text={t('faq.a3')} />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-4">
-              <CustomAccordionTrigger text="Os benefícios são válidos em todo o país?" />
-              <CustomAccordionContent text="Sim, os benefícios estarão disponíveis para todas as instituições federadas em todo o Brasil." />
+              <CustomAccordionTrigger text={t('faq.q4')} />
+              <CustomAccordionContent text={t('faq.a4')} />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-5">
-              <CustomAccordionTrigger text="Como entro em contato com o suporte?" />
-              <CustomAccordionContent text="Em breve disponibilizaremos canais de suporte dedicados." />
+              <CustomAccordionTrigger text={t('faq.q5')} />
+              <CustomAccordionContent text={t('faq.a5')} />
             </CustomAccordionItem>
+
             <CustomAccordionItem value="item-6">
-              <CustomAccordionTrigger text="Quais iniciativas internacionais estão alinhadas com a CAFe 2.0?" />
+              <CustomAccordionTrigger text={t('faq.q6')} />
               <CustomAccordionContent>
-                A eduGAIN tem adotado o OpenID Federation como novo protocolo para{' '}
+                {t('faq.a6.prefix')}{' '}
                 <CustomLink
                   href="https://wiki.geant.org/spaces/eduGAIN/pages/1072398451/eduGAIN+-+Open+ID+Federation+Pilot"
-                  text="implementação da interfederação"
+                  text={t('faq.a6.link-edugain')}
                 />
-                . A{' '}
+                . {t('faq.a6.middle')}{' '}
                 <CustomLink
                   href="https://italia.github.io/eid-wallet-it-docs/versione-corrente/en/trust-infrastructure.html"
-                  text="Itália"
+                  text={t('faq.a6.link-italy')}
                 />{' '}
-                e a <CustomLink href="https://sandbox.swedenconnect.se/oidfed/home" text="Suécia" />{' '}
-                também estão usando o OpenID Federation como solução de interoperabilidade.
+                {t('faq.a6.and')}{' '}
+                <CustomLink
+                  href="https://sandbox.swedenconnect.se/oidfed/home"
+                  text={t('faq.a6.link-sweden')}
+                />{' '}
+                {t('faq.a6.suffix')}
               </CustomAccordionContent>
             </CustomAccordionItem>
           </Accordion>

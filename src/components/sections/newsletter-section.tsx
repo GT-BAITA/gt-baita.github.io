@@ -6,14 +6,33 @@ import { CustomTextarea } from '../atoms/custom-textarea';
 import { useContactForm } from '@/hooks/useContactForm';
 import { motion } from 'motion/react';
 import { splitText } from '@/utils/split-text';
+import { useTranslation } from 'react-i18next';
 
 export function NewsletterSection() {
-  const { formRef, siteKey, isSubmitting, isSucceeded, formId, goBack, errors } = useContactForm();
-  const title = 'Inscreva-se em nossa lista';
+  const { t } = useTranslation();
+
+  const {
+    formRef,
+    siteKey,
+    isSubmitting,
+    isSucceeded,
+    formId,
+    goBack,
+    errors,
+  } = useContactForm();
+
+  const title = t('newsletter.title');
 
   return (
-    <section id="newsletter" className="px-6 md:px-24 py-24 md:py-48 bg-neutral-900">
-      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <section
+      id="newsletter"
+      className="px-6 md:px-24 py-24 md:py-48 bg-neutral-900"
+    >
+      <script
+        src="https://www.google.com/recaptcha/api.js"
+        async
+        defer
+      ></script>
 
       <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-12">
         <div className="space-y-6 max-w-[582px]">
@@ -24,11 +43,7 @@ export function NewsletterSection() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.5 }}
               variants={{
-                visible: {
-                  transition: {
-                    staggerChildren: 0.04,
-                  },
-                },
+                visible: { transition: { staggerChildren: 0.04 } },
               }}
             >
               {splitText(title).map((char, index) => (
@@ -47,8 +62,7 @@ export function NewsletterSection() {
           </div>
 
           <p className="text-neutral-300 font-geist">
-            Inscreva-se em nosso banco de voluntários para participar do nosso programa de testes
-            beta.
+            {t('newsletter.description')}
           </p>
         </div>
 
@@ -56,10 +70,17 @@ export function NewsletterSection() {
           {isSucceeded ? (
             <div className="flex flex-col items-center justify-center text-center gap-6 bg-neutral-800 rounded-2xl p-10 w-full transition-all duration-300 ease-in-out">
               <CheckCircle2 className="w-16 h-16 text-neutral-400 opacity-80" />
-              <h2 className="text-4xl md:text-5xl font-domine text-neutral-100 mb-2">Obrigado!</h2>
-              <p className="text-neutral-300 font-geist">Sua inscrição foi enviada com sucesso.</p>
-              <Button onClick={goBack} className="bg-neutral-950 text-white rounded-lg">
-                Voltar
+              <h2 className="text-4xl md:text-5xl font-domine text-neutral-100 mb-2">
+                {t('newsletter.successTitle')}
+              </h2>
+              <p className="text-neutral-300 font-geist">
+                {t('newsletter.successMessage')}
+              </p>
+              <Button
+                onClick={goBack}
+                className="bg-neutral-950 text-white rounded-lg"
+              >
+                {t('newsletter.goBack')}
               </Button>
             </div>
           ) : (
@@ -74,8 +95,8 @@ export function NewsletterSection() {
                 id="name"
                 type="text"
                 name="name"
-                label="Nome completo"
-                placeholder="Seu nome"
+                label={t('newsletter.form.name.label')}
+                placeholder={t('newsletter.form.name.placeholder')}
                 required
                 error={errors.name}
               />
@@ -84,17 +105,17 @@ export function NewsletterSection() {
                 id="email"
                 type="email"
                 name="email"
-                label="Email"
+                label={t('newsletter.form.email.label')}
                 required
-                placeholder="Seu email"
+                placeholder={t('newsletter.form.email.placeholder')}
                 error={errors.email}
               />
 
               <CustomTextarea
                 id="message"
                 name="message"
-                label="Mensagem (Opcional)"
-                placeholder="Deixe sua mensagem"
+                label={t('newsletter.form.message.label')}
+                placeholder={t('newsletter.form.message.placeholder')}
                 rows={4}
               />
 
@@ -106,7 +127,7 @@ export function NewsletterSection() {
                 disabled={isSubmitting}
                 type="submit"
               >
-                {isSubmitting ? <Spinner /> : 'Enviar'}
+                {isSubmitting ? <Spinner /> : t('newsletter.form.submit')}
               </button>
             </form>
           )}

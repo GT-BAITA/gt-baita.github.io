@@ -1,0 +1,131 @@
+{
+  "language-pt": "Português",
+  "language-en": "Inglês",
+  "header": {
+    "brand": "GT-Baita",
+    "nav-1": "Sobre",
+    "nav-2": "Roadmap",
+    "nav-3": "Equipe",
+    "nav-4": "Perguntas Frequentes",
+    "cta": "Inscreva-se"
+  },
+  "init": {
+    "title": "A maior federação do Brasil: agora moderna",
+    "subtitle": "A CAFe 2.0 chegou para revolucionar o acesso digital entre institutos e universidades.",
+    "cta": "Saiba Mais"
+  },
+  "about": {
+    "title": "A CAFe conecta uma rede de mais de 300 instituições federadas.",
+    "p1": "Mantida pela RNP, a atual CAFe operacionaliza a infraestrutura tecnológica para conectar centenas de universidades, institutos e centros de pesquisa brasileiros.",
+    "p2": {
+      "prefix": "A proposta da CAFe 2.0 busca modernizar o modelo atual, por meio do protocolo",
+      "suffix": ", ampliando o alcance da rede federada e aumentando a qualidade dos benefícios para todas as partes."
+    }
+  },
+  "faq": {
+    "title": "FAQ",
+    "q1": "O Portal já está no ar?",
+    "a1": "Ainda não. Temos lançamento previsto para 2027; você pode se inscrever em nosso banco de voluntários para participar do programa de testes beta.",
+    "q2": "Quais os critérios para participar?",
+    "a2": "Em breve divulgaremos os critérios de participação.",
+    "q3": "Como encontro os melhores benefícios?",
+    "a3": "Através do Portal de Benefícios, você poderá descobrir todos os serviços disponíveis.",
+    "q4": "Os benefícios são válidos em todo o país?",
+    "a4": "Sim, os benefícios estarão disponíveis para todas as instituições federadas em todo o Brasil.",
+    "q5": "Como entro em contato com o suporte?",
+    "a5": "Em breve disponibilizaremos canais de suporte dedicados.",
+    "q6": "Quais iniciativas internacionais estão alinhadas com a CAFe 2.0?",
+    "a6": {
+      "prefix": "A eduGAIN tem adotado o OpenID Federation como novo protocolo para",
+      "link-edugain": "implementação da interfederação",
+      "middle": "A",
+      "link-italy": "Itália",
+      "and": "e a",
+      "link-sweden": "Suécia",
+      "suffix": "também estão usando o OpenID Federation como solução de interoperabilidade."
+    }
+  },
+  "features": {
+    "card1": {
+      "title": "Três plataformas, uma solução",
+      "text": "A adoção do protocolo OpenID Federation possibilita uma infraestrutura flexível, com a criação de portais de autenticação, gestão administrativa e user-facing.",
+      "cta": "Saiba Mais"
+    },
+    "card2": {
+      "title": "Conexão com \no Brasil e o Mundo",
+      "text": "A solução proporciona interoperabilidade com a eduGAIN, conectando a federação brasileira a serviços de mais de 3400 instituições internacionais."
+    },
+    "card3": {
+      "title": "Padrões adotados \npor federações \ninternacionais*"
+    },
+    "card4": {
+      "title": "Tecnologia que abre portas."
+    }
+  },
+  "newsletter": {
+    "title": "Inscreva-se em nossa lista",
+    "description": "Inscreva-se em nosso banco de voluntários para participar do nosso programa de testes beta.",
+    "successTitle": "Obrigado!",
+    "successMessage": "Sua inscrição foi enviada com sucesso.",
+    "goBack": "Voltar",
+    "form": {
+      "name": {
+        "label": "Nome completo",
+        "placeholder": "Seu nome"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Seu email"
+      },
+      "message": {
+        "label": "Mensagem (Opcional)",
+        "placeholder": "Deixe sua mensagem"
+      },
+      "submit": "Enviar"
+    }
+  },
+  "roadmap": {
+    "title": "Nosso Roadmap",
+    "card1": {
+      "title": "Painel de Gestão",
+      "quarter": "Q2/2025",
+      "description": "Sistema de gerenciamento completo para administradores de instituições federadas"
+    },
+    "card2": {
+      "title": "Portal\nWhere Are You From",
+      "quarter": "Q1/2026",
+      "description": "Portal de autenticação com redirecionamento para o IdP institucional"
+    },
+    "card3": {
+      "title": "Portal de Benefícios",
+      "quarter": "Em breve",
+      "description": "Plataforma de descoberta de serviços para usuários de instituições federadas"
+    }
+  },
+  "team": {
+    "title": "A Equipe",
+    "roles": {
+      "coordinator": "Coordenador de Projeto",
+      "viceCoordinator": "Vice-Coordenador de Projeto",
+      "innovationAssistant": "Assistente de Inovação",
+      "productDesigner": "Designer de Produto",
+      "developerM": "Desenvolvedor",
+      "developerF": "Desenvolvedora"
+    }
+  },
+  "journey": {
+    "title": "Nossa jornada até aqui",
+    "p1": {
+      "prefix": "Durante a",
+      "strong1": "Fase 1 do Programa de Serviços Avançados da RNP",
+      "middle": "o GT-Baita vivenciou uma jornada intensa de",
+      "strong2": "capacitação empreendedora",
+      "suffix": "Este vídeo conta um pouco dessa trajetória e do aprendizado que guiou o grupo até aqui."
+    },
+    "videoTitle": "Nossa jornada até aqui — GT-Baita"
+  },
+  "notfound": {
+    "message": "Oops! Página não encontrada",
+    "return": "Voltar para a página inicial"
+  }
+}

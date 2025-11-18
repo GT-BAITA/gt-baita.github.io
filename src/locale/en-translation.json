@@ -1,0 +1,131 @@
+{
+  "language-en": "English",
+  "language-pt": "Portuguese",
+  "header": {
+    "brand": "GT-Baita",
+    "nav-1": "About",
+    "nav-2": "Roadmap",
+    "nav-3": "Team",
+    "nav-4": "Frequently Asked Questions",
+    "cta": "Subscribe"
+  },
+  "init": {
+    "title": "The largest federation in Brazil: now modern",
+    "subtitle": "CAFe 2.0 has arrived to revolutionize digital access between institutes and universities.",
+    "cta": "Learn More"
+  },
+  "about": {
+    "title": "CAFe connects a network of more than 300 federated institutions.",
+    "p1": "Maintained by RNP, the current CAFe operates the technological infrastructure that connects hundreds of Brazilian universities, institutes, and research centers.",
+    "p2": {
+      "prefix": "The proposal of CAFe 2.0 aims to modernize the current model through the",
+      "suffix": "protocol, expanding the reach of the federated network and increasing the quality of benefits for all parties."
+    }
+  },
+  "faq": {
+    "title": "FAQ",
+    "q1": "Is the Portal already online?",
+    "a1": "Not yet. The launch is planned for 2027; you can sign up for our volunteer pool to participate in the beta testing program.",
+    "q2": "What are the criteria to participate?",
+    "a2": "We will soon publish the participation criteria.",
+    "q3": "How do I find the best benefits?",
+    "a3": "Through the Benefits Portal, you will be able to discover all available services.",
+    "q4": "Are the benefits valid throughout the country?",
+    "a4": "Yes, the benefits will be available to all federated institutions across Brazil.",
+    "q5": "How do I contact support?",
+    "a5": "We will soon provide dedicated support channels.",
+    "q6": "Which international initiatives are aligned with CAFe 2.0?",
+    "a6": {
+      "prefix": "eduGAIN has adopted OpenID Federation as the new protocol for",
+      "link-edugain": "interfederation implementation",
+      "middle": "Italy",
+      "link-italy": "Italy",
+      "and": "and",
+      "link-sweden": "Sweden",
+      "suffix": "are also using OpenID Federation as an interoperability solution."
+    }
+  },
+  "features": {
+    "card1": {
+      "title": "Three platforms, one solution",
+      "text": "The adoption of the OpenID Federation protocol enables a flexible infrastructure with the creation of authentication, administrative management, and user-facing portals.",
+      "cta": "Learn More"
+    },
+    "card2": {
+      "title": "Connection with \nBrazil and the World",
+      "text": "The solution provides interoperability with eduGAIN, connecting the Brazilian federation to services from more than 3400 international institutions."
+    },
+    "card3": {
+      "title": "Standards adopted \nby international \nfederations*"
+    },
+    "card4": {
+      "title": "Technology that opens doors."
+    }
+  },
+  "newsletter": {
+    "title": "Join our list",
+    "description": "Sign up for our volunteer pool to participate in our beta testing program.",
+    "successTitle": "Thank you!",
+    "successMessage": "Your submission has been sent successfully.",
+    "goBack": "Back",
+    "form": {
+      "name": {
+        "label": "Full name",
+        "placeholder": "Your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Your email"
+      },
+      "message": {
+        "label": "Message (Optional)",
+        "placeholder": "Leave your message"
+      },
+      "submit": "Send"
+    }
+  },
+  "roadmap": {
+    "title": "Our Roadmap",
+    "card1": {
+      "title": "Management Dashboard",
+      "quarter": "Q2/2025",
+      "description": "A complete management system for administrators of federated institutions"
+    },
+    "card2": {
+      "title": "Where Are You From\nPortal",
+      "quarter": "Q1/2026",
+      "description": "Authentication portal with redirection to the institutional IdP"
+    },
+    "card3": {
+      "title": "Benefits Portal",
+      "quarter": "Coming soon",
+      "description": "Service discovery platform for users from federated institutions"
+    }
+  },
+  "team": {
+    "title": "The Team",
+    "roles": {
+      "coordinator": "Project Coordinator",
+      "viceCoordinator": "Deputy Project Coordinator",
+      "innovationAssistant": "Innovation Assistant",
+      "productDesigner": "Product Designer",
+      "developerM": "Developer",
+      "developerF": "Developer"
+    }
+  },
+  "journey": {
+    "title": "Our journey so far",
+    "p1": {
+      "prefix": "During the",
+      "strong1": "Phase 1 of the RNP Advanced Services Program",
+      "middle": "GT-Baita experienced an intense journey of",
+      "strong2": "entrepreneurial development",
+      "suffix": "This video shares part of that trajectory and the lessons that guided the group to this point."
+    },
+    "videoTitle": "Our journey so far — GT-Baita"
+  },
+  "notfound": {
+    "message": "Oops! Page not found",
+    "return": "Return to Home"
+  }
+}

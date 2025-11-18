@@ -1,8 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 function CardOne() {
+  const { t } = useTranslation();
+
   const handleScrollToRoadmap = () => {
     const section = document.querySelector('#roadmap');
     if (section) {
@@ -21,17 +24,16 @@ function CardOne() {
     >
       <div className="space-y-6">
         <h4 className="text-2xl text-neutral-900 leading-6 font-geist font-medium tracking-[-0.03em]">
-          Três plataformas, <br /> uma solução
+          {t('features.card1.title')}
         </h4>
         <p className="text-neutral-600 text-base leading-5 font-geist w-[75%]">
-          A adoção do protocolo OpenID Federation possibilita uma infraestrutura flexível, com a
-          criação de portais de autenticação, gestão administrativa e user-facing.
+          {t('features.card1.text')}
         </p>
         <Button
-          onClick={() => handleScrollToRoadmap()}
+          onClick={handleScrollToRoadmap}
           className="bg-neutral-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px] flex items-center justify-center gap-1 transition-all duration-300"
         >
-          Saiba Mais <ChevronRight className="w-4 h-4" />
+          {t('features.card1.cta')} <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
 
@@ -47,6 +49,8 @@ function CardOne() {
 }
 
 function CardTwo() {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 100 }}
@@ -58,18 +62,19 @@ function CardTwo() {
       <div className="flex justify-end">
         <img src="/svgs/edugain.svg" alt="eduGAIN" className="h-20" />
       </div>
-      <h4 className="text-2xl text-neutral-900 leading-6 font-geist font-medium tracking-[-0.03em]">
-        Conexão com <br /> o Brasil e o Mundo
+      <h4 className="text-2xl text-neutral-900 leading-6 font-geist font-medium tracking-[-0.03em] whitespace-pre-line">
+        {t('features.card2.title')}
       </h4>
       <p className="text-neutral-600 text-base leading-5 font-geist w-[98%]">
-        A solução proporciona interoperabilidade com a eduGAIN, conectando a federação brasileira a
-        serviços de mais de 3400 instituições internacionais.
+        {t('features.card2.text')}
       </p>
     </motion.div>
   );
 }
 
 function CardThree() {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 100 }}
@@ -81,14 +86,16 @@ function CardThree() {
       <div className="absolute top-0 left-0">
         <img src="/svgs/world.svg" alt="Network Icon" className="h-52" />
       </div>
-      <h4 className="text-2xl text-neutral-900 leading-6 font-geist font-medium text-right tracking-[-0.03em] z-10 relative">
-        Padrões adotados <br /> por federações <br /> internacionais*
+      <h4 className="text-2xl text-neutral-900 leading-6 font-geist font-medium text-right tracking-[-0.03em] z-10 relative whitespace-pre-line">
+        {t('features.card3.title')}
       </h4>
     </motion.div>
   );
 }
 
 function CardFour() {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 120 }}
@@ -99,7 +106,7 @@ function CardFour() {
     >
       <div className="z-10 space-y-4">
         <h4 className="text-5xl md:text-5xl font-domine text-white leading-tight tracking-[-0.03em]">
-          Tecnologia que <br /> abre portas.
+          {t('features.card4.title')}
         </h4>
       </div>
       <img
