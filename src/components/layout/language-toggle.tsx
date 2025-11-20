@@ -1,9 +1,9 @@
 import { ChevronDown, GlobeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { twMerge } from 'tailwind-merge';
 
+import { CustomAccordionSelect } from '@/components/atoms/custom-accordion-select';
+import { CustomDropdown } from '@/components/atoms/custom-dropdown';
 import { Button } from '@/components/ui/button';
-import { CustomDropdown } from '../atoms/custom-dropdown';
 
 /**
  * Botão de seleção de idioma da aplicação.
@@ -31,20 +31,33 @@ export function LanguageToggle() {
   ];
 
   return (
-    <CustomDropdown options={options}>
-      <Button
-        variant="ghost"
-        size="sm"
-        className={twMerge(
-          'text-neutral-700  focus-visible:ring-white/50 transition-colors duration-300 cursor-pointer flex items-center gap-3'
-        )}
-      >
-        <GlobeIcon className="h-5 w-5 text-neutral-700" />
-        <span className="text-neutral-700 text-base font-normal">
-          {currentLang}
-        </span>
-        <ChevronDown className="h-4 w-4 text-neutral-700" />
-      </Button>
-    </CustomDropdown>
+    <>
+      <div className="md:hidden">
+        <CustomAccordionSelect value={i18n.language} options={options}>
+          <div className="flex items-center gap-3 text-neutral-700 hover:text-neutral-900 text-base font-normal select-none">
+            <GlobeIcon className="h-4 w-4 text-neutral-700 hover:text-neutral-900" />
+            {currentLang}
+          </div>
+        </CustomAccordionSelect>
+      </div>
+
+      <div className="hidden md:block">
+        <CustomDropdown options={options}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className={
+              'text-neutral-700 hover:text-neutral-900  hover:bg-white/10 focus-visible:ring-white/50 transition-colors duration-300 cursor-pointer flex gap-3 md:hover:bg-transparent md:w-fit'
+            }
+          >
+            <GlobeIcon className="h-5 w-5 text-neutral-700 hover:text-neutral-900 " />
+            <span className="text-neutral-700 hover:text-neutral-900  text-sm font-normal">
+              {currentLang}
+            </span>
+            <ChevronDown className="h-4 w-4 text-neutral-700 hover:text-neutral-900 " />
+          </Button>
+        </CustomDropdown>
+      </div>
+    </>
   );
 }
