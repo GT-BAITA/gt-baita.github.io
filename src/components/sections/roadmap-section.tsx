@@ -1,4 +1,5 @@
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 function RoadmapCard({
   title,
@@ -21,7 +22,9 @@ function RoadmapCard({
         </h3>
         <div className="space-y-2">
           <p className="text-neutral-600 font-geist">{quarter}</p>
-          <p className="text-neutral-600 font-geist leading-snug max-w-[85%]">{description}</p>
+          <p className="text-neutral-600 font-geist leading-snug max-w-[85%]">
+            {description}
+          </p>
         </div>
       </div>
 
@@ -35,11 +38,15 @@ function RoadmapCard({
 }
 
 export function RoadmapSection() {
+  const { t } = useTranslation();
+
   return (
     <section id="roadmap" className="py-[88px]">
       <div className="space-y-24">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-          <h2 className="text-5xl md:text-5xl font-domine text-neutral-900">Nosso Roadmap</h2>
+          <h2 className="text-5xl md:text-5xl font-domine text-neutral-900">
+            {t('roadmap.title')}
+          </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -50,12 +57,13 @@ export function RoadmapSection() {
             viewport={{ once: true }}
           >
             <RoadmapCard
-              title="Painel de Gestão"
-              quarter="Q2/2025"
-              description="Sistema de gerenciamento completo para administradores de instituições federadas"
+              title={t('roadmap.card1.title')}
+              quarter={t('roadmap.card1.quarter')}
+              description={t('roadmap.card1.description')}
               image="/svgs/roadmap-painel.svg"
             />
           </motion.div>
+
           <motion.div
             initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -63,9 +71,9 @@ export function RoadmapSection() {
             viewport={{ once: true }}
           >
             <RoadmapCard
-              title={'Portal\nWhere Are You From'}
-              quarter="Q1/2026"
-              description="Portal de autenticação com redirecionamento para o IdP institucional"
+              title={t('roadmap.card2.title')}
+              quarter={t('roadmap.card2.quarter')}
+              description={t('roadmap.card2.description')}
               image="/svgs/roadmap-wayf.svg"
             />
           </motion.div>
@@ -77,9 +85,9 @@ export function RoadmapSection() {
             viewport={{ once: true }}
           >
             <RoadmapCard
-              title="Portal de Benefícios"
-              quarter="Em breve"
-              description="Plataforma de descoberta de serviços para usuários de instituições federadas"
+              title={t('roadmap.card3.title')}
+              quarter={t('roadmap.card3.quarter')}
+              description={t('roadmap.card3.description')}
               image="/svgs/roadmap-portal.svg"
             />
           </motion.div>
