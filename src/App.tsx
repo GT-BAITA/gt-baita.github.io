@@ -7,7 +7,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/redirect" element={<RandomRedirect/>}/>
+      <Route path="/redirect" element={<RandomRedirect />}/>
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
