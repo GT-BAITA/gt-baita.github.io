@@ -3,12 +3,10 @@ import { useTranslation } from 'react-i18next';
 
 function RoadmapCard({
   title,
-  quarter,
   description,
   image,
 }: {
   title: string;
-  quarter: string;
   description: string;
   image: string;
 }) {
@@ -21,7 +19,6 @@ function RoadmapCard({
           {title}
         </h3>
         <div className="space-y-2">
-          <p className="text-neutral-600 font-geist">{quarter}</p>
           <p className="text-neutral-600 font-geist leading-snug max-w-[85%]">
             {description}
           </p>
@@ -58,7 +55,6 @@ export function RoadmapSection() {
           >
             <RoadmapCard
               title={t('roadmap.card1.title')}
-              quarter={t('roadmap.card1.quarter')}
               description={t('roadmap.card1.description')}
               image="/svgs/roadmap-painel.svg"
             />
@@ -72,7 +68,6 @@ export function RoadmapSection() {
           >
             <RoadmapCard
               title={t('roadmap.card2.title')}
-              quarter={t('roadmap.card2.quarter')}
               description={t('roadmap.card2.description')}
               image="/svgs/roadmap-wayf.svg"
             />
@@ -86,7 +81,6 @@ export function RoadmapSection() {
           >
             <RoadmapCard
               title={t('roadmap.card3.title')}
-              quarter={t('roadmap.card3.quarter')}
               description={t('roadmap.card3.description')}
               image="/svgs/roadmap-portal.svg"
             />

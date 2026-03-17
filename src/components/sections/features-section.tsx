@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 function CardOne() {
   const { t } = useTranslation();
@@ -33,7 +34,9 @@ function CardOne() {
           onClick={handleScrollToRoadmap}
           className="bg-neutral-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px] flex items-center justify-center gap-1 transition-all duration-300"
         >
-          {t('features.card1.cta')} <ChevronRight className="w-4 h-4" />
+          <Link to="/about" className="flex items-center justify-center gap-1">
+            {t('features.card1.cta')} <ChevronRight className="w-4 h-4" />
+          </Link>
         </Button>
       </div>
 

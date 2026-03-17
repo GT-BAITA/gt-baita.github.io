@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 export function InitSection() {
   const { scrollY } = useScroll();
@@ -20,24 +21,28 @@ export function InitSection() {
   return (
     <>
       <section id="init" className="pt-24 pb-12 md:pt-40 md:pb-50 mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-end">
-          <div className="space-y-14 max-w-[517px]">
-            <div className="space-y-10">
-              <h2 className="text-5xl md:text-6xl lg:text-[64px] font-domine leading-none text-neutral-900">
-                {t('init.title')}
-              </h2>
-              <p className="text-xl text-neutral-600 leading-tight font-geist">
-                {t('init.subtitle')}
-              </p>
-            </div>
+        <div className="flex items-center justify-center flex-col gap-6 text-center">
+          <h2 className="text-5xl md:text-6xl lg:text-[64px] max-w-[900px] font-domine leading-none text-neutral-900">
+            {t('init.title')}
+          </h2>
+          <p className="text-xl text-neutral-500 leading-tight font-geist">
+            {t('init.subtitle')}
+          </p>
 
-            <Button
-              className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px]"
-              onClick={handleScrollToAbout}
-            >
+          <Button
+            className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px]"
+            onClick={handleScrollToAbout}
+          >
+            <Link to="/about" className="flex items-center justify-center gap-1">
               {t('init.cta')} <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
+            </Link>
+
+          </Button>
+          <img
+            src="/svgs/management-system.svg"
+            alt="Management System Image"
+            className="mt-10"
+          />
         </div>
       </section>
 

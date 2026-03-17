@@ -4,7 +4,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { CustomLink } from '../atoms/custom-link';
 import { useTranslation } from 'react-i18next';
 
 function CustomAccordionItem(props: {
@@ -83,24 +82,7 @@ export function FAQSection() {
 
             <CustomAccordionItem value="item-6">
               <CustomAccordionTrigger text={t('faq.q6')} />
-              <CustomAccordionContent>
-                {t('faq.a6.prefix')}{' '}
-                <CustomLink
-                  href="https://wiki.geant.org/spaces/eduGAIN/pages/1072398451/eduGAIN+-+Open+ID+Federation+Pilot"
-                  text={t('faq.a6.link-edugain')}
-                />
-                . {t('faq.a6.middle')}{' '}
-                <CustomLink
-                  href="https://italia.github.io/eid-wallet-it-docs/versione-corrente/en/trust-infrastructure.html"
-                  text={t('faq.a6.link-italy')}
-                />{' '}
-                {t('faq.a6.and')}{' '}
-                <CustomLink
-                  href="https://sandbox.swedenconnect.se/oidfed/home"
-                  text={t('faq.a6.link-sweden')}
-                />{' '}
-                {t('faq.a6.suffix')}
-              </CustomAccordionContent>
+              <CustomAccordionContent text={t('faq.a6')} />
             </CustomAccordionItem>
           </Accordion>
         </div>

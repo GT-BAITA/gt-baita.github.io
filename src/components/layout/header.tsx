@@ -9,6 +9,7 @@ import { Menu } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { LanguageToggle } from './language-toggle';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 type NavItem = {
   href: string;
@@ -104,7 +105,7 @@ export function Header() {
       }}
       className="text-2xl font-bold font-domine text-neutral-900 transition hover:opacity-90 cursor-pointer"
     >
-      {t('header.brand')}
+      <Link to="/">{t('header.brand')}</Link>
     </h1>
   );
   return (

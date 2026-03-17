@@ -26,7 +26,7 @@ export function NewsletterSection() {
   return (
     <section
       id="newsletter"
-      className="px-6 md:px-24 py-24 md:py-48 bg-neutral-900"
+      className="px-6 md:px-24 py-24 md:py-48 relative bg-neutral-900"
     >
       <script
         src="https://www.google.com/recaptcha/api.js"

@@ -7,6 +7,7 @@ export function AboutSection() {
   const { t } = useTranslation();
 
   const text = t('about.title');
+  const connectorDashes = Array.from({ length: 10 });
 
   return (
     <section id="sobre">
@@ -45,14 +46,14 @@ export function AboutSection() {
 
         <div className="w-full lg:w-auto flex-shrink-0 2xl:flex items-center justify-center hidden">
           <div className="relative w-[210px] h-[214px]">
-            <div className="w-8 h-8 rounded-full bg-[#D4D4D4] absolute left-0 top-1/2 -translate-y-1/2 flex items-center justify-center" />
-            <div
-              className="absolute top-1/2 left-8 right-[12px] h-[1px]"
-              style={{
-                backgroundImage:
-                  'repeating-linear-gradient(to right, #E5E5E5, #E5E5E5 12px, transparent 12px, transparent 20px)',
-              }}
-            />
+            <div className="absolute left-0 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#D4D4D4]" />
+            <div className="absolute left-8 right-[12px] top-1/2 flex -translate-y-1/2 items-center justify-between text-[22px] leading-none text-neutral-200">
+              {connectorDashes.map((_, index) => (
+                <span key={index} aria-hidden="true">
+                  -
+                </span>
+              ))}
+            </div>
             <div className="absolute right-[12px] top-[20px] bottom-[20px] w-[1.5px] bg-neutral-200" />
           </div>
         </div>

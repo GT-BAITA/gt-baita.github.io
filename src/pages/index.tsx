@@ -1,4 +1,3 @@
-import { Layout } from '@/components/layout/layout';
 import { AboutSection } from '@/components/sections/about-section';
 import { FAQSection } from '@/components/sections/faq-section';
 import { FeaturesSection } from '@/components/sections/features-section';
@@ -9,7 +8,7 @@ import YouTubeEmbed from '@/components/sections/youtube-player';
 
 export function Home() {
   return (
-    <Layout>
+    <>
       <InitSection />
       <AboutSection />
       <FeaturesSection />
@@ -17,6 +16,6 @@ export function Home() {
       <TeamSection />
       <YouTubeEmbed />
       <FAQSection />
-    </Layout>
+    </>
   );
 }
