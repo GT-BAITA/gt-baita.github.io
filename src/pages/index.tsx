@@ -5,7 +5,6 @@ import { FeaturesSection } from '@/components/sections/features-section';
 import { InitSection } from '@/components/sections/init-section';
 import { RoadmapSection } from '@/components/sections/roadmap-section';
 import { TeamSection } from '@/components/sections/team-section';
-// import YouTubeEmbed from '@/components/sections/youtube-player';
 
 export function Home() {
   return (
@@ -15,7 +14,6 @@ export function Home() {
       <FeaturesSection />
       <RoadmapSection />
       <TeamSection />
-      {/* <YouTubeEmbed /> */}
       <FAQSection />
     </Layout>
   );
