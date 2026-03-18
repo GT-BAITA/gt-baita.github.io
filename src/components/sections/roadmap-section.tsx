@@ -1,5 +1,6 @@
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { twMerge } from 'tailwind-merge';
 
 function RoadmapCard({
   title,
@@ -28,7 +29,7 @@ function RoadmapCard({
       <img
         src={image}
         alt={title}
-        className="absolute bottom-0 right-0 h-auto object-contain block"
+        className={twMerge("absolute bottom-0 right-0 h-auto object-contain block", image === "/svgs/portal-de-beneficios.svg" && "-bottom-6")}
       />
     </div>
   );
@@ -82,7 +83,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t('roadmap.card3.title')}
               description={t('roadmap.card3.description')}
-              image="/svgs/roadmap-portal.svg"
+              image="/svgs/portal-de-beneficios.svg"
             />
           </motion.div>
         </div>

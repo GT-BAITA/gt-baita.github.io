@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { useScroll, useTransform } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { AboutSection } from './about-section';
 
 export function InitSection() {
   const { scrollY } = useScroll();
@@ -20,7 +21,7 @@ export function InitSection() {
 
   return (
     <>
-      <section id="init" className="pt-24 pb-12 md:pt-40 md:pb-50 mx-auto">
+      <section id="init" className="pt-24 pb-12 md:pt-40 md:pb-50 lg:pb-10 mx-auto">
         <div className="flex items-center justify-center flex-col gap-6 text-center">
           <h2 className="text-5xl md:text-6xl lg:text-[64px] max-w-[900px] font-domine leading-none text-neutral-900">
             {t('init.title')}
@@ -30,7 +31,7 @@ export function InitSection() {
           </p>
 
           <Button
-            className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px]"
+            className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg w-[139px]"
             onClick={handleScrollToAbout}
           >
             <Link to="/about" className="flex items-center justify-center gap-1">
@@ -38,15 +39,21 @@ export function InitSection() {
             </Link>
 
           </Button>
-          <img
-            src="/svgs/management-system.svg"
-            alt="Management System Image"
-            className="mt-10"
-          />
+          <div className="relative hidden w-full overflow-x-clip lg:flex items-center justify-center">
+            <img
+              src="/svgs/management-system.svg"
+              alt="Management System Image"
+              className="mt-10 block h-auto w-full max-w-[1062px]"
+            />
+            <div className="absolute -bottom-[36px]">
+              <AboutSection />
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <motion.div
+      {/* <motion.div
         className="absolute right-0 top-8 -z-[1] hidden opacity-50 lg:flex justify-end"
         style={{ y }}
       >
@@ -55,7 +62,8 @@ export function InitSection() {
           alt="Hero Image"
           className="w-[80%] h-auto"
         />
-      </motion.div>
+
+      </motion.div> */}
     </>
   );
 }

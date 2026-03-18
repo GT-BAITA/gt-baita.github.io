@@ -38,6 +38,7 @@ export function NewsletterSection() {
         <div className="space-y-6 max-w-[582px]">
           <div className="min-h-[140px]">
             <motion.h2
+              key={title}
               className="text-5xl md:text-6xl font-domine text-neutral-100 leading-none inline-block"
               initial="hidden"
               whileInView="visible"
@@ -48,7 +49,7 @@ export function NewsletterSection() {
             >
               {splitText(title).map((char, index) => (
                 <motion.span
-                  key={index}
+                  key={`${title}-${index}-${char}`}
                   variants={{
                     hidden: { opacity: 0 },
                     visible: { opacity: 1 },

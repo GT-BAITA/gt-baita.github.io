@@ -17,6 +17,7 @@ export function AboutSection() {
       >
         <div className="lg:max-w-[445px] min-h-[108px] lg:min-h-[190px] text-4xl md:text-5xl font-domine text-neutral-100 leading-none">
           <motion.h3
+            key={text}
             className="inline-block"
             initial="hidden"
             whileInView="visible"
@@ -31,7 +32,7 @@ export function AboutSection() {
           >
             {splitText(text).map((char, index) => (
               <motion.span
-                key={index}
+                key={`${text}-${index}-${char}`}
                 variants={{
                   hidden: { opacity: 0 },
                   visible: { opacity: 1 },
