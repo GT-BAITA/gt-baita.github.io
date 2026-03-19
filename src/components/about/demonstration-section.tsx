@@ -15,7 +15,8 @@ export function DemonstrationSection() {
         <div className="text-base leading-6 tracking-[-0.48px] font-geist text-neutral-600 max-w-[500px]">
           <p>Os vídeos abaixo mostram os fluxos implementados até agora.</p>
           <p>
-            Esta é uma versão em desenvolvimento — funcionalidades continuam evoluindo a cada dia.
+            Esta é uma versão em desenvolvimento — funcionalidades continuam
+            evoluindo a cada dia.
           </p>
         </div>
       </div>

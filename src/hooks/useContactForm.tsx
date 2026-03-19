@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from "react";
 
 type Errors = {
   name?: string;
@@ -28,12 +28,12 @@ export function useContactForm() {
     const newErrors: Errors = {};
 
     if (name.length < 3) {
-      newErrors.name = 'Digite seu nome completo.';
+      newErrors.name = "Digite seu nome completo.";
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      newErrors.email = 'Digite um email válido.';
+      newErrors.email = "Digite um email válido.";
     }
 
     setErrors(newErrors);
@@ -53,9 +53,9 @@ export function useContactForm() {
       const formData = new FormData(formRef.current);
 
       const response = await fetch(`https://formspree.io/f/${formId}`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
-        headers: { Accept: 'application/json' },
+        headers: { Accept: "application/json" },
       });
 
       const data = await response.json();
@@ -64,10 +64,10 @@ export function useContactForm() {
         formRef.current.reset();
         setErrors({});
       } else {
-        console.error('Erro Formspree:', data);
+        console.error("Erro Formspree:", data);
       }
     } catch (err) {
-      console.error('Erro ao enviar:', err);
+      console.error("Erro ao enviar:", err);
     } finally {
       setIsSubmitting(false);
     }
@@ -78,10 +78,10 @@ export function useContactForm() {
   }, []);
 
   useEffect(() => {
-    if (document.querySelector('#recaptcha-script')) return;
-    const script = document.createElement('script');
-    script.id = 'recaptcha-script';
-    script.src = 'https://www.google.com/recaptcha/api.js';
+    if (document.querySelector("#recaptcha-script")) return;
+    const script = document.createElement("script");
+    script.id = "recaptcha-script";
+    script.src = "https://www.google.com/recaptcha/api.js";
     script.async = true;
     script.defer = true;
     document.body.appendChild(script);

@@ -1,6 +1,6 @@
-import { LGPDSection } from '../sections/lgpd';
-import { NewsletterSection } from '../sections/newsletter-section';
-import { Header } from './header';
+import { LGPDSection } from "./components/lgpd";
+import { NewsletterSection } from "./components/newsletter-section";
+import { Header } from "./components/header";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

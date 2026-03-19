@@ -1,8 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
-import NotFound from './pages/not-found';
-import { Home } from './pages';
-import { AboutPage } from './pages/about';
-import { Layout } from './components/layout/layout';
+import { Routes, Route } from "react-router-dom";
+import NotFound from "./pages/not-found";
+import { Home } from "./pages";
+import { AboutPage } from "./pages/about";
+import { Layout } from "./components/layout/layout";
 
 function App() {
   return (

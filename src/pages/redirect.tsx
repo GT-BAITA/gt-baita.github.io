@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 function RandomRedirect() {
   useEffect(() => {
@@ -7,9 +7,9 @@ function RandomRedirect() {
     // https://t.maze.co/502054013 -> DRILL DOWN
 
     const urlWeights = [
-      { url: 'https://t.maze.co/501900855', weight: 1 },
-      { url: 'https://t.maze.co/501964025', weight: 2 },
-      { url: 'https://t.maze.co/502054013', weight: 2 },
+      { url: "https://t.maze.co/501900855", weight: 1 },
+      { url: "https://t.maze.co/501964025", weight: 2 },
+      { url: "https://t.maze.co/502054013", weight: 2 },
     ];
 
     const weightedPool: string[] = [];
@@ -23,7 +23,7 @@ function RandomRedirect() {
       const randomIndex = Math.floor(Math.random() * weightedPool.length);
       const selectedUrl = weightedPool[randomIndex];
 
-      if (selectedUrl.startsWith('http')) {
+      if (selectedUrl.startsWith("http")) {
         window.location.replace(selectedUrl);
       }
     }
