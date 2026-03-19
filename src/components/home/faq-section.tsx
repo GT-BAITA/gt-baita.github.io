@@ -48,7 +48,7 @@ export function FAQSection() {
 
   return (
     <section id="faq">
-      <div className="py-20 space-y-10">
+      <div className="lg:py-22 space-y-10">
         <h2 className="text-5xl md:text-6xl font-domine text-neutral-900 text-center">
           {t("faq.title")}
         </h2>

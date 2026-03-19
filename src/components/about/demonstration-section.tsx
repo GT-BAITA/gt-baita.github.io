@@ -1,6 +1,6 @@
 export function DemonstrationSection() {
   return (
-    <section id="demonstration" className="py-16 md:py-20 ">
+    <section id="demonstration" className="py-11 lg:py-22">
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
         <div className="flex flex-col gap-8">
           <p className="font-geist text-base uppercase tracking-[0.02em] text-neutral-500">

@@ -123,7 +123,7 @@ function CardFour() {
 
 export function FeaturesSection() {
   return (
-    <section className="pt-48 pb-[106px]">
+    <section className="pb-26 pt-24 lg:pt-48">
       <div
         className="
           max-w-[1440px] mx-auto 

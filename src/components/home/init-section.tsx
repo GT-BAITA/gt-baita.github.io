@@ -19,7 +19,8 @@ export function InitSection() {
     <>
       <section
         id="init"
-        className="pt-24 pb-12 md:pt-40 md:pb-50 lg:pb-0  mx-auto"
+        className="pt-49.5 pb-40 lg:pb-0"
+        // className="pt-24 pb-12 md:pt-40 md:pb-50 lg:pb-0  mx-auto"
       >
         <div className="flex items-center justify-center flex-col gap-6 text-center">
           <h2 className="text-5xl md:text-6xl lg:text-[64px] max-w-[900px] font-domine leading-none text-neutral-900">

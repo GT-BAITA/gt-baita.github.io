@@ -28,12 +28,12 @@ export function ManagementDecorations() {
 
   return (
     <>
-      <div className="absolute left-13 top-1">
+      <div className="hidden xl:block xl:absolute xl:left-13 xl:top-1">
         <p className="font-geist text-2xl  font-medium text-neutral-800">
           Painel de Gestão da Federação
         </p>
       </div>
-      <div className="absolute flex flex-col items-end gap-3 top-[49px] -left-[194px] ">
+      <div className="xl:absolute flex flex-col md:flex-row xl:flex-col xl:items-end gap-3 xl:top-[49px] xl:-left-[194px] ">
         {chips.map(({ icon: Icon, text, className }) => (
           <div
             key={text}
@@ -48,7 +48,7 @@ export function ManagementDecorations() {
         ))}
       </div>
 
-      <div className="absolute top-[8%] -right-[58%] z-10 ">
+      <div className="xl:absolute xl:top-[8%] xl:-right-[58%] hidden xl:block">
         <div className="bg-neutral-50 border border-neutral-400 text-center rounded-sm font-geist py-4 leading-4 tracking-[0.426px]">
           Cadastro e Gerenciamento de <br /> entidades na federação
         </div>

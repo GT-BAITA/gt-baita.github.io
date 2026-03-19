@@ -6,7 +6,7 @@ export function InfoSection() {
     "Hoje, a CAFe conecta mais 320 instituições — mas muitos usuários não sabem o que pode ser acessado com ela.";
 
   return (
-    <section id="info" className="pt-24 pb-12 md:pt-40  mx-auto">
+    <section id="info" className="py-11">
       <div
         data-dark
         className="bg-neutral-900 rounded-3xl p-8 md:p-16 flex flex-col items-center gap-8 text-center"

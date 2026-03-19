@@ -17,7 +17,7 @@ export function TeamSection() {
   ];
 
   return (
-    <section id="equipe" className="py-24">
+    <section id="equipe" className="py-22">
       <div className="relative rounded-[24px] overflow-hidden bg-neutral-900 text-white flex flex-col-reverse lg:flex-row">
         <img
           src="/svgs/ascii-globe.svg"

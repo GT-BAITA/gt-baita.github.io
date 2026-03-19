@@ -42,8 +42,8 @@ export function RoadmapSection() {
   const { t } = useTranslation();
 
   return (
-    <section id="roadmap" className="py-[88px]">
-      <div className="space-y-24">
+    <section id="roadmap" className="lg:py-22">
+      <div className="space-y-22">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <h2 className="text-5xl md:text-5xl font-domine text-neutral-900">
             {t("roadmap.title")}
