@@ -6,10 +6,7 @@ import {
 } from '@/components/ui/accordion';
 import { useTranslation } from 'react-i18next';
 
-function CustomAccordionItem(props: {
-  value: string;
-  children: React.ReactNode;
-}) {
+function CustomAccordionItem(props: { value: string; children: React.ReactNode }) {
   return (
     <AccordionItem
       value={props.value}
@@ -28,13 +25,7 @@ function CustomAccordionTrigger({ text }: { text: string }) {
   );
 }
 
-function CustomAccordionContent({
-  text,
-  children,
-}: {
-  text?: string;
-  children?: React.ReactNode;
-}) {
+function CustomAccordionContent({ text, children }: { text?: string; children?: React.ReactNode }) {
   return (
     <AccordionContent className="text-neutral-900 p-0 text-base font-[400] leading-5 px-4 pb-4 font-geist">
       {text}

@@ -20,16 +20,17 @@ function RoadmapCard({
           {title}
         </h3>
         <div className="space-y-2">
-          <p className="text-neutral-600 font-geist leading-snug max-w-[85%]">
-            {description}
-          </p>
+          <p className="text-neutral-600 font-geist leading-snug max-w-[85%]">{description}</p>
         </div>
       </div>
 
       <img
         src={image}
         alt={title}
-        className={twMerge("absolute bottom-0 right-0 h-auto object-contain block", image === "/svgs/portal-de-beneficios.svg" && "-bottom-6")}
+        className={twMerge(
+          'absolute bottom-0 right-0 h-auto object-contain block',
+          image === '/svgs/portal-de-beneficios.svg' && '-bottom-6'
+        )}
       />
     </div>
   );

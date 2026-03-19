@@ -12,10 +12,7 @@ import {
  *
  * Estende as propriedades de `DropdownMenu`, exceto `children`.
  */
-type CustomDropdownProps = Omit<
-  React.ComponentProps<typeof DropdownMenu>,
-  'children'
-> & {
+type CustomDropdownProps = Omit<React.ComponentProps<typeof DropdownMenu>, 'children'> & {
   /** Lista de opções que serão exibidas no dropdown. */
   options: {
     /** Valor único da opção. */
@@ -34,11 +31,7 @@ type CustomDropdownProps = Omit<
 /**
  * Componente genérico de menu suspenso.
  */
-export function CustomDropdown({
-  options,
-  children,
-  ...props
-}: CustomDropdownProps) {
+export function CustomDropdown({ options, children, ...props }: CustomDropdownProps) {
   return (
     <DropdownMenu modal={false} {...props}>
       <DropdownMenuTrigger asChild>

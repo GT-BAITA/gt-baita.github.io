@@ -1,10 +1,5 @@
 import { Button } from '@/components/ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { LanguageToggle } from './language-toggle';
@@ -23,12 +18,7 @@ type CustomHrefProps = {
   offset?: number;
 };
 
-export function CustomHref({
-  href,
-  className = '',
-  children,
-  offset = -100,
-}: CustomHrefProps) {
+export function CustomHref({ href, className = '', children, offset = -100 }: CustomHrefProps) {
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     scrollToSection(href, offset);

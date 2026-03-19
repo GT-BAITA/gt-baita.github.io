@@ -7,13 +7,13 @@ function RandomRedirect() {
     // https://t.maze.co/502054013 -> DRILL DOWN
 
     const urlWeights = [
-      { url: "https://t.maze.co/501900855", weight: 1 },
-      { url: "https://t.maze.co/501964025", weight: 2 },
-      { url: "https://t.maze.co/502054013", weight: 2 } 
+      { url: 'https://t.maze.co/501900855', weight: 1 },
+      { url: 'https://t.maze.co/501964025', weight: 2 },
+      { url: 'https://t.maze.co/502054013', weight: 2 },
     ];
 
     const weightedPool: string[] = [];
-    urlWeights.forEach(item => {
+    urlWeights.forEach((item) => {
       for (let i = 0; i < item.weight; i++) {
         weightedPool.push(item.url);
       }
@@ -27,7 +27,6 @@ function RandomRedirect() {
         window.location.replace(selectedUrl);
       }
     }
-
   }, []);
 
   return <h3>Redirecionando...</h3>;

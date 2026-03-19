@@ -33,12 +33,8 @@ export function TeamSection() {
               key={index}
               className="bg-neutral-900 rounded-2xl p-6 flex flex-col justify-center shadow-inner hover:bg-neutral-800 transition-colors cursor-pointer"
             >
-              <h4 className="font-geist text-base font-normal">
-                {member.name}
-              </h4>
-              <p className="text-neutral-300 text-[12px] font-geist">
-                {member.role}
-              </p>
+              <h4 className="font-geist text-base font-normal">{member.name}</h4>
+              <p className="text-neutral-300 text-[12px] font-geist">{member.role}</p>
             </div>
           ))}
         </div>

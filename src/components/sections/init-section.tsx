@@ -1,14 +1,10 @@
 import { Button } from '@/components/ui/button';
 import { ChevronRight } from 'lucide-react';
-import { useScroll, useTransform } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { AboutSection } from './about-section';
 
 export function InitSection() {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, -50]);
-
   const { t } = useTranslation();
 
   const handleScrollToAbout = () => {
@@ -21,14 +17,12 @@ export function InitSection() {
 
   return (
     <>
-      <section id="init" className="pt-24 pb-12 md:pt-40 md:pb-50 lg:pb-10 mx-auto">
+      <section id="init" className="pt-24 pb-12 md:pt-40 md:pb-50 lg:pb-0  mx-auto">
         <div className="flex items-center justify-center flex-col gap-6 text-center">
           <h2 className="text-5xl md:text-6xl lg:text-[64px] max-w-[900px] font-domine leading-none text-neutral-900">
             {t('init.title')}
           </h2>
-          <p className="text-xl text-neutral-500 leading-tight font-geist">
-            {t('init.subtitle')}
-          </p>
+          <p className="text-xl text-neutral-500 leading-tight font-geist">{t('init.subtitle')}</p>
 
           <Button
             className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg w-[139px]"
@@ -37,7 +31,6 @@ export function InitSection() {
             <Link to="/about" className="flex items-center justify-center gap-1">
               {t('init.cta')} <ChevronRight className="w-4 h-4" />
             </Link>
-
           </Button>
           <div className="relative hidden w-full overflow-x-clip lg:flex items-center justify-center">
             <img
@@ -49,7 +42,6 @@ export function InitSection() {
               <AboutSection />
             </div>
           </div>
-
         </div>
       </section>
 

@@ -1,14 +1,14 @@
-export function PillarsSection() {
+export function DemonstrationSection() {
   return (
     <section id="demonstration" className="py-16 md:py-20 ">
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
         <div className="flex flex-col gap-8">
           <p className="font-geist text-base uppercase tracking-[0.02em] text-neutral-500">
-            O que estamos construindo
+            Demonstração — MVP atual
           </p>
 
           <h2 className="font-domine text-4xl leading-10 md:text-5xl md:leading-12 font-normal text-neutral-900 max-w-[536px]">
-            Três portais, um ecossistema.
+            Veja o Painel de Gestão em funcionamento.
           </h2>
         </div>
 

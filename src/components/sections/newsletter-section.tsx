@@ -11,28 +11,13 @@ import { useTranslation } from 'react-i18next';
 export function NewsletterSection() {
   const { t } = useTranslation();
 
-  const {
-    formRef,
-    siteKey,
-    isSubmitting,
-    isSucceeded,
-    formId,
-    goBack,
-    errors,
-  } = useContactForm();
+  const { formRef, siteKey, isSubmitting, isSucceeded, formId, goBack, errors } = useContactForm();
 
   const title = t('newsletter.title');
 
   return (
-    <section
-      id="newsletter"
-      className="px-6 md:px-24 py-24 md:py-48 relative bg-neutral-900"
-    >
-      <script
-        src="https://www.google.com/recaptcha/api.js"
-        async
-        defer
-      ></script>
+    <section id="newsletter" className="px-6 md:px-24 py-24 md:py-48 relative bg-neutral-900">
+      <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
       <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-12">
         <div className="space-y-6 max-w-[582px]">
@@ -62,9 +47,7 @@ export function NewsletterSection() {
             </motion.h2>
           </div>
 
-          <p className="text-neutral-300 font-geist">
-            {t('newsletter.description')}
-          </p>
+          <p className="text-neutral-300 font-geist">{t('newsletter.description')}</p>
         </div>
 
         <div className="w-full max-w-[519px] min-h-[460px] flex items-center justify-center">
@@ -74,13 +57,8 @@ export function NewsletterSection() {
               <h2 className="text-4xl md:text-5xl font-domine text-neutral-100 mb-2">
                 {t('newsletter.successTitle')}
               </h2>
-              <p className="text-neutral-300 font-geist">
-                {t('newsletter.successMessage')}
-              </p>
-              <Button
-                onClick={goBack}
-                className="bg-neutral-950 text-white rounded-lg"
-              >
+              <p className="text-neutral-300 font-geist">{t('newsletter.successMessage')}</p>
+              <Button onClick={goBack} className="bg-neutral-950 text-white rounded-lg">
                 {t('newsletter.goBack')}
               </Button>
             </div>

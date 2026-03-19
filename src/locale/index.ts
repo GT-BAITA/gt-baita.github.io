@@ -1,9 +1,9 @@
-import i18n from "i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import { initReactI18next } from "react-i18next";
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import { initReactI18next } from 'react-i18next';
 
-import en from "./en-translation.json";
-import pt from "./pt-translation.json";
+import en from './en-translation.json';
+import pt from './pt-translation.json';
 
 i18n
   .use(LanguageDetector)
@@ -13,11 +13,11 @@ i18n
       pt: { translation: pt },
       en: { translation: en },
     },
-    fallbackLng: "pt",
+    fallbackLng: 'pt',
     interpolation: { escapeValue: false },
     detection: {
-      order: ["localStorage", "navigator", "htmlTag"],
-      caches: ["localStorage"],
+      order: ['localStorage', 'navigator', 'htmlTag'],
+      caches: ['localStorage'],
     },
   });
 
