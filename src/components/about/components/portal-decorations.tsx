@@ -19,7 +19,7 @@ export function PortalDecorations({
     <>
       <div
         className={twMerge(
-          "xl:absolute hidden lg:flex",
+          "xl:absolute hidden xl:flex",
           side === "left" ? "left-13" : "right-13",
           align
         )}
