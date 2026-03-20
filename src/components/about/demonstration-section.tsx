@@ -89,9 +89,9 @@ export function DemonstrationSection() {
                       <iframe
                         width="100%"
                         height="100%"
-                        src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+                        src={`https://www.youtube.com/embed/${video.id}`}
                         title={video.title}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowFullScreen
                         className="h-full w-full"
                       />

@@ -24,7 +24,7 @@ export function HeroSection() {
       </section>
 
       <motion.div
-        className="absolute right-0 top-8 -z-1 hidden opacity-50 lg:flex justify-end"
+        className="absolute right-0 top-8 -z-1 hidden opacity-50 md:flex justify-end"
         style={{ y }}
       >
         <img

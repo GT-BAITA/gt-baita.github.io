@@ -13,16 +13,18 @@ export function PillarsSection() {
       src: "/svgs/portal-1.svg",
       alt: t("aboutPillars.management.alt"),
       positionClassName: "left-1/2 top-[-33%] -translate-x-1/2",
-      cardClassName: "w-[min(94vw,28rem)] md:w-[min(58vw,40rem)]",
+      cardClassName:
+        "w-[min(94vw,28rem)] md:w-[min(64vw,44rem)] lg:w-[min(76vw,52rem)] xl:w-[min(58vw,40rem)]",
       mobileCardClassName: "h-auto w-full max-w-none",
     },
     {
       id: "benefits",
       src: "/svgs/portal-2.svg",
       alt: t("aboutPillars.benefits.alt"),
-      positionClassName: "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-12%]",
+      positionClassName:
+        "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-12%]",
       cardClassName:
-        "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(43vw,29rem)] md:w-[min(58vw,39rem)]",
+        "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(48vw,32rem)] md:w-[min(64vw,43rem)] lg:h-[min(52vw,35rem)] lg:w-[min(78vw,52rem)] xl:h-[min(43vw,29rem)] xl:w-[min(58vw,39rem)]",
       mobileCardClassName: "h-auto w-full max-w-none object-contain",
     },
     {
@@ -31,7 +33,7 @@ export function PillarsSection() {
       alt: t("aboutPillars.wayf.alt"),
       positionClassName: "left-[-6%] top-[64%] -translate-y-1/2 md:left-[-12%]",
       cardClassName:
-        "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(43vw,29rem)] md:w-[min(58vw,39rem)]",
+        "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(48vw,32rem)] md:w-[min(64vw,43rem)] lg:h-[min(52vw,35rem)] lg:w-[min(78vw,52rem)] xl:h-[min(43vw,29rem)] xl:w-[min(58vw,39rem)]",
       mobileCardClassName: "h-auto w-full max-w-none object-contain",
     },
   ];
@@ -62,12 +64,8 @@ export function PillarsSection() {
           transition={{ duration: 0.7, ease: "easeOut", delay: 0.08 }}
           viewport={viewportOnce}
         >
-          <p>
-            {t("aboutPillars.description1")}
-          </p>
-          <p>
-            {t("aboutPillars.description2")}
-          </p>
+          <p>{t("aboutPillars.description1")}</p>
+          <p>{t("aboutPillars.description2")}</p>
         </motion.div>
       </div>
 
@@ -144,7 +142,7 @@ export function PillarsSection() {
         {portals.map((portal, index) => (
           <motion.div
             key={portal.id}
-            className="mx-auto flex w-full max-w-[36rem] flex-col "
+            className="mx-auto flex w-full max-w-[36rem] flex-col md:max-w-[44rem] lg:max-w-[52rem]"
             initial={{
               opacity: 0,
               y: 18,
