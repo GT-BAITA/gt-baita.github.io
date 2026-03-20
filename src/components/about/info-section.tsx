@@ -1,9 +1,10 @@
 import { splitText } from "@/utils/split-text";
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 
 export function InfoSection() {
-  const text =
-    "Hoje, a CAFe conecta mais 320 instituições — mas muitos usuários não sabem o que pode ser acessado com ela.";
+  const { t } = useTranslation();
+  const text = t("aboutInfo.title");
 
   return (
     <section id="info" className="py-11">
@@ -42,9 +43,7 @@ export function InfoSection() {
         </div>
 
         <p className="text-neutral-200 font-geist max-w-[957px]">
-          Os serviços disponíveis possuem pouca visibilidade, e a federação é
-          muitas vezes vista apenas como uma porta de entrada para sistemas da
-          RNP. Ela pode ser muito mais do que isso.
+          {t("aboutInfo.description")}
         </p>
       </div>
     </section>

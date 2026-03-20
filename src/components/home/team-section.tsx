@@ -4,16 +4,56 @@ export function TeamSection() {
   const { t } = useTranslation();
 
   const members = [
-    { name: "Frederico Schardong", role: t("team.roles.coordinator") },
-    { name: "Ricardo Custódio", role: t("team.roles.viceCoordinator") },
-    { name: "Brendon Vicente", role: t("team.roles.innovationAssistant") },
-    { name: "Eduardo Perottoni", role: t("team.roles.innovationAssistant") },
-    { name: "Giulia Manno", role: t("team.roles.productDesigner") },
-    { name: "Álison Batista", role: t("team.roles.developerM") },
-    { name: "Charlie Terra", role: t("team.roles.developerF") },
-    { name: "Rayane Melo", role: t("team.roles.developerF") },
-    { name: "Leonardo Passos", role: t("team.roles.developerM") },
-    { name: "Raissa Lima", role: t("team.roles.developerF") },
+    {
+      name: "Frederico Schardong",
+      role: t("team.roles.coordinator"),
+      portfolioUrl: "https://frederico.phd/",
+    },
+    {
+      name: "Ricardo Custódio",
+      role: t("team.roles.viceCoordinator"),
+      portfolioUrl: "https://rfcustodio.github.io/",
+    },
+    {
+      name: "Brendon Vicente",
+      role: t("team.roles.innovationAssistant"),
+      portfolioUrl: "https://github.com/Bredstone",
+    },
+    {
+      name: "Eduardo Perottoni",
+      role: t("team.roles.innovationAssistant"),
+      portfolioUrl: "https://github.com/eduperottoni",
+    },
+    {
+      name: "Giulia Manno",
+      role: t("team.roles.productDesigner"),
+      portfolioUrl: "https://giu-manno.github.io/portfolio/",
+    },
+    {
+      name: "Leonardo Passos",
+      role: t("team.roles.developerM"),
+      portfolioUrl: "https://github.com/passosleo",
+    },
+    {
+      name: "Rayane Melo",
+      role: t("team.roles.developerF"),
+      portfolioUrl: "https://github.com/rayanemelo",
+    },
+    {
+      name: "Álison Batista",
+      role: t("team.roles.developerM"),
+      portfolioUrl: "https://github.com/alisonnRB",
+    },
+    {
+      name: "Charlie Terra",
+      role: t("team.roles.developerF"),
+      portfolioUrl: "https://github.com/hext04d",
+    },
+    {
+      name: "Raissa Lima",
+      role: t("team.roles.developerF"),
+      portfolioUrl: "https://github.com/theraissa",
+    },
   ];
 
   return (
@@ -29,8 +69,11 @@ export function TeamSection() {
 
         <div className="w-full lg:w-2/3 p-8 lg:p-14 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 z-10">
           {members.map((member, index) => (
-            <div
+            <a
               key={index}
+              href={member.portfolioUrl}
+              target="_blank"
+              rel="noreferrer"
               className="bg-neutral-900 rounded-2xl p-6 flex flex-col justify-center shadow-inner hover:bg-neutral-800 transition-colors cursor-pointer"
             >
               <h4 className="font-geist text-base font-normal">
@@ -39,7 +82,7 @@ export function TeamSection() {
               <p className="text-neutral-300 text-[12px] font-geist">
                 {member.role}
               </p>
-            </div>
+            </a>
           ))}
         </div>
 

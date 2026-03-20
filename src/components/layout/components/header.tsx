@@ -9,7 +9,7 @@ import { Menu } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { LanguageToggle } from "./language-toggle";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 type NavItem = {
   href: string;
@@ -29,8 +29,17 @@ export function CustomHref({
   children,
   offset = -100,
 }: CustomHrefProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
+
+    if (location.pathname !== "/") {
+      navigate(`/${href}`);
+      return;
+    }
+
     scrollToSection(href, offset);
   };
 
@@ -55,31 +64,50 @@ function scrollToSection(href: string, offset = -100) {
 }
 
 function ScrollToSectionOnLoad() {
+  const location = useLocation();
+
   useEffect(() => {
-    const hash = window.location.hash;
-    if (hash) scrollToSection(hash);
-  }, []);
+    if (!location.hash) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      scrollToSection(location.hash);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash]);
   return null;
 }
 
 function NavLinks({ items }: { items: NavItem[] }) {
   return (
     <>
-      {items.map((item) => (
-        <CustomHref key={item.href} href={item.href}>
-          {item.label}
-        </CustomHref>
-      ))}
+      {items.map((item) =>
+        item.href.startsWith("#") ? (
+          <CustomHref key={item.href} href={item.href}>
+            {item.label}
+          </CustomHref>
+        ) : (
+          <Link
+            key={item.href}
+            to={item.href}
+            className="text-neutral-700 hover:text-neutral-900 transition-all duration-300 font-geist hover:scale-[1.05]"
+          >
+            {item.label}
+          </Link>
+        )
+      )}
     </>
   );
 }
 
 export function Header() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const navRef = useRef<HTMLDivElement | null>(null);
 
   const navItems: NavItem[] = [
-    { href: "#sobre", label: t("header.nav-1") },
+    { href: "/sobre", label: t("header.nav-1") },
     { href: "#roadmap", label: t("header.nav-2") },
     { href: "#equipe", label: t("header.nav-3") },
     { href: "#faq", label: t("header.nav-4") },
@@ -89,6 +117,10 @@ export function Header() {
     <Button
       onClick={(e) => {
         e.preventDefault();
+        if (location.pathname !== "/") {
+          navigate("/#newsletter");
+          return;
+        }
         scrollToSection("#newsletter");
       }}
       className="bg-neutral-900 text-white rounded-lg font-geist transition-all duration-300 hover:bg-neutral-800 hover:shadow-lg"
@@ -101,7 +133,7 @@ export function Header() {
     <h1
       onClick={(e) => {
         e.preventDefault();
-        scrollToSection("#init");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }}
       className="text-2xl font-bold font-domine text-neutral-900 transition hover:opacity-90 cursor-pointer"
     >

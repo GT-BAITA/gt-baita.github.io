@@ -1,36 +1,38 @@
 import { CoffeeIcon, GraduationCapIcon, WrenchIcon } from "lucide-react";
+import { Trans, useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
 
 export function ManagementDecorations() {
+  const { t } = useTranslation();
   const chips = [
     {
       icon: CoffeeIcon,
-      text: "Gestores da CAFe/RNP",
+      text: t("aboutManagement.chip1"),
       className: "border-purple-600 bg-purple-50 text-purple-500",
     },
     {
       icon: WrenchIcon,
-      text: "Técnicos de TI e Sistemas",
+      text: t("aboutManagement.chip2"),
       className: "border-blue-200 bg-blue-50 text-blue-500",
     },
     {
       icon: GraduationCapIcon,
-      text: "Professores e Pesquisadores",
+      text: t("aboutManagement.chip3"),
       className: "border-rose-200 bg-rose-50 text-rose-500",
     },
   ];
 
   const boxes = [
-    "Organizações",
-    "Identity Providers (IdP)",
-    "Service Providers (SP)",
+    t("aboutManagement.box1"),
+    t("aboutManagement.box2"),
+    t("aboutManagement.box3"),
   ];
 
   return (
     <>
       <div className="hidden xl:block xl:absolute xl:left-13 xl:top-1">
         <p className="font-geist text-2xl  font-medium text-neutral-800">
-          Painel de Gestão da Federação
+          {t("aboutManagement.title")}
         </p>
       </div>
       <div className="xl:absolute flex flex-col md:flex-row xl:flex-col xl:items-end gap-3 xl:top-[49px] xl:-left-[194px] ">
@@ -50,7 +52,10 @@ export function ManagementDecorations() {
 
       <div className="xl:absolute xl:top-[8%] xl:-right-[58%] hidden xl:block">
         <div className="bg-neutral-50 border border-neutral-400 text-center rounded-sm font-geist py-4 leading-4 tracking-[0.426px]">
-          Cadastro e Gerenciamento de <br /> entidades na federação
+          <Trans
+            i18nKey="aboutManagement.description"
+            components={{ br: <br /> }}
+          />
         </div>
         <div className="mt-2 flex gap-3 items-center ">
           {boxes.map((box) => (

@@ -7,21 +7,9 @@ import { AboutSection } from "./about-section";
 export function InitSection() {
   const { t } = useTranslation();
 
-  const handleScrollToAbout = () => {
-    const section = document.querySelector("#sobre");
-    if (section) {
-      const y = section.getBoundingClientRect().top + window.pageYOffset - 100;
-      window.scrollTo({ top: y, behavior: "smooth" });
-    }
-  };
-
   return (
     <>
-      <section
-        id="init"
-        className="pt-49.5 pb-40 lg:pb-0"
-        // className="pt-24 pb-12 md:pt-40 md:pb-50 lg:pb-0  mx-auto"
-      >
+      <section id="init" className="pt-49.5 pb-40 lg:pb-0">
         <div className="flex items-center justify-center flex-col gap-6 text-center">
           <h2 className="text-5xl md:text-6xl lg:text-[64px] max-w-[900px] font-domine leading-none text-neutral-900">
             {t("init.title")}
@@ -30,13 +18,10 @@ export function InitSection() {
             {t("init.subtitle")}
           </p>
 
-          <Button
-            className="bg-zinc-950 text-white hover:bg-neutral-900 rounded-lg w-[139px]"
-            onClick={handleScrollToAbout}
-          >
+          <Button className="bg-zinc-950 text-white hover:bg-neutral-900 p-0 rounded-lg ">
             <Link
-              to="/about"
-              className="flex items-center justify-center gap-1"
+              to="/sobre"
+              className="flex items-center w-[139px] h-full rounded-lg justify-center gap-1"
             >
               {t("init.cta")} <ChevronRight className="w-4 h-4" />
             </Link>

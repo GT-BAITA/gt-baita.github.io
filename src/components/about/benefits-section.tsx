@@ -1,27 +1,26 @@
 import { motion } from "motion/react";
-
-const benefits = [
-  {
-    number: "01",
-    title: "Governança Federativa",
-    description:
-      "Um sistema de gestão que facilita o onboarding e a administração de provedores de identidade e serviço.",
-  },
-  {
-    number: "02",
-    title: "Acesso Simplificado",
-    description:
-      "Um novo WAYF que vai além do login: normaliza identidades e garante consistência entre diferentes sistemas e provedores.",
-  },
-  {
-    number: "03",
-    title: "Descoberta de Serviços",
-    description:
-      "Um portal que reúne serviços da sua instituição e da RNP em um único lugar, com autenticação federada integrada.",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export function BenefitsSection() {
+  const { t } = useTranslation();
+  const benefits = [
+    {
+      number: "01",
+      title: t("aboutBenefits.card1.title"),
+      description: t("aboutBenefits.card1.description"),
+    },
+    {
+      number: "02",
+      title: t("aboutBenefits.card2.title"),
+      description: t("aboutBenefits.card2.description"),
+    },
+    {
+      number: "03",
+      title: t("aboutBenefits.card3.title"),
+      description: t("aboutBenefits.card3.description"),
+    },
+  ];
+
   return (
     <section id="benefits" className="pb-11">
       <div className="flex flex-col gap-6">
@@ -32,7 +31,7 @@ export function BenefitsSection() {
           transition={{ duration: 0.55, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }}
         >
-          Benefícios da proposta
+          {t("aboutBenefits.eyebrow")}
         </motion.p>
 
         <div className="grid gap-6 lg:grid-cols-3">

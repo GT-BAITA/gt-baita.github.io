@@ -1,39 +1,41 @@
 import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
 import { ManagementDecorations } from "./components/management-decorations";
 import { PortalDecorations } from "./components/portal-decorations";
 
 const viewportOnce = { once: true, amount: 0.2 };
 
-const portals = [
-  {
-    id: "management",
-    src: "/svgs/portal-1.svg",
-    alt: "Portal de gestão da federação",
-    positionClassName: "left-1/2 top-[-33%] -translate-x-1/2",
-    cardClassName: "w-[min(94vw,28rem)] md:w-[min(58vw,40rem)]",
-    mobileCardClassName: "h-auto w-full max-w-none",
-  },
-  {
-    id: "benefits",
-    src: "/svgs/portal-2.svg",
-    alt: "Portal de autenticação e descoberta",
-    positionClassName: "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-12%]",
-    cardClassName:
-      "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(43vw,29rem)] md:w-[min(58vw,39rem)]",
-    mobileCardClassName: "h-auto w-full max-w-none object-contain",
-  },
-  {
-    id: "wayf",
-    src: "/svgs/portal-3.svg",
-    alt: "Portal de benefícios",
-    positionClassName: "left-[-6%] top-[64%] -translate-y-1/2 md:left-[-12%]",
-    cardClassName:
-      "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(43vw,29rem)] md:w-[min(58vw,39rem)]",
-    mobileCardClassName: "h-auto w-full max-w-none object-contain",
-  },
-];
-
 export function PillarsSection() {
+  const { t } = useTranslation();
+  const portals = [
+    {
+      id: "management",
+      src: "/svgs/portal-1.svg",
+      alt: t("aboutPillars.management.alt"),
+      positionClassName: "left-1/2 top-[-33%] -translate-x-1/2",
+      cardClassName: "w-[min(94vw,28rem)] md:w-[min(58vw,40rem)]",
+      mobileCardClassName: "h-auto w-full max-w-none",
+    },
+    {
+      id: "benefits",
+      src: "/svgs/portal-2.svg",
+      alt: t("aboutPillars.benefits.alt"),
+      positionClassName: "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-12%]",
+      cardClassName:
+        "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(43vw,29rem)] md:w-[min(58vw,39rem)]",
+      mobileCardClassName: "h-auto w-full max-w-none object-contain",
+    },
+    {
+      id: "wayf",
+      src: "/svgs/portal-3.svg",
+      alt: t("aboutPillars.wayf.alt"),
+      positionClassName: "left-[-6%] top-[64%] -translate-y-1/2 md:left-[-12%]",
+      cardClassName:
+        "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(43vw,29rem)] md:w-[min(58vw,39rem)]",
+      mobileCardClassName: "h-auto w-full max-w-none object-contain",
+    },
+  ];
+
   return (
     <section id="pillars" className="overflow-visible py-11 pb-12">
       <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
@@ -45,11 +47,11 @@ export function PillarsSection() {
           viewport={viewportOnce}
         >
           <p className="font-geist text-base uppercase tracking-[0.02em] text-neutral-500">
-            O que estamos construindo
+            {t("aboutPillars.eyebrow")}
           </p>
 
           <h2 className="xl:max-w-[536px] font-domine text-4xl leading-10 font-normal text-neutral-900 md:text-5xl md:leading-12">
-            Três portais, um ecossistema.
+            {t("aboutPillars.title")}
           </h2>
         </motion.div>
 
@@ -61,13 +63,10 @@ export function PillarsSection() {
           viewport={viewportOnce}
         >
           <p>
-            O círculo central representa o barramento de interoperabilidade que
-            conecta gestão, descoberta e acesso em uma única experiência
-            federada.
+            {t("aboutPillars.description1")}
           </p>
           <p>
-            Cada portal orbita o mesmo núcleo, reforçando visualmente a ideia de
-            um ecossistema integrado.
+            {t("aboutPillars.description2")}
           </p>
         </motion.div>
       </div>
@@ -77,7 +76,7 @@ export function PillarsSection() {
         <div className="relative mx-auto aspect-[16/11] w-full max-w-[1320px]">
           <motion.img
             src="/svgs/circle.svg"
-            alt="Círculo central do ecossistema"
+            alt={t("aboutPillars.circleAlt")}
             className="absolute left-1/2 top-1/2 z-0 w-[50%] min-w-[280px] max-w-[620px] -translate-x-1/2 -translate-y-1/2 opacity-70"
             initial={{ opacity: 0, scale: 0.96 }}
             whileInView={{ opacity: 0.7, scale: 1 }}
@@ -96,15 +95,15 @@ export function PillarsSection() {
                 {portal.id === "benefits" && (
                   <PortalDecorations
                     side="right"
-                    title="Portal de Benefícios"
-                    description="Facilita a busca e acesso a serviços de instituições federadas"
+                    title={t("aboutPillars.benefits.title")}
+                    description={t("aboutPillars.benefits.description")}
                   />
                 )}
                 {portal.id === "wayf" && (
                   <PortalDecorations
                     side="left"
-                    title="Portal Where Are You From (WAYF)"
-                    description="Permite a oferta de IdPs e atua na comercialização da identidade do usuário"
+                    title={t("aboutPillars.wayf.title")}
+                    description={t("aboutPillars.wayf.description")}
                   />
                 )}
                 <img
@@ -135,11 +134,11 @@ export function PillarsSection() {
         >
           <img
             src="/svgs/icon-cafe.svg"
-            alt="Ícone da CAFe"
+            alt={t("aboutPillars.iconAlt")}
             className="w-17 h-16"
           />
           <p className="text-[#B3B3B3] text-center text-3xl  tracking-[-1.186px] font-bold font-geist">
-            Barramento de Interoperabilidade
+            {t("aboutPillars.interoperability")}
           </p>
         </motion.div>
         {portals.map((portal, index) => (
@@ -179,8 +178,8 @@ export function PillarsSection() {
               <div className="w-full overflow-hidden">
                 <PortalDecorations
                   side="right"
-                  title="Portal de Benefícios"
-                  description="Facilita a busca e acesso a serviços de instituições federadas"
+                  title={t("aboutPillars.benefits.title")}
+                  description={t("aboutPillars.benefits.description")}
                 />
               </div>
             )}
@@ -188,8 +187,8 @@ export function PillarsSection() {
               <div className="w-full overflow-hidden">
                 <PortalDecorations
                   side="left"
-                  title="Portal Where Are You From (WAYF)"
-                  description="Permite a oferta de IdPs e atua na comercialização da identidade do usuário"
+                  title={t("aboutPillars.wayf.title")}
+                  description={t("aboutPillars.wayf.description")}
                 />
               </div>
             )}
