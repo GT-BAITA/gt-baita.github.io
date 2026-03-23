@@ -9,7 +9,7 @@ export function Home() {
   return (
     <>
       <InitSection />
-      <div className="lg:hidden visible">
+      <div className="md:hidden visible">
         <AboutSection />
       </div>
       <FeaturesSection />

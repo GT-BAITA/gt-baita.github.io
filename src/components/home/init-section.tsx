@@ -26,30 +26,19 @@ export function InitSection() {
               {t("init.cta")} <ChevronRight className="w-4 h-4" />
             </Link>
           </Button>
-          <div className="relative hidden w-full overflow-x-clip lg:flex items-center justify-center">
+          <div className="relative hidden w-full overflow-x-clip md:flex flex-col items-center">
             <img
               src="/svgs/management-system.svg"
               alt="Management System Image"
               className="mt-10 block h-auto w-full max-w-[1062px]"
             />
-            <div className="absolute -bottom-[36px]">
+
+            <div className="lg:-mt-85 md:-mt-70 w-full flex justify-center">
               <AboutSection />
             </div>
           </div>
         </div>
       </section>
-
-      {/* <motion.div
-        className="absolute right-0 top-8 -z-[1] hidden opacity-50 lg:flex justify-end"
-        style={{ y }}
-      >
-        <img
-          src="/svgs/ascii-brasil.svg"
-          alt="Hero Image"
-          className="w-[80%] h-auto"
-        />
-
-      </motion.div> */}
     </>
   );
 }
