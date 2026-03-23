@@ -50,18 +50,18 @@ export function ManagementDecorations() {
         ))}
       </div>
 
-      <div className="xl:absolute xl:top-[8%] xl:-right-[58%] hidden xl:block">
-        <div className="bg-neutral-50 border border-neutral-400 text-center rounded-sm font-geist py-4 leading-4 tracking-[0.426px]">
+      <div className="xl:absolute xl:top-[8%] xl:-right-[46%] hidden xl:block xl:max-w-[21rem]">
+        <div className="bg-neutral-50 border text-sm border-neutral-400 text-center rounded-sm font-geist py-4 leading-4 tracking-[0.426px]">
           <Trans
             i18nKey="aboutManagement.description"
             components={{ br: <br /> }}
           />
         </div>
-        <div className="mt-2 flex gap-3 items-center ">
+        <div className="mt-2 flex gap-2 items-center ">
           {boxes.map((box) => (
             <div
               key={box}
-              className="bg-neutral-50 border border-neutral-400 text-center rounded-sm font-geist max-w-[135px] w-full leading-4 tracking-[0.426px] h-[64px] flex items-center justify-center"
+              className="bg-neutral-50 border border-neutral-400 text-sm px-1 text-center rounded-sm font-geist max-w-[135px] w-full leading-4 tracking-[0.426px] h-[64px] flex items-center justify-center"
             >
               {box}
             </div>

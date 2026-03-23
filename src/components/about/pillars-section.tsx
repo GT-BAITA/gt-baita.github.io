@@ -22,7 +22,7 @@ export function PillarsSection() {
       src: "/svgs/portal-2.svg",
       alt: t("aboutPillars.benefits.alt"),
       positionClassName:
-        "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-12%]",
+        "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-7%]",
       cardClassName:
         "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(48vw,32rem)] md:w-[min(64vw,43rem)] lg:h-[min(52vw,35rem)] lg:w-[min(78vw,52rem)] xl:h-[min(43vw,29rem)] xl:w-[min(58vw,39rem)]",
       mobileCardClassName: "h-auto w-full max-w-none object-contain",
@@ -31,7 +31,7 @@ export function PillarsSection() {
       id: "wayf",
       src: "/svgs/portal-3.svg",
       alt: t("aboutPillars.wayf.alt"),
-      positionClassName: "left-[-6%] top-[64%] -translate-y-1/2 md:left-[-12%]",
+      positionClassName: "left-[-6%] top-[64%] -translate-y-1/2 md:left-[-7%]",
       cardClassName:
         "h-[min(78vw,21rem)] w-[min(96vw,28rem)] object-contain md:h-[min(48vw,32rem)] md:w-[min(64vw,43rem)] lg:h-[min(52vw,35rem)] lg:w-[min(78vw,52rem)] xl:h-[min(43vw,29rem)] xl:w-[min(58vw,39rem)]",
       mobileCardClassName: "h-auto w-full max-w-none object-contain",
