@@ -35,32 +35,30 @@ export function NewsletterSection() {
       ></script>
 
       <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-between items-center gap-12">
-        <div className="space-y-6 max-w-[582px]">
-          <div className="min-h-[140px]">
-            <motion.h2
-              key={title}
-              className="text-5xl md:text-6xl font-domine text-neutral-100 leading-none inline-block"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.5 }}
-              variants={{
-                visible: { transition: { staggerChildren: 0.04 } },
-              }}
-            >
-              {splitText(title).map((char, index) => (
-                <motion.span
-                  key={`${title}-${index}-${char}`}
-                  variants={{
-                    hidden: { opacity: 0 },
-                    visible: { opacity: 1 },
-                  }}
-                  transition={{ duration: 0.05, ease: "linear" }}
-                >
-                  {char}
-                </motion.span>
-              ))}
-            </motion.h2>
-          </div>
+        <div className="space-y-8 md:space-y-10 max-w-[582px]">
+          <motion.h2
+            key={title}
+            className="text-5xl md:text-6xl font-domine text-neutral-100 leading-none inline-block"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.5 }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.04 } },
+            }}
+          >
+            {splitText(title).map((char, index) => (
+              <motion.span
+                key={`${title}-${index}-${char}`}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: { opacity: 1 },
+                }}
+                transition={{ duration: 0.05, ease: "linear" }}
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.h2>
 
           <p className="text-neutral-300 font-geist">
             {t("newsletter.description")}

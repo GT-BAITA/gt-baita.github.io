@@ -33,7 +33,7 @@ export function InitSection() {
               className="mt-10 block h-auto w-full max-w-[1062px]"
             />
 
-            <div className="lg:-mt-85 md:-mt-70 w-full flex justify-center">
+            <div className="lg:-mt-80 md:-mt-70 w-full flex justify-center">
               <AboutSection />
             </div>
           </div>

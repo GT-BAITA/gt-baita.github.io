@@ -9,7 +9,7 @@ export function HeroSection() {
 
   return (
     <>
-      <section id="init" className="pt-49.5 pb-40">
+      <section id="init" className="pt-32 pb-11 md:pt-49.5 md:pb-40">
         <div className="flex items-start flex-col gap-10 max-w-200">
           <p className="uppercase text-neutral-500 text-base font-geist">
             {t("aboutHero.eyebrow")}

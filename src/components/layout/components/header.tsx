@@ -5,8 +5,9 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LanguageToggle } from "./language-toggle";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -105,6 +106,8 @@ export function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const navRef = useRef<HTMLDivElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const navItems: NavItem[] = [
     { href: "/sobre", label: t("header.nav-1") },
@@ -140,14 +143,68 @@ export function Header() {
       <Link to="/">{t("header.brand")}</Link>
     </h1>
   );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+
+    const syncViewport = () => {
+      const mobile = mediaQuery.matches;
+      setIsMobile(mobile);
+
+      if (!mobile) {
+        setIsVisible(true);
+      }
+    };
+
+    syncViewport();
+
+    let lastScrollY = window.scrollY;
+    const scrollThreshold = 12;
+    const topOffset = 24;
+
+    const handleScroll = () => {
+      if (!mediaQuery.matches) {
+        setIsVisible(true);
+        lastScrollY = window.scrollY;
+        return;
+      }
+
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+
+      if (Math.abs(scrollDelta) < scrollThreshold) return;
+
+      if (currentScrollY <= topOffset) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(scrollDelta < 0);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    mediaQuery.addEventListener("change", syncViewport);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      mediaQuery.removeEventListener("change", syncViewport);
+    };
+  }, []);
+
   return (
     <>
       <ScrollToSectionOnLoad />
 
-      <header className="fixed top-7 left-1/2 -translate-x-1/2 z-50 w-full max-w-[1264px] px-4">
+      <header
+        className={cn(
+          "fixed top-7 left-1/2 -translate-x-1/2 z-50 w-full max-w-[1264px] px-4 transition-transform duration-300 ease-out",
+          isMobile && !isVisible ? "-translate-y-[140%] md:translate-y-0" : "translate-y-0",
+        )}
+      >
         <nav
           ref={navRef}
-          className="flex items-center justify-between px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 hover:bg-white/70"
+          className="flex items-center justify-between px-4 md:px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 hover:bg-white/70"
         >
           <div className="flex items-center gap-12">
             {Brand}
