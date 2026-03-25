@@ -5,6 +5,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -157,4 +158,8 @@ body {
 button {
   font-family: var(--font-geist);
   cursor: pointer;
+}
+
+.grecaptcha-badge {
+  z-index: 10;
 }
