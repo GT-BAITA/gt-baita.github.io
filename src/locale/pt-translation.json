@@ -1,131 +1,117 @@
 {
   "language-pt": "Português",
   "language-en": "Inglês",
-  "header": {
-    "brand": "GT-Baita",
-    "nav-1": "Sobre",
-    "nav-2": "Roadmap",
-    "nav-3": "Equipe",
-    "nav-4": "Perguntas Frequentes",
-    "cta": "Inscreva-se"
-  },
-  "init": {
-    "title": "A maior federação do Brasil: agora moderna",
-    "subtitle": "A CAFe 2.0 chegou para revolucionar o acesso digital entre institutos e universidades.",
-    "cta": "Saiba Mais"
-  },
-  "about": {
-    "title": "A CAFe conecta uma rede de mais de 300 instituições federadas.",
-    "p1": "Mantida pela RNP, a atual CAFe operacionaliza a infraestrutura tecnológica para conectar centenas de universidades, institutos e centros de pesquisa brasileiros.",
-    "p2": {
-      "prefix": "A proposta da CAFe 2.0 busca modernizar o modelo atual, por meio do protocolo",
-      "suffix": ", ampliando o alcance da rede federada e aumentando a qualidade dos benefícios para todas as partes."
-    }
-  },
-  "faq": {
-    "title": "FAQ",
-    "q1": "O Portal já está no ar?",
-    "a1": "Ainda não. Temos lançamento previsto para 2027; você pode se inscrever em nosso banco de voluntários para participar do programa de testes beta.",
-    "q2": "Quais os critérios para participar?",
-    "a2": "Em breve divulgaremos os critérios de participação.",
-    "q3": "Como encontro os melhores benefícios?",
-    "a3": "Através do Portal de Benefícios, você poderá descobrir todos os serviços disponíveis.",
-    "q4": "Os benefícios são válidos em todo o país?",
-    "a4": "Sim, os benefícios estarão disponíveis para todas as instituições federadas em todo o Brasil.",
-    "q5": "Como entro em contato com o suporte?",
-    "a5": "Em breve disponibilizaremos canais de suporte dedicados.",
-    "q6": "Quais iniciativas internacionais estão alinhadas com a CAFe 2.0?",
-    "a6": {
-      "prefix": "A eduGAIN tem adotado o OpenID Federation como novo protocolo para",
-      "link-edugain": "implementação da interfederação",
-      "middle": "A",
-      "link-italy": "Itália",
-      "and": "e a",
-      "link-sweden": "Suécia",
-      "suffix": "também estão usando o OpenID Federation como solução de interoperabilidade."
-    }
-  },
-  "features": {
-    "card1": {
-      "title": "Três plataformas, uma solução",
-      "text": "A adoção do protocolo OpenID Federation possibilita uma infraestrutura flexível, com a criação de portais de autenticação, gestão administrativa e user-facing.",
-      "cta": "Saiba Mais"
-    },
-    "card2": {
-      "title": "Conexão com \no Brasil e o Mundo",
-      "text": "A solução proporciona interoperabilidade com a eduGAIN, conectando a federação brasileira a serviços de mais de 3400 instituições internacionais."
-    },
-    "card3": {
-      "title": "Padrões adotados \npor federações \ninternacionais*"
-    },
-    "card4": {
-      "title": "Tecnologia que abre portas."
-    }
-  },
-  "newsletter": {
-    "title": "Inscreva-se em nossa lista",
-    "description": "Inscreva-se em nosso banco de voluntários para participar do nosso programa de testes beta.",
-    "successTitle": "Obrigado!",
-    "successMessage": "Sua inscrição foi enviada com sucesso.",
-    "goBack": "Voltar",
-    "form": {
-      "name": {
-        "label": "Nome completo",
-        "placeholder": "Seu nome"
-      },
-      "email": {
-        "label": "Email",
-        "placeholder": "Seu email"
-      },
-      "message": {
-        "label": "Mensagem (Opcional)",
-        "placeholder": "Deixe sua mensagem"
-      },
-      "submit": "Enviar"
-    }
-  },
-  "roadmap": {
-    "title": "Nosso Roadmap",
-    "card1": {
-      "title": "Painel de Gestão",
-      "quarter": "Q2/2025",
-      "description": "Sistema de gerenciamento completo para administradores de instituições federadas"
-    },
-    "card2": {
-      "title": "Portal\nWhere Are You From",
-      "quarter": "Q1/2026",
-      "description": "Portal de autenticação com redirecionamento para o IdP institucional"
-    },
-    "card3": {
-      "title": "Portal de Benefícios",
-      "quarter": "Em breve",
-      "description": "Plataforma de descoberta de serviços para usuários de instituições federadas"
-    }
-  },
-  "team": {
-    "title": "A Equipe",
-    "roles": {
-      "coordinator": "Coordenador de Projeto",
-      "viceCoordinator": "Vice-Coordenador de Projeto",
-      "innovationAssistant": "Assistente de Inovação",
-      "productDesigner": "Designer de Produto",
-      "developerM": "Desenvolvedor",
-      "developerF": "Desenvolvedora"
-    }
-  },
-  "journey": {
-    "title": "Nossa jornada até aqui",
-    "p1": {
-      "prefix": "Durante a",
-      "strong1": "Fase 1 do Programa de Serviços Avançados da RNP",
-      "middle": "o GT-Baita vivenciou uma jornada intensa de",
-      "strong2": "capacitação empreendedora",
-      "suffix": "Este vídeo conta um pouco dessa trajetória e do aprendizado que guiou o grupo até aqui."
-    },
-    "videoTitle": "Nossa jornada até aqui — GT-Baita"
-  },
-  "notfound": {
-    "message": "Oops! Página não encontrada",
-    "return": "Voltar para a página inicial"
-  }
+  "header.brand": "GT-Baita",
+  "header.nav-1": "Sobre",
+  "header.nav-2": "Roadmap",
+  "header.nav-3": "Equipe",
+  "header.nav-4": "FAQ",
+  "header.cta": "Inscreva-se",
+  "init.title": "A maior federação do Brasil: agora moderna",
+  "init.subtitle": "A CAFe 2.0 chegou para revolucionar o acesso digital entre institutos e universidades.",
+  "init.cta": "Saiba Mais",
+  "about.title": "A CAFe conecta uma rede de mais de 300 instituições federadas.",
+  "about.p1": "Mantida pela RNP, a atual CAFe operacionaliza a infraestrutura tecnológica para conectar centenas de universidades, institutos e centros de pesquisa brasileiros.",
+  "about.p2.prefix": "A proposta da CAFe 2.0 busca modernizar o modelo atual, por meio do protocolo",
+  "about.p2.suffix": ", ampliando o alcance da rede federada e aumentando a qualidade dos benefícios para todas as partes.",
+  "aboutHero.eyebrow": "Sobre o projeto",
+  "aboutHero.title": "A próxima geração da identidade acadêmica brasileira.",
+  "aboutHero.description": "O GT-BAITA está redesenhando a infraestrutura por trás<br/> do acesso digital de milhões de pesquisadores, professores <br/>e estudantes em todo o país.",
+  "aboutInfo.title": "Hoje, a CAFe conecta mais 320 instituições — mas muitos usuários não sabem o que pode ser acessado com ela.",
+  "aboutInfo.description": "Os serviços disponíveis possuem pouca visibilidade, e a federação é muitas vezes vista apenas como uma porta de entrada para sistemas da RNP. Ela pode ser muito mais do que isso.",
+  "aboutBenefits.eyebrow": "Benefícios da proposta",
+  "aboutBenefits.card1.title": "Governança Federativa",
+  "aboutBenefits.card1.description": "Um sistema de gestão que facilita o onboarding e a administração de provedores de identidade e serviço.",
+  "aboutBenefits.card2.title": "Acesso Simplificado",
+  "aboutBenefits.card2.description": "Um novo WAYF que vai além do login: normaliza identidades e garante consistência entre diferentes sistemas e provedores.",
+  "aboutBenefits.card3.title": "Descoberta de Serviços",
+  "aboutBenefits.card3.description": "Um portal que reúne serviços da sua instituição e da RNP em um único lugar, com autenticação federada integrada.",
+  "aboutDemonstration.eyebrow": "Demonstração — MVP atual",
+  "aboutDemonstration.title": "Veja o Sistema de Gestão em funcionamento.",
+  "aboutDemonstration.description1": "Os vídeos abaixo mostram os fluxos implementados até agora.",
+  "aboutDemonstration.description2": "Esta é uma versão em desenvolvimento — funcionalidades continuam evoluindo a cada dia.",
+  "aboutDemonstration.videoLabel": "Video {{number}}",
+  "aboutDemonstration.video1.title": "Fluxo de Registro de IdPs",
+  "aboutDemonstration.video2.title": "Fluxo de Registro de SPs",
+  "aboutDemonstration.video3.title": "Fluxo de autenticação e suas entidades",
+  "aboutDemonstration.video4.title": "Listagem das Entidades da federação",
+  "aboutPillars.eyebrow": "O que estamos construindo",
+  "aboutPillars.title": "Três portais, um ecossistema.",
+  "aboutPillars.description1": "O círculo central representa o barramento de interoperabilidade que conecta gestão, descoberta e acesso em uma única experiência federada.",
+  "aboutPillars.description2": "Cada portal orbita o mesmo núcleo, reforçando visualmente a ideia de um ecossistema integrado.",
+  "aboutPillars.circleAlt": "Círculo central do ecossistema",
+  "aboutPillars.iconAlt": "Ícone da CAFe",
+  "aboutPillars.interoperability": "Barramento de Interoperabilidade",
+  "aboutPillars.management.alt": "Sistema de Gestão da Federação",
+  "aboutPillars.benefits.alt": "Portal de Autenticação e Descoberta",
+  "aboutPillars.wayf.alt": "Portal de Benefícios",
+  "aboutPillars.benefits.title": "Portal de Benefícios",
+  "aboutPillars.benefits.description": "Facilita a busca e acesso a serviços de instituições federadas",
+  "aboutPillars.wayf.title": "Portal Where Are You From (WAYF)",
+  "aboutPillars.wayf.description": "Permite a oferta de IdPs e atua na comercialização da identidade do usuário",
+  "aboutManagement.title": "Sistema de Gestão da Federação",
+  "aboutManagement.chip1": "Gestores da CAFe/RNP",
+  "aboutManagement.chip2": "Técnicos de TI e Sistemas",
+  "aboutManagement.chip3": "Professores e Pesquisadores",
+  "aboutManagement.description": "Cadastro e Gerenciamento de <br/> entidades na federação",
+  "aboutManagement.box1": "Organizações",
+  "aboutManagement.box2": "Identity Providers (IdP)",
+  "aboutManagement.box3": "Service Providers (SP)",
+  "aboutPortal.public": "Aberto ao Público",
+  "faq.title": "FAQ",
+  "faq.q1": "O Portal já está no ar?",
+  "faq.a1": "A CAFe 2.0 está em fase de implementação piloto. Você pode acompanhar o andamento na seção Roadmap ou se inscrever na nossa lista para receber atualizações.",
+  "faq.q2": "Qual é o público-alvo da CAFe 2.0?",
+  "faq.a2": "As soluções da CAFe 2.0 atendem estudantes, professores e pesquisadores com descoberta centralizada de serviços. O Portal de Benefício é de acesso público, sem necessidade de vínculo institucional para explorar os serviços disponíveis. Além disso, o Sistema de Gestão é feito para interação com gestores de instituições e operadores da federação.",
+  "faq.q3": "O que muda para quem já usa a CAFe hoje?",
+  "faq.a3": "A CAFe 2.0 é desenvolvida para conviver com a federação atual durante a transição. Para o usuário final, a mudança mais visível será um WAYF mais simples e intuitivo. Para os gestores de TI das instituições ou mantenedores de aplicações, o novo Sistema de Gestão simplifica o cadastro e a manutenção dos provedores de identidade.",
+  "faq.q4": "O que é o Portal de Benefícios?",
+  "faq.a4": "É uma plataforma de descoberta de serviços digitais disponíveis para a comunidade acadêmica brasileira, acessíveis por meio do login institucional.",
+  "faq.q5": "Como entro em contato com o projeto?",
+  "faq.a5": "Você pode usar o formulário de inscrição abaixo para enviar uma mensagem à equipe. Canais de suporte dedicados serão disponibilizados conforme o projeto avança para produção.",
+  "faq.q6": "Quais iniciativas internacionais estão alinhadas com a CAFe 2.0?",
+  "faq.a6": "A CAFe 2.0 adota o OpenID Federation 1.0, padrão que vem sendo estudado pela eduGAIN e implementado por federações nacionais como as da Itália e da Suécia. Isso posiciona a federação brasileira em linha com o movimento global de modernização da gestão de identidade acadêmica.",
+  "features.card1.title": "Três plataformas, uma solução",
+  "features.card1.text": "A adoção do protocolo OpenID Federation possibilita uma infraestrutura flexível, com a criação de portais de autenticação, gestão administrativa e user-facing.",
+  "features.card1.cta": "Saiba Mais",
+  "features.card2.title": "Conexão com \no Brasil e o Mundo",
+  "features.card2.text": "A solução proporciona interoperabilidade com a eduGAIN, conectando a federação brasileira a serviços de mais de 3400 instituições internacionais.",
+  "features.card3.title": "Padrões adotados \npor federações \ninternacionais*",
+  "features.card4.title": "Tecnologia que abre portas.",
+  "newsletter.title": "Faça parte da CAFe 2.0.",
+  "newsletter.description": "Acompanhe os avanços do projeto e saiba como você e sua instituição podem contribuir e participar.",
+  "newsletter.successTitle": "Obrigado!",
+  "newsletter.successMessage": "Sua inscrição foi enviada com sucesso.",
+  "newsletter.goBack": "Voltar",
+  "newsletter.form.name.label": "Nome completo",
+  "newsletter.form.name.placeholder": "Seu nome",
+  "newsletter.form.email.label": "Email",
+  "newsletter.form.email.placeholder": "Seu email",
+  "newsletter.form.message.label": "Mensagem (Opcional)",
+  "newsletter.form.message.placeholder": "Deixe sua mensagem",
+  "newsletter.form.submit": "Enviar",
+  "roadmap.title": "Nosso Roadmap",
+  "roadmap.card1.title": "Sistema de Gestão",
+  "roadmap.card1.description": "Sistema de gerenciamento completo para administradores de instituições federadas",
+  "roadmap.card2.title": "Portal\nWhere Are You From",
+  "roadmap.card2.description": "Portal de autenticação com redirecionamento para o IdP institucional",
+  "roadmap.card3.title": "Portal de Benefícios",
+  "roadmap.card3.description": "Plataforma de descoberta de serviços para usuários de instituições federadas",
+  "team.title": "A Equipe",
+  "team.roles.coordinator": "Coordenador de Projeto",
+  "team.roles.viceCoordinator": "Vice-Coordenador de Projeto",
+  "team.roles.innovationAssistant": "Assistente de Inovação",
+  "team.roles.productDesigner": "Designer de Produto",
+  "team.roles.developerM": "Desenvolvedor",
+  "team.roles.developerF": "Desenvolvedora",
+  "journey.title": "Nossa jornada até aqui",
+  "journey.p1.prefix": "Durante a",
+  "journey.p1.strong1": "Fase 1 do Programa de Serviços Avançados da RNP",
+  "journey.p1.middle": "o GT-Baita vivenciou uma jornada intensa de",
+  "journey.p1.strong2": "capacitação empreendedora",
+  "journey.p1.suffix": "Este vídeo conta um pouco dessa trajetória e do aprendizado que guiou o grupo até aqui.",
+  "journey.videoTitle": "Nossa jornada até aqui — GT-Baita",
+  "lgpd.prefix": "Seus dados serão usados exclusivamente para contato relacionado ao GT-BAITA. Para solicitações relacionadas à privacidade, escreva para",
+  "notfound.message": "Oops! Página não encontrada",
+  "notfound.return": "Voltar para a página inicial"
 }

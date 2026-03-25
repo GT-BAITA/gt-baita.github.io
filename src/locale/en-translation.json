@@ -1,131 +1,117 @@
 {
   "language-en": "English",
   "language-pt": "Portuguese",
-  "header": {
-    "brand": "GT-Baita",
-    "nav-1": "About",
-    "nav-2": "Roadmap",
-    "nav-3": "Team",
-    "nav-4": "Frequently Asked Questions",
-    "cta": "Subscribe"
-  },
-  "init": {
-    "title": "The largest federation in Brazil: now modern",
-    "subtitle": "CAFe 2.0 has arrived to revolutionize digital access between institutes and universities.",
-    "cta": "Learn More"
-  },
-  "about": {
-    "title": "CAFe connects a network of more than 300 federated institutions.",
-    "p1": "Maintained by RNP, the current CAFe operates the technological infrastructure that connects hundreds of Brazilian universities, institutes, and research centers.",
-    "p2": {
-      "prefix": "The proposal of CAFe 2.0 aims to modernize the current model through the",
-      "suffix": "protocol, expanding the reach of the federated network and increasing the quality of benefits for all parties."
-    }
-  },
-  "faq": {
-    "title": "FAQ",
-    "q1": "Is the Portal already online?",
-    "a1": "Not yet. The launch is planned for 2027; you can sign up for our volunteer pool to participate in the beta testing program.",
-    "q2": "What are the criteria to participate?",
-    "a2": "We will soon publish the participation criteria.",
-    "q3": "How do I find the best benefits?",
-    "a3": "Through the Benefits Portal, you will be able to discover all available services.",
-    "q4": "Are the benefits valid throughout the country?",
-    "a4": "Yes, the benefits will be available to all federated institutions across Brazil.",
-    "q5": "How do I contact support?",
-    "a5": "We will soon provide dedicated support channels.",
-    "q6": "Which international initiatives are aligned with CAFe 2.0?",
-    "a6": {
-      "prefix": "eduGAIN has adopted OpenID Federation as the new protocol for",
-      "link-edugain": "interfederation implementation",
-      "middle": "Italy",
-      "link-italy": "Italy",
-      "and": "and",
-      "link-sweden": "Sweden",
-      "suffix": "are also using OpenID Federation as an interoperability solution."
-    }
-  },
-  "features": {
-    "card1": {
-      "title": "Three platforms, one solution",
-      "text": "The adoption of the OpenID Federation protocol enables a flexible infrastructure with the creation of authentication, administrative management, and user-facing portals.",
-      "cta": "Learn More"
-    },
-    "card2": {
-      "title": "Connection with \nBrazil and the World",
-      "text": "The solution provides interoperability with eduGAIN, connecting the Brazilian federation to services from more than 3400 international institutions."
-    },
-    "card3": {
-      "title": "Standards adopted \nby international \nfederations*"
-    },
-    "card4": {
-      "title": "Technology that opens doors."
-    }
-  },
-  "newsletter": {
-    "title": "Join our list",
-    "description": "Sign up for our volunteer pool to participate in our beta testing program.",
-    "successTitle": "Thank you!",
-    "successMessage": "Your submission has been sent successfully.",
-    "goBack": "Back",
-    "form": {
-      "name": {
-        "label": "Full name",
-        "placeholder": "Your name"
-      },
-      "email": {
-        "label": "Email",
-        "placeholder": "Your email"
-      },
-      "message": {
-        "label": "Message (Optional)",
-        "placeholder": "Leave your message"
-      },
-      "submit": "Send"
-    }
-  },
-  "roadmap": {
-    "title": "Our Roadmap",
-    "card1": {
-      "title": "Management Dashboard",
-      "quarter": "Q2/2025",
-      "description": "A complete management system for administrators of federated institutions"
-    },
-    "card2": {
-      "title": "Where Are You From\nPortal",
-      "quarter": "Q1/2026",
-      "description": "Authentication portal with redirection to the institutional IdP"
-    },
-    "card3": {
-      "title": "Benefits Portal",
-      "quarter": "Coming soon",
-      "description": "Service discovery platform for users from federated institutions"
-    }
-  },
-  "team": {
-    "title": "The Team",
-    "roles": {
-      "coordinator": "Project Coordinator",
-      "viceCoordinator": "Deputy Project Coordinator",
-      "innovationAssistant": "Innovation Assistant",
-      "productDesigner": "Product Designer",
-      "developerM": "Developer",
-      "developerF": "Developer"
-    }
-  },
-  "journey": {
-    "title": "Our journey so far",
-    "p1": {
-      "prefix": "During the",
-      "strong1": "Phase 1 of the RNP Advanced Services Program",
-      "middle": "GT-Baita experienced an intense journey of",
-      "strong2": "entrepreneurial development",
-      "suffix": "This video shares part of that trajectory and the lessons that guided the group to this point."
-    },
-    "videoTitle": "Our journey so far — GT-Baita"
-  },
-  "notfound": {
-    "message": "Oops! Page not found",
-    "return": "Return to Home"
-  }
+  "header.brand": "GT-Baita",
+  "header.nav-1": "About",
+  "header.nav-2": "Roadmap",
+  "header.nav-3": "Team",
+  "header.nav-4": "FAQ",
+  "header.cta": "Subscribe",
+  "init.title": "The largest federation in Brazil: now modern",
+  "init.subtitle": "CAFe 2.0 has arrived to revolutionize digital access between institutes and universities.",
+  "init.cta": "Learn More",
+  "about.title": "CAFe connects a network of more than 300 federated institutions.",
+  "about.p1": "Maintained by RNP, the current CAFe operates the technological infrastructure that connects hundreds of Brazilian universities, institutes, and research centers.",
+  "about.p2.prefix": "The proposal of CAFe 2.0 aims to modernize the current model through the",
+  "about.p2.suffix": "protocol, expanding the reach of the federated network and increasing the quality of benefits for all parties.",
+  "aboutHero.eyebrow": "About the project",
+  "aboutHero.title": "The next generation of Brazilian academic identity.",
+  "aboutHero.description": "GT-BAITA is redesigning the infrastructure behind<br/> digital access for millions of researchers, professors, <br/>and students across the country.",
+  "aboutInfo.title": "Today, CAFe connects more than 320 institutions, yet many users do not know what they can access through it.",
+  "aboutInfo.description": "The available services have low visibility, and the federation is often seen only as a gateway to RNP systems. It can be much more than that.",
+  "aboutBenefits.eyebrow": "Benefits of the proposal",
+  "aboutBenefits.card1.title": "Federated Governance",
+  "aboutBenefits.card1.description": "A management system that makes onboarding and the administration of identity and service providers easier.",
+  "aboutBenefits.card2.title": "Simplified Access",
+  "aboutBenefits.card2.description": "A new WAYF that goes beyond login: it normalizes identities and ensures consistency across different systems and providers.",
+  "aboutBenefits.card3.title": "Service Discovery",
+  "aboutBenefits.card3.description": "A portal that brings together services from your institution and RNP in one place, with integrated federated authentication.",
+  "aboutDemonstration.eyebrow": "Demonstration - current MVP",
+  "aboutDemonstration.title": "See the Management System in action.",
+  "aboutDemonstration.description1": "The videos below show the flows implemented so far.",
+  "aboutDemonstration.description2": "This is a version under development, and features continue to evolve every day.",
+  "aboutDemonstration.videoLabel": "Video {{number}}",
+  "aboutDemonstration.video1.title": "IdP Registration Flow",
+  "aboutDemonstration.video2.title": "SP Registration Flow",
+  "aboutDemonstration.video3.title": "Authentication flow and its entities",
+  "aboutDemonstration.video4.title": "Federation entity listing",
+  "aboutPillars.eyebrow": "What we are building",
+  "aboutPillars.title": "Three portals, one ecosystem.",
+  "aboutPillars.description1": "The central circle represents the interoperability layer that connects management, discovery, and access in a single federated experience.",
+  "aboutPillars.description2": "Each portal orbits the same core, visually reinforcing the idea of an integrated ecosystem.",
+  "aboutPillars.circleAlt": "Central circle of the ecosystem",
+  "aboutPillars.iconAlt": "CAFe icon",
+  "aboutPillars.interoperability": "Interoperability Layer",
+  "aboutPillars.management.alt": "Federation Management System",
+  "aboutPillars.benefits.alt": "Authentication and Discovery Portal",
+  "aboutPillars.wayf.alt": "Benefits Portal",
+  "aboutPillars.benefits.title": "Benefits Portal",
+  "aboutPillars.benefits.description": "Makes it easier to find and access services from federated institutions",
+  "aboutPillars.wayf.title": "Where Are You From (WAYF) Portal",
+  "aboutPillars.wayf.description": "Enables the offering of IdPs and supports the exchange of the user's identity",
+  "aboutManagement.title": "Federation Management System",
+  "aboutManagement.chip1": "CAFe/RNP Managers",
+  "aboutManagement.chip2": "IT and Systems Technicians",
+  "aboutManagement.chip3": "Professors and Researchers",
+  "aboutManagement.description": "Registration and management of <br/> entities in the federation",
+  "aboutManagement.box1": "Organizations",
+  "aboutManagement.box2": "Identity Providers (IdP)",
+  "aboutManagement.box3": "Service Providers (SP)",
+  "aboutPortal.public": "Open to the Public",
+  "faq.title": "FAQ",
+  "faq.q1": "Is the Portal already live?",
+  "faq.a1": "CAFe 2.0 is currently in the pilot implementation phase. You can follow progress in the Roadmap section or subscribe to our list to receive updates.",
+  "faq.q2": "Who is the target audience for CAFe 2.0?",
+  "faq.a2": "CAFe 2.0 solutions serve students, professors, and researchers through centralized service discovery. The Benefits Portal is publicly accessible, with no institutional affiliation required to explore the available services. In addition, the Management System is designed for interaction with institution managers and federation operators.",
+  "faq.q3": "What changes for those who already use CAFe today?",
+  "faq.a3": "CAFe 2.0 is being developed to coexist with the current federation during the transition. For end users, the most visible change will be a simpler and more intuitive WAYF. For institutional IT managers and application maintainers, the new Management System simplifies the registration and maintenance of identity providers.",
+  "faq.q4": "What is the Benefits Portal?",
+  "faq.a4": "It is a digital service discovery platform available to the Brazilian academic community, accessible through institutional login.",
+  "faq.q5": "How can I contact the project?",
+  "faq.a5": "You can use the subscription form below to send a message to the team. Dedicated support channels will be made available as the project advances toward production.",
+  "faq.q6": "Which international initiatives are aligned with CAFe 2.0?",
+  "faq.a6": "CAFe 2.0 adopts OpenID Federation 1.0, a standard being studied by eduGAIN and implemented by national federations such as those in Italy and Sweden. This positions the Brazilian federation in line with the global movement to modernize academic identity management.",
+  "features.card1.title": "Three platforms, one solution",
+  "features.card1.text": "The adoption of the OpenID Federation protocol enables a flexible infrastructure with the creation of authentication, administrative management, and user-facing portals.",
+  "features.card1.cta": "Learn More",
+  "features.card2.title": "Connection with \nBrazil and the World",
+  "features.card2.text": "The solution provides interoperability with eduGAIN, connecting the Brazilian federation to services from more than 3400 international institutions.",
+  "features.card3.title": "Standards adopted \nby international \nfederations*",
+  "features.card4.title": "Technology that opens doors.",
+  "newsletter.title": "Be a part of CAFe 2.0.",
+  "newsletter.description": "Follow the project's progress and learn how you and your institution can contribute and participate.",
+  "newsletter.successTitle": "Thank you!",
+  "newsletter.successMessage": "Your submission has been sent successfully.",
+  "newsletter.goBack": "Back",
+  "newsletter.form.name.label": "Full name",
+  "newsletter.form.name.placeholder": "Your name",
+  "newsletter.form.email.label": "Email",
+  "newsletter.form.email.placeholder": "Your email",
+  "newsletter.form.message.label": "Message (Optional)",
+  "newsletter.form.message.placeholder": "Leave your message",
+  "newsletter.form.submit": "Send",
+  "roadmap.title": "Our Roadmap",
+  "roadmap.card1.title": "Management System",
+  "roadmap.card1.description": "A complete management system for administrators of federated institutions",
+  "roadmap.card2.title": "Where Are You From\nPortal",
+  "roadmap.card2.description": "Authentication portal with redirection to the institutional IdP",
+  "roadmap.card3.title": "Benefits Portal",
+  "roadmap.card3.description": "Service discovery platform for users from federated institutions",
+  "team.title": "The Team",
+  "team.roles.coordinator": "Project Coordinator",
+  "team.roles.viceCoordinator": "Deputy Project Coordinator",
+  "team.roles.innovationAssistant": "Innovation Assistant",
+  "team.roles.productDesigner": "Product Designer",
+  "team.roles.developerM": "Developer",
+  "team.roles.developerF": "Developer",
+  "journey.title": "Our journey so far",
+  "journey.p1.prefix": "During the",
+  "journey.p1.strong1": "Phase 1 of the RNP Advanced Services Program",
+  "journey.p1.middle": "GT-Baita experienced an intense journey of",
+  "journey.p1.strong2": "entrepreneurial development",
+  "journey.p1.suffix": "This video shares part of that trajectory and the lessons that guided the group to this point.",
+  "journey.videoTitle": "Our journey so far — GT-Baita",
+  "lgpd.prefix": "Your data will be used exclusively for contact related to GT-BAITA. For privacy-related requests, write to",
+  "notfound.message": "Oops! Page not found",
+  "notfound.return": "Return to Home"
 }

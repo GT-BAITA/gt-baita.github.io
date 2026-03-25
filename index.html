@@ -1,30 +1,34 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/svgs/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Geist:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="GT-Baita" />
+    <title>GT-Baita</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/svgs/favicon.svg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=Geist:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="GT-Baita" />
-  <title>GT-Baita</title>
-</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-096R6QP6KD"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-096R6QP6KD"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-096R6QP6KD');
-  </script>
-</body>
-
+      gtag("config", "G-096R6QP6KD");
+    </script>
+  </body>
 </html>

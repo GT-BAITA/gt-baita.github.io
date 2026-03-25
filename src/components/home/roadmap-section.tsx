@@ -1,0 +1,96 @@
+import { motion } from "motion/react";
+import { useTranslation } from "react-i18next";
+import { twMerge } from "tailwind-merge";
+
+function RoadmapCard({
+  title,
+  description,
+  image,
+}: {
+  title: string;
+  description: string;
+  image: string;
+}) {
+  return (
+    <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#DFDFDA] via-[#F1F1EC] to-[#F1F1EC] p-8 min-h-[450px] flex flex-col justify-between">
+      <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-[#D4D4D4]/50 blur-3xl"></div>
+
+      <div className="z-10 space-y-4 relative">
+        <h3 className="text-[32px] font-geist font-medium text-neutral-900 leading-8 tracking-[-0.03em] whitespace-pre-line">
+          {title}
+        </h3>
+        <div className="space-y-2">
+          <p className="text-neutral-600 font-geist leading-snug max-w-[85%]">
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <img
+        src={image}
+        alt={title}
+        className={twMerge(
+          "absolute bottom-0 right-0 h-auto object-contain block",
+          image === "/svgs/portal-de-beneficios.svg" && "-bottom-6"
+        )}
+      />
+    </div>
+  );
+}
+
+export function RoadmapSection() {
+  const { t } = useTranslation();
+
+  return (
+    <section id="roadmap" className="lg:py-22">
+      <div className="space-y-22">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <h2 className="text-5xl md:text-5xl font-domine text-neutral-900">
+            {t("roadmap.title")}
+          </h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 80 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            <RoadmapCard
+              title={t("roadmap.card1.title")}
+              description={t("roadmap.card1.description")}
+              image="/svgs/roadmap-painel.svg"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: -80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            <RoadmapCard
+              title={t("roadmap.card2.title")}
+              description={t("roadmap.card2.description")}
+              image="/svgs/roadmap-wayf.svg"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            <RoadmapCard
+              title={t("roadmap.card3.title")}
+              description={t("roadmap.card3.description")}
+              image="/svgs/portal-de-beneficios.svg"
+            />
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
