@@ -31,6 +31,18 @@ export function DemonstrationSection() {
       id: "QOzteJ4bA7M",
       title: t("aboutDemonstration.video4.title"),
     },
+    {
+      id: "qRqZlt3MbPM",
+      title: t("aboutDemonstration.video5.title"),
+    },
+    {
+      id: "e5s2jhkpQDc",
+      title: t("aboutDemonstration.video6.title"),
+    },
+    {
+      id: "5rwA5Zbib5k",
+      title: t("aboutDemonstration.video7.title"),
+    },
   ];
 
   useEffect(() => {
