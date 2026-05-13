@@ -31,7 +31,7 @@ function RoadmapCard({
         alt={title}
         className={twMerge(
           "absolute bottom-0 right-0 h-auto object-contain block",
-          image === "/svgs/portal-de-beneficios.svg" && "-bottom-6"
+          (image === ("/svgs/roadmap-portal-pt.svg") || image.endsWith("-en.svg")) && "-bottom-6",
         )}
       />
     </div>
@@ -39,7 +39,7 @@ function RoadmapCard({
 }
 
 export function RoadmapSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <section id="roadmap" className="lg:py-22">
@@ -60,7 +60,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t("roadmap.card1.title")}
               description={t("roadmap.card1.description")}
-              image="/svgs/roadmap-painel.svg"
+              image={`/svgs/roadmap-painel-${i18n.language}.svg`}
             />
           </motion.div>
 
@@ -73,7 +73,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t("roadmap.card2.title")}
               description={t("roadmap.card2.description")}
-              image="/svgs/roadmap-wayf.svg"
+              image={`/svgs/roadmap-wayf-${i18n.language}.svg`}
             />
           </motion.div>
 
@@ -86,7 +86,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t("roadmap.card3.title")}
               description={t("roadmap.card3.description")}
-              image="/svgs/portal-de-beneficios.svg"
+              image={`/svgs/roadmap-portal-${i18n.language}.svg`}
             />
           </motion.div>
         </div>

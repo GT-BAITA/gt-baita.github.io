@@ -35,7 +35,7 @@ function CardOne() {
           className="bg-neutral-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px] p-0 flex items-center justify-center gap-1 transition-all duration-300"
         >
           <Link
-            to="/sobre"
+            to="/about"
             className="flex items-center justify-center gap-1 rounded-lg w-[139px] h-full"
           >
             {t("features.card1.cta")} <ChevronRight className="w-4 h-4" />

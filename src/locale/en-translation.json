@@ -27,7 +27,7 @@
   "aboutBenefits.card3.title": "Service Discovery",
   "aboutBenefits.card3.description": "A portal that brings together services from your institution and RNP in one place, with integrated federated authentication.",
   "aboutDemonstration.eyebrow": "Demonstration - current MVP",
-  "aboutDemonstration.title": "See the Management System in action.",
+  "aboutDemonstration.title": "See the Interoperability Backbone in action.",
   "aboutDemonstration.description1": "The videos below show the flows implemented so far.",
   "aboutDemonstration.description2": "This is a version under development, and features continue to evolve every day.",
   "aboutDemonstration.videoLabel": "Video {{number}}",
