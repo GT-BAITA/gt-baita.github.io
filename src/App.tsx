@@ -10,7 +10,7 @@ function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/sobre" element={<AboutPage />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/wayf-ux-test" element={<RandomRedirect />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

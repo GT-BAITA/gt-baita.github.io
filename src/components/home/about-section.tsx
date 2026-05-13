@@ -10,7 +10,7 @@ export function AboutSection() {
   const connectorDashes = Array.from({ length: 10 });
 
   return (
-    <section id="sobre">
+    <section id="about">
       <div
         data-dark
         className="bg-neutral-900 rounded-3xl p-8 md:p-16 flex flex-col lg:flex-row items-center gap-12"

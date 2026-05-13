@@ -110,9 +110,9 @@ export function Header() {
   const [isVisible, setIsVisible] = useState(true);
 
   const navItems: NavItem[] = [
-    { href: "/sobre", label: t("header.nav-1") },
+    { href: "/about", label: t("header.nav-1") },
     { href: "#roadmap", label: t("header.nav-2") },
-    { href: "#equipe", label: t("header.nav-3") },
+    { href: "#team", label: t("header.nav-3") },
     { href: "#faq", label: t("header.nav-4") },
   ];
 

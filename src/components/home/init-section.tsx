@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { AboutSection } from "./about-section";
 
 export function InitSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <>
@@ -20,7 +20,7 @@ export function InitSection() {
 
           <Button className="bg-zinc-950 text-white hover:bg-neutral-900 p-0 rounded-lg ">
             <Link
-              to="/sobre"
+              to="/about"
               className="flex items-center w-[139px] h-full rounded-lg justify-center gap-1"
             >
               {t("init.cta")} <ChevronRight className="w-4 h-4" />
@@ -28,7 +28,7 @@ export function InitSection() {
           </Button>
           <div className="relative hidden w-full overflow-x-clip md:flex flex-col items-center">
             <img
-              src="/svgs/management-system.svg"
+              src={`/svgs/management-system-${i18n.language}.svg`}
               alt="Management System Image"
               className="mt-10 block h-auto w-full max-w-[1062px]"
             />
