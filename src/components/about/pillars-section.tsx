@@ -7,10 +7,14 @@ const viewportOnce = { once: true, amount: 0.2 };
 
 export function PillarsSection() {
   const { t, i18n } = useTranslation();
+  const assetLanguage = i18n.language.startsWith("pt") ? "pt" : "en";
   const portals = [
     {
       id: "management",
-      src: i18n.language === "pt" ? "/svgs/portal-1-pt.svg": "/svgs/portal-1-en.png",
+      src:
+        assetLanguage === "pt"
+          ? "/svgs/portal-1-pt.svg"
+          : "/svgs/portal-1-en.png",
       alt: t("aboutPillars.management.alt"),
       positionClassName: "left-1/2 top-[-33%] -translate-x-1/2",
       cardClassName:
@@ -19,7 +23,10 @@ export function PillarsSection() {
     },
     {
       id: "benefits",
-      src: i18n.language === "pt" ? "/svgs/portal-2-pt.svg": "/svgs/portal-2-en.png",
+      src:
+        assetLanguage === "pt"
+          ? "/svgs/portal-2-pt.svg"
+          : "/svgs/portal-2-en.png",
       alt: t("aboutPillars.benefits.alt"),
       positionClassName:
         "right-[-6%] top-[64%] -translate-y-1/2 md:right-[-7%]",
@@ -29,7 +36,10 @@ export function PillarsSection() {
     },
     {
       id: "wayf",
-      src: i18n.language === "pt" ? "/svgs/portal-3-pt.svg": "/svgs/portal-3-en.png",
+      src:
+        assetLanguage === "pt"
+          ? "/svgs/portal-3-pt.svg"
+          : "/svgs/portal-3-en.png",
       alt: t("aboutPillars.wayf.alt"),
       positionClassName: "left-[-6%] top-[64%] -translate-y-1/2 md:left-[-7%]",
       cardClassName:
@@ -73,7 +83,7 @@ export function PillarsSection() {
       <div className="relative mt-70 overflow-visible px-2 py-8 md:px-8 md:py-12 hidden xl:block">
         <div className="relative mx-auto aspect-[16/11] w-full max-w-[1320px]">
           <motion.img
-            src={`/svgs/circle-${i18n.language}.svg`}
+            src={`/svgs/circle-${assetLanguage}.svg`}
             alt={t("aboutPillars.circleAlt")}
             className="absolute left-1/2 top-1/2 z-0 w-[50%] min-w-[280px] max-w-[620px] -translate-x-1/2 -translate-y-1/2 opacity-70"
             initial={{ opacity: 0, scale: 0.96 }}

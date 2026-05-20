@@ -40,6 +40,7 @@ function RoadmapCard({
 
 export function RoadmapSection() {
   const { t, i18n } = useTranslation();
+  const assetLanguage = i18n.language.startsWith("pt") ? "pt" : "en";
 
   return (
     <section id="roadmap" className="lg:py-22">
@@ -60,7 +61,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t("roadmap.card1.title")}
               description={t("roadmap.card1.description")}
-              image={`/svgs/roadmap-painel-${i18n.language}.svg`}
+              image={`/svgs/roadmap-painel-${assetLanguage}.svg`}
             />
           </motion.div>
 
@@ -73,7 +74,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t("roadmap.card2.title")}
               description={t("roadmap.card2.description")}
-              image={`/svgs/roadmap-wayf-${i18n.language}.svg`}
+              image={`/svgs/roadmap-wayf-${assetLanguage}.svg`}
             />
           </motion.div>
 
@@ -86,7 +87,7 @@ export function RoadmapSection() {
             <RoadmapCard
               title={t("roadmap.card3.title")}
               description={t("roadmap.card3.description")}
-              image={`/svgs/roadmap-portal-${i18n.language}.svg`}
+              image={`/svgs/roadmap-portal-${assetLanguage}.svg`}
             />
           </motion.div>
         </div>

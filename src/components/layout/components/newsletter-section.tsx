@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { CheckCircle2 } from "lucide-react";
+import { CustomComboboxInput } from "../../shared/custom-combobox-input";
 import { CustomInput } from "../../shared/custom-input";
 import { CustomTextarea } from "../../shared/custom-textarea";
 import { useContactForm } from "@/hooks/useContactForm";
@@ -19,7 +20,7 @@ export function NewsletterSection() {
     formId,
     goBack,
     errors,
-  } = useContactForm();
+  } = useContactForm(t);
 
   const title = t("newsletter.title");
 
@@ -108,6 +109,46 @@ export function NewsletterSection() {
                 required
                 placeholder={t("newsletter.form.email.placeholder")}
                 error={errors.email}
+              />
+
+              <CustomInput
+                id="companyOrInstitution"
+                type="text"
+                name="companyOrInstitution"
+                required
+                label={t("newsletter.form.companyOrInstitution.label")}
+                placeholder={t(
+                  "newsletter.form.companyOrInstitution.placeholder"
+                )}
+                error={errors.companyOrInstitution}
+              />
+
+              <CustomComboboxInput
+                id="affiliation"
+                type="text"
+                name="affiliation"
+                required
+                label={t("newsletter.form.affiliation.label")}
+                placeholder={t("newsletter.form.affiliation.placeholder")}
+                options={[
+                  {
+                    label: t("newsletter.form.affiliation.options.professor"),
+                    value: t("newsletter.form.affiliation.options.professor"),
+                  },
+                  {
+                    label: t("newsletter.form.affiliation.options.itStaff"),
+                    value: t("newsletter.form.affiliation.options.itStaff"),
+                  },
+                  {
+                    label: t("newsletter.form.affiliation.options.student"),
+                    value: t("newsletter.form.affiliation.options.student"),
+                  },
+                  {
+                    label: t("newsletter.form.affiliation.options.other"),
+                    value: "",
+                  },
+                ]}
+                error={errors.affiliation}
               />
 
               <CustomTextarea
