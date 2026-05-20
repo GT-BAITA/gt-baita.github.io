@@ -6,6 +6,7 @@ import { AboutSection } from "./about-section";
 
 export function InitSection() {
   const { t, i18n } = useTranslation();
+  const assetLanguage = i18n.language.startsWith("pt") ? "pt" : "en";
 
   return (
     <>
@@ -28,7 +29,7 @@ export function InitSection() {
           </Button>
           <div className="relative hidden w-full overflow-x-clip md:flex flex-col items-center">
             <img
-              src={`/svgs/management-system-${i18n.language}.svg`}
+              src={`/svgs/management-system-${assetLanguage}.svg`}
               alt="Management System Image"
               className="mt-10 block h-auto w-full max-w-[1062px]"
             />

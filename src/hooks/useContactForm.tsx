@@ -1,19 +1,32 @@
 import { useRef, useState, useCallback, useEffect } from "react";
+import type { TFunction } from "i18next";
 
-type Errors = {
-  name?: string;
-  email?: string;
+type ContactFormField =
+  | "name"
+  | "email"
+  | "companyOrInstitution"
+  | "affiliation";
+
+type Errors = Record<ContactFormField, string>;
+
+const emptyErrors: Errors = {
+  name: "",
+  email: "",
+  companyOrInstitution: "",
+  affiliation: "",
 };
 
 type ContactFormElements = HTMLFormElement & {
   name: HTMLInputElement;
   email: HTMLInputElement;
+  companyOrInstitution: HTMLInputElement;
+  affiliation: HTMLInputElement;
 };
 
-export function useContactForm() {
+export function useContactForm(t: TFunction) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSucceeded, setIsSucceeded] = useState(false);
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<Errors>(emptyErrors);
   const formRef = useRef<ContactFormElements | null>(null);
 
   const formId = import.meta.env.VITE_FORMSPREE_ID!;
@@ -24,20 +37,33 @@ export function useContactForm() {
 
     const name = formRef.current.name.value.trim();
     const email = formRef.current.email.value.trim();
+    const companyOrInstitution =
+      formRef.current.companyOrInstitution.value.trim();
+    const affiliation = formRef.current.affiliation.value.trim();
 
-    const newErrors: Errors = {};
+    const newErrors: Errors = { ...emptyErrors };
 
     if (name.length < 3) {
-      newErrors.name = "Digite seu nome completo.";
+      newErrors.name = t("newsletter.form.validation.name");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      newErrors.email = "Digite um email válido.";
+      newErrors.email = t("newsletter.form.validation.email");
+    }
+
+    if (companyOrInstitution.length < 3) {
+      newErrors.companyOrInstitution = t(
+        "newsletter.form.validation.companyOrInstitution"
+      );
+    }
+
+    if (affiliation.length < 3) {
+      newErrors.affiliation = t("newsletter.form.validation.affiliation");
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((error) => !error);
   };
 
   (window as any).onSubmit = async function () {
@@ -62,7 +88,7 @@ export function useContactForm() {
       if (data.ok) {
         setIsSucceeded(true);
         formRef.current.reset();
-        setErrors({});
+        setErrors(emptyErrors);
       } else {
         console.error("Erro Formspree:", data);
       }
