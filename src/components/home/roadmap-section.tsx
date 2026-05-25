@@ -6,10 +6,14 @@ function RoadmapCard({
   title,
   description,
   image,
+  buttonLabel,
+  buttonHref,
 }: {
   title: string;
   description: string;
   image: string;
+  buttonLabel?: string;
+  buttonHref?: string;
 }) {
   return (
     <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#DFDFDA] via-[#F1F1EC] to-[#F1F1EC] p-8 min-h-[450px] flex flex-col justify-between">
@@ -24,6 +28,16 @@ function RoadmapCard({
             {description}
           </p>
         </div>
+        {buttonLabel && buttonHref && (
+          <a
+            href={buttonHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 px-4 h-9 rounded-lg bg-neutral-950 text-white font-geist text-sm font-medium hover:bg-neutral-900 transition-colors"
+          >
+            {buttonLabel}
+          </a>
+        )}
       </div>
 
       <img
@@ -88,6 +102,8 @@ export function RoadmapSection() {
               title={t("roadmap.card3.title")}
               description={t("roadmap.card3.description")}
               image={`/svgs/roadmap-portal-${assetLanguage}.svg`}
+              buttonLabel={t("roadmap.card3.button")}
+              buttonHref="https://servicos.baita.testbeds.rnp.br/"
             />
           </motion.div>
         </div>
