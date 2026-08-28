@@ -113,6 +113,8 @@
   "roadmap.card3.title": "Benefits Portal",
   "roadmap.card3.description": "Service discovery platform for users from federated institutions",
   "roadmap.card3.button": "Access Portal",
+  "roadmap.card4.title": "IdP-SaaS",
+  "roadmap.card4.description": "Identity provider as a service for institutions without their own infrastructure",
   "team.title": "The Team",
   "team.roles.coordinator": "Project Coordinator",
   "team.roles.viceCoordinator": "Deputy Project Coordinator",
@@ -129,5 +131,14 @@
   "journey.videoTitle": "Our journey so far — GT-Baita",
   "lgpd.prefix": "Your data will be used exclusively for contact related to GT-BAITA. For privacy-related requests, write to",
   "notfound.message": "Oops! Page not found",
-  "notfound.return": "Return to Home"
+  "notfound.return": "Return to Home",
+  "earlyAdopters.title": "Join as an Early Adopter",
+  "earlyAdopters.description": "Be among the first to integrate your institution into the new federated ecosystem. Help us shape the future of academic identity in Brazil and gain exclusive access to new features.",
+  "earlyAdopters.cta": "Enroll",
+  "earlyAdopters.usecase1.title": "Your own Federation",
+  "earlyAdopters.usecase1.description": "Build your own federated identity management ecossystem, including a benefits portal and a WAYF service.",
+  "earlyAdopters.usecase2.title": "Providers Integration",
+  "earlyAdopters.usecase2.description": "Connect existing OIDC providers or services without the need to care about federation stuff.",
+  "earlyAdopters.usecase3.title": "Identity Provider as a Service",
+  "earlyAdopters.usecase3.description": "Offer a unified experience to students and teachers through a single, secure academic identity."
 }

@@ -10,11 +10,6 @@ export function TeamSection() {
       portfolioUrl: "https://frederico.phd/",
     },
     {
-      name: "Ricardo Custódio",
-      role: t("team.roles.viceCoordinator"),
-      portfolioUrl: "https://rfcustodio.github.io/",
-    },
-    {
       name: "Brendon Vicente",
       role: t("team.roles.innovationAssistant"),
       portfolioUrl: "https://github.com/Bredstone",
@@ -26,7 +21,7 @@ export function TeamSection() {
     },
     {
       name: "Giulia Manno",
-      role: t("team.roles.productDesigner"),
+      role: t("team.roles.innovationAssistant"),
       portfolioUrl: "https://giu-manno.github.io/portfolio/",
     },
     {

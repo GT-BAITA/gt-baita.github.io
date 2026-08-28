@@ -113,6 +113,8 @@
   "roadmap.card3.title": "Portal de Benefícios",
   "roadmap.card3.description": "Plataforma de descoberta de serviços para usuários de instituições federadas",
   "roadmap.card3.button": "Acessar Portal",
+  "roadmap.card4.title": "IdP-SaaS",
+  "roadmap.card4.description": "Provedor de identidade como serviço para instituições sem infraestrutura própria",
   "team.title": "A Equipe",
   "team.roles.coordinator": "Coordenador de Projeto",
   "team.roles.viceCoordinator": "Vice-Coordenador de Projeto",
@@ -129,5 +131,14 @@
   "journey.videoTitle": "Nossa jornada até aqui — GT-Baita",
   "lgpd.prefix": "Seus dados serão usados exclusivamente para contato relacionado ao GT-BAITA. Para solicitações relacionadas à privacidade, escreva para",
   "notfound.message": "Oops! Página não encontrada",
-  "notfound.return": "Voltar para a página inicial"
+  "notfound.return": "Voltar para a página inicial",
+  "earlyAdopters.title": "Participe como Early Adopter",
+  "earlyAdopters.description": "Seja um dos primeiros a integrar sua instituição ao novo ecossistema federado. Ajude-nos a moldar o futuro da identidade acadêmica no Brasil e tenha acesso exclusivo a novas funcionalidades.",
+  "earlyAdopters.cta": "Inscrever-se",
+  "earlyAdopters.usecase1.title": "Sua própria federação",
+  "earlyAdopters.usecase1.description": "Construa seu próprio ecossistema de gestão de identidade federada, incluindo um portal de benefícios e um serviço WAYF.",
+  "earlyAdopters.usecase2.title": "Integração de Provedores",
+  "earlyAdopters.usecase2.description": "Conecte serviços ou provedores OIDC existentes sem necessidade de se preocupar com coisas de federação.",
+  "earlyAdopters.usecase3.title": "Provedor de Identidade como Serviço",
+  "earlyAdopters.usecase3.description": "Ofereça uma experiência unificada aos alunos e professores através de uma identidade acadêmica única e segura."
 }

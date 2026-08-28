@@ -1,4 +1,5 @@
 import { AboutSection } from "@/components/home/about-section";
+import { EarlyAdoptersSection } from "@/components/home/early-adopters-section";
 import { FAQSection } from "@/components/home/faq-section";
 import { FeaturesSection } from "@/components/home/features-section";
 import { InitSection } from "@/components/home/init-section";
@@ -14,6 +15,7 @@ export function Home() {
       </div>
       <FeaturesSection />
       <RoadmapSection />
+      <EarlyAdoptersSection />
       <TeamSection />
       {/* <YouTubeEmbed /> */}
       <FAQSection />
