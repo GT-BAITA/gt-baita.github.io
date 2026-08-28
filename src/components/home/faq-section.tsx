@@ -37,7 +37,9 @@ function CustomAccordionContent({
 }) {
   return (
     <AccordionContent className="text-neutral-900 p-0 text-base font-[400] leading-5 px-4 pb-4 font-geist">
-      {text}
+      {text ? (
+        <div dangerouslySetInnerHTML={{ __html: text }} className="[&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800" />
+      ) : null}
       {children}
     </AccordionContent>
   );
