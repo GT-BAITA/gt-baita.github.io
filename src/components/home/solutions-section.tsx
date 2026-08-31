@@ -13,19 +13,19 @@ import {
 } from "@/lib/scrub-schedule";
 
 /**
- * "O que estamos construindo" — Figma node 1058:35764.
+ * "O que estamos construindo" — nó 1058:35764 do Figma.
  *
- * Desktop: the section is one viewport tall per card and pins its
- * content, so scrolling rolls the list — the active card expands, the
- * others recede, and the product demo on the right swaps to match.
+ * Desktop: a seção tem uma viewport de altura por card e fixa o conteúdo,
+ * então a rolagem percorre a lista — o card ativo se expande, os demais
+ * recuam e a demonstração do produto à direita troca para acompanhá-lo.
  *
- * Below lg (or under prefers-reduced-motion) the pinning is off and
- * the same expand is driven by tapping instead, so nothing ever
- * reflows under the reader mid-sentence. There the demo also moves
- * inside the expanded card, trailing the CTA, since there is no
- * second column to hold it.
+ * Abaixo de lg (ou com prefers-reduced-motion), a fixação é desativada e a
+ * mesma expansão é controlada por toque, então nada é reorganizado sob o
+ * leitor no meio da frase. Nesse caso, a demonstração também se move para
+ * dentro do card expandido, depois do CTA, pois não há uma segunda coluna
+ * para abrigá-la.
  *
- * Both modes share one `activeIndex`; only the driver differs.
+ * Os dois modos compartilham um `activeIndex`; apenas o controlador muda.
  */
 
 type Solution = {
@@ -35,11 +35,11 @@ type Solution = {
   description: string;
   cta?: {
     label: string;
-    /** External URL, or "" when the CTA opens the contact form. */
+    /** URL externa ou "" quando o CTA abre o formulário de contato. */
     href: string;
-    /** Prefills the form's Message field. Implies the contact form. */
+    /** Preenche o campo de mensagem do formulário. Implica o formulário. */
     message?: string;
-    /** Filled for the primary action, outlined for the secondary one. */
+    /** Preenchido para a ação primária e contornado para a secundária. */
     variant: "primary" | "outline";
   };
 };
@@ -47,9 +47,10 @@ type Solution = {
 const PORTAL_URL = "https://servicos.baita.testbeds.rnp.br/";
 
 /**
- * Viewports of page height per card. Below the benefits section's 1.15
- * because there is one card fewer and the expand is a 400ms tween
- * rather than 700ms, so each card needs less dwell to read as settled.
+ * Viewports de altura de página por card. Abaixo dos 1.15 da seção de
+ * benefícios porque há um card a menos e a expansão é um tween de 400ms em
+ * vez de 700ms; assim, cada card precisa de menos tempo parado para parecer
+ * estável.
  */
 const VIEWPORTS_PER_CARD = 0.9;
 
@@ -96,7 +97,7 @@ function useSolutions(): Solution[] {
   ];
 }
 
-/** Which screen belongs to which card. */
+/** Qual tela pertence a cada card. */
 const SCREEN_FOR: Record<string, "benefits" | "management" | "idp"> = {
   portal: "benefits",
   management: "management",
@@ -104,12 +105,12 @@ const SCREEN_FOR: Record<string, "benefits" | "management" | "idp"> = {
 };
 
 /**
- * The product screen for a card, in its browser window.
+ * A tela do produto de um card, dentro de sua janela de navegador.
  *
- * `variant` rather than a className, because the two placements want
- * opposite sizing: the desktop column hands the window a box to fill,
- * while inside a mobile card it sets its own height from the capture's
- * own shape.
+ * Usa `variant` em vez de className porque as duas posições precisam de
+ * dimensionamentos opostos: a coluna desktop oferece à janela uma caixa para
+ * preencher, enquanto dentro de um card mobile ela define a própria altura a
+ * partir do formato da captura.
  */
 function DemoPanel({
   solution,
@@ -143,8 +144,8 @@ function SolutionCard({
       : "border border-neutral-200 bg-white/40 text-neutral-950 shadow-sm hover:bg-white/80",
   ].join(" ");
 
-  // A contact CTA is a button, not a link: the app mounts a HashRouter,
-  // so an "#contact-form" href would be read as a route.
+  // Um CTA de contato é um botão, não um link: a aplicação monta um
+  // HashRouter, então um href "#contact-form" seria lido como uma rota.
   const cta = !solution.cta ? null : solution.cta.message ? (
     <button
       type="button"
@@ -172,9 +173,9 @@ function SolutionCard({
       className={`t-card-enter ${hasEntered ? "is-shown" : ""}`}
       style={{ "--i": index } as React.CSSProperties}
     >
-      {/* Entrance opacity lives on the <li>, the active/inactive
-          dimming on the card — two independent opacities that would
-          otherwise fight over the same element. */}
+      {/* A opacidade de entrada vive no <li>, e o escurecimento de ativo/inativo
+          no card — são duas opacidades independentes que, de outro modo,
+          competiriam pelo mesmo elemento. */}
       <div className="t-solution-card" data-active={String(isActive)}>
         <span className="t-solution-blob" aria-hidden="true" />
 
@@ -210,8 +211,8 @@ function SolutionCard({
                     </span>
                   )}
 
-                  {/* t-demo-inline, not an `lg:hidden` utility — see the
-                      note on that class in global.css. */}
+                  {/* t-demo-inline, não o utilitário `lg:hidden` — veja a
+                      observação sobre essa classe em global.css. */}
                   {!isPinned && (
                     <span className="t-stagger-line t-stagger-line--4 t-demo-inline mt-6 block">
                       <DemoPanel solution={solution} variant="inline" />
@@ -231,9 +232,9 @@ export function SolutionsSection() {
   const { t } = useTranslation();
   const solutions = useSolutions();
 
-  // Scrubbed hand-off: the card that is opening and the one closing
-  // both move with the scroll, so the pinned stretch never sits still
-  // waiting for a discrete swap.
+  // Transição com scrub: o card que abre e o que fecha se movem com a
+  // rolagem, então o trecho fixado nunca fica parado esperando uma troca
+  // discreta.
   const buildTimeline = useCallback(
     (tl: gsap.core.Timeline, root: HTMLElement) => {
       const panels = Array.from(
@@ -286,8 +287,8 @@ export function SolutionsSection() {
     []
   );
 
-  // The open card is whichever panel track is tallest, so the badge
-  // colours and the rail can never disagree with the geometry.
+  // O card aberto é aquele cuja faixa do painel está mais alta, então as cores
+  // do badge e a régua nunca discordam da geometria.
   const deriveIndex = useCallback((root: HTMLElement) => {
     const panels = Array.from(
       root.querySelectorAll<HTMLElement>(".t-solution-card .t-acc-panel")
@@ -304,9 +305,9 @@ export function SolutionsSection() {
     return best;
   }, []);
 
-  // Clicking scrolls to the middle of the window where the item is
-  // whole. Sharing this with the timeline is the point of
-  // scrub-schedule: the two disagreeing is what froze item 0 half open.
+  // Clicar rola até o meio da janela, onde o item fica inteiro. Compartilhar
+  // isso com a timeline é o propósito de scrub-schedule: quando discordavam,
+  // o item 0 ficava congelado pela metade.
   const progressForIndex = useCallback(
     (index: number) => restProgress(index, solutions.length),
     []
@@ -326,8 +327,8 @@ export function SolutionsSection() {
     progressForIndex,
   });
 
-  // Tap drives the list when the scroll stagger is off. First card
-  // open by default, exactly one open at a time in both modes.
+  // O toque controla a lista quando o stagger da rolagem está desativado. O
+  // primeiro card abre por padrão, com exatamente um aberto em ambos os modos.
   const [tappedIndex, setTappedIndex] = useState(0);
   const activeIndex = isPinned ? scrolledIndex : tappedIndex;
 
@@ -378,14 +379,14 @@ export function SolutionsSection() {
             </div>
           </div>
 
-          {/* Demo column: panels are stacked and cross-faded, so the
-              swap has no layout step. When the stagger is off the demo
-              rides inside the expanded card instead. */}
-          {/* Rendered unconditionally: the timeline is built inside the
-              matchMedia callback, and anything gated on isPinned does
-              not exist yet at that point — its tweens would silently
-              never be created. `hidden lg:block` already keeps it off
-              small screens. */}
+          {/* Coluna de demonstração: os painéis ficam empilhados e fazem
+              cross-fade, então a troca não altera o layout. Com o stagger
+              desativado, a demonstração fica dentro do card expandido. */}
+          {/* Renderizado incondicionalmente: a timeline é criada dentro do
+              callback de matchMedia, e qualquer elemento condicionado a
+              isPinned ainda não existiria nesse momento — seus tweens nunca
+              seriam criados. `hidden lg:block` já o mantém fora de telas
+              pequenas. */}
           <div className="t-solution-demo relative hidden lg:block">
             {solutions.map((solution, index) => (
               <div

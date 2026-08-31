@@ -3,15 +3,15 @@ import { useEnterOnce } from "@/hooks/useEnterOnce";
 import { requestContact } from "@/lib/contact-request";
 
 /**
- * "Participe como Early Adopter" — Figma node 1058:37336.
+ * "Participe como Early Adopter" — nó 1058:37336 do Figma.
  *
- * Static two-column section: the pitch and its CTA on the left, the
- * use cases on the right. No pinning or scroll driver here — after two
- * scroll-driven sections in a row, a third would be exhausting, and
- * the content has no state to move through.
+ * Seção estática em duas colunas: a apresentação e seu CTA à esquerda, e
+ * os casos de uso à direita. Não há fixação nem controle de rolagem aqui —
+ * depois de duas seções dirigidas pela rolagem em sequência, uma terceira
+ * seria cansativa, e o conteúdo não tem estado para percorrer.
  *
- * Reuses the existing earlyAdopters.title / .description copy, which
- * already matched the Figma word for word.
+ * Reutiliza os textos existentes de earlyAdopters.title / .description,
+ * que já correspondiam palavra por palavra ao Figma.
  */
 
 type UseCase = {

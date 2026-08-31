@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Flips to true the first time the element scrolls into view, and
- * never back — for entrance animations that should play once.
+ * Muda para true na primeira vez que o elemento entra na tela e nunca volta
+ * — para animações de entrada que devem tocar uma única vez.
  *
- * Falls back to true when IntersectionObserver is missing, so the
- * content is never left stuck in its hidden starting state.
+ * Usa true como fallback quando IntersectionObserver não existe, para que o
+ * conteúdo nunca fique preso no estado inicial oculto.
  */
 export function useEnterOnce<T extends HTMLElement>(amount = 0.35) {
   const ref = useRef<T | null>(null);

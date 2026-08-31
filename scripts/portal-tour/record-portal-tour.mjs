@@ -1,18 +1,18 @@
 /**
- * Records the Portal de Benefícios tour used by the solutions section.
+ * Grava o tour do Portal de Benefícios usado na seção de soluções.
  *
  *   npm i --no-save playwright ffmpeg-static
  *   node scripts/record-portal-tour.mjs
  *
- * Writes public/media/portal-tour-pt.webm and its poster frame. Re-run
- * it whenever the portal changes — it is a testbed, so its catalogue
- * will. Needs Playwright and a local Chrome; nothing here is a build
- * dependency, so it is deliberately not wired into npm scripts.
+ * Grava public/media/portal-tour-pt.webm e seu poster. Execute novamente
+ * sempre que o portal mudar — ele é um testbed, então o catálogo também
+ * mudará. Requer Playwright e um Chrome local; nada aqui é dependência de
+ * build, por isso o script não está ligado aos scripts do npm.
  *
- * The recorder only emits WebM/VP8, which real Safari would not play,
- * so the WebM is transcoded to H.264 MP4 and thrown away. That needs a
- * full ffmpeg — the one bundled with Playwright is built
- * --disable-everything and has no H.264 encoder — hence ffmpeg-static.
+ * O gravador só emite WebM/VP8, que o Safari real não reproduz; por isso o
+ * WebM é convertido para H.264 MP4 e descartado. Isso exige um ffmpeg
+ * completo — o que vem com o Playwright é compilado com
+ * --disable-everything e não tem codificador H.264 — daí o ffmpeg-static.
  */
 import { chromium } from 'playwright';
 import fs from 'fs';
@@ -26,16 +26,16 @@ const OUT_WEBM = 'scripts/.rec/tour.webm';
 const OUT_VIDEO = 'public/media/portal-tour-pt.mp4';
 const OUT_POSTER = 'public/media/portal-tour-pt.jpg';
 /**
- * Recorded taller than a laptop window on purpose. The preview is a
- * fixed 685px column whose height follows the cards beside it, which
- * lands around 1.3:1 — a 16:10 capture into that box has to give up a
- * quarter of its width. At 1280x980 the capture already has the box's
- * shape, so almost nothing is cropped.
+ * Gravado mais alto que uma janela de laptop de propósito. A prévia é uma
+ * coluna fixa de 685px cuja altura acompanha os cards ao lado, chegando a
+ * aproximadamente 1,3:1 — uma captura 16:10 nessa caixa teria de perder um
+ * quarto da largura. Em 1280x980, a captura já tem o formato da caixa, então
+ * quase nada é cortado.
  */
 const W = 1280, H = 980;
 
-// Playwright's recorder does not draw a cursor, so the page draws its own:
-// it follows the real mouse, which means hovers in the video are genuine.
+// O gravador do Playwright não desenha o cursor, então a página desenha o
+// próprio: ele acompanha o mouse real, tornando genuínos os hovers do vídeo.
 const CURSOR = `
 (() => {
   const draw = () => {
@@ -51,7 +51,7 @@ const CURSOR = `
       r.style.transition = 'none'; r.style.opacity = '.6'; r.style.transform = 'scale(.2)';
       requestAnimationFrame(() => { r.style.transition = 'all 420ms cubic-bezier(.22,1,.36,1)'; r.style.opacity = '0'; r.style.transform = 'scale(1)'; });
     }, true);
-    // The badge is fixed bottom-right and would sit in every frame.
+    // O badge é fixo no canto inferior direito e apareceria em todos os quadros.
     const s = document.createElement('style');
     s.textContent = '.grecaptcha-badge{display:none !important}';
     document.head.appendChild(s);
@@ -78,7 +78,7 @@ const smoothScroll = async (top) => page.evaluate(t => window.scrollTo({ top: t,
 await page.goto(BASE, { waitUntil: 'networkidle' });
 await wait(1000);
 
-// 1 — the hero call to action (the header has one too; take the lower one)
+// 1 — o call to action do hero (o cabeçalho também tem um; use o inferior)
 const heroCta = await page.evaluateHandle(() => {
   const all = Array.from(document.querySelectorAll('a,button')).filter(e => /Acessar Benef/i.test(e.textContent || ''));
   return all.find(e => e.getBoundingClientRect().top > 250) || all[0];
@@ -89,12 +89,12 @@ await glide(Math.round(cta.x + cta.width / 2), Math.round(cta.y + cta.height / 2
 await wait(800);
 await page.mouse.down(); await wait(90); await page.mouse.up();
 
-// 2 — the catalogue
+// 2 — o catálogo
 await page.waitForURL('**/benefits**', { timeout: 20000 }).catch(() => {});
 await page.waitForLoadState('networkidle').catch(() => {});
 await wait(1300);
 
-// 3 — filter it by typing
+// 3 — filtre digitando
 const filter = await page.$('input[placeholder="Buscar..."]');
 if (filter) {
   const fb = await filter.boundingBox();
@@ -105,7 +105,7 @@ if (filter) {
   await wait(1600);
 }
 
-// 4 — hover a result, then open it
+// 4 — passe o mouse sobre um resultado e abra-o
 const card = await page.$('a[href*="/benefits/details"]');
 if (card) {
   const cb = await card.boundingBox();
@@ -118,7 +118,7 @@ if (card) {
   await wait(1400);
 }
 
-// 5 — back to where it started, so the loop seam is soft
+// 5 — volte ao início para que a emenda do loop seja suave
 await smoothScroll(0);
 await wait(700);
 await page.goto(BASE, { waitUntil: 'networkidle' });
@@ -131,9 +131,10 @@ const raw = await video.path();
 fs.mkdirSync(path.dirname(OUT_VIDEO), { recursive: true });
 fs.renameSync(raw, OUT_WEBM);
 
-// -an: the capture is silent, and an empty audio track only gives some
-// browsers a reason to treat the element as needing a user gesture.
-// +faststart puts the index first so playback can begin while it loads.
+// -an: a captura é silenciosa, e uma faixa de áudio vazia apenas faz alguns
+// navegadores tratarem o elemento como dependente de um gesto do usuário.
+// +faststart coloca o índice no início para que a reprodução comece durante o
+// carregamento.
 execFileSync(ffmpeg, [
   '-y', '-hide_banner', '-loglevel', 'error',
   '-i', OUT_WEBM,
@@ -143,8 +144,8 @@ execFileSync(ffmpeg, [
   OUT_VIDEO,
 ]);
 
-// The poster is the recording's own first frame, so the still and the
-// video can never show different framing.
+// O poster é o primeiro quadro da própria gravação, então a imagem estática
+// e o vídeo nunca podem mostrar enquadramentos diferentes.
 const poster = await browser.newPage({ viewport: { width: W + 20, height: H + 30 } });
 const b64 = fs.readFileSync(OUT_VIDEO).toString('base64');
 await poster.setContent(

@@ -5,16 +5,16 @@ import { CONSENT_KEY, sendConsent, storeConsent } from "./consent";
 
 export function ClarityNotice() {
   const { t } = useTranslation();
-  // Read the stored choice up front so the banner never flashes for someone
-  // who has already answered it.
+  // Lê a escolha armazenada antes da primeira renderização para que o aviso
+  // não apareça rapidamente para quem já respondeu.
   const [isVisible, setIsVisible] = useState(
     () => !localStorage.getItem(CONSENT_KEY)
   );
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Re-send the user's previous choice to Clarity on every page load,
-    // since consent state is not persisted by Clarity itself.
+    // Reenvia a escolha anterior ao Clarity a cada carregamento, pois o
+    // próprio Clarity não persiste o estado do consentimento.
     const userChoice = localStorage.getItem(CONSENT_KEY);
     if (userChoice) {
       sendConsent(userChoice === "accepted");

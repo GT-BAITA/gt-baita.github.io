@@ -6,17 +6,17 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 /**
- * Adds inertial smoothing to the whole page.
+ * Adiciona suavização inercial à página inteira.
  *
- * ScrollSmoother works by translating `#smooth-content` inside a
- * fixed-height `#smooth-wrapper`, so anything that must stay put —
- * the header, the consent notice — has to live OUTSIDE the wrapper.
- * A `position: fixed` element inside it resolves against the
- * transformed ancestor and scrolls away with the page.
+ * ScrollSmoother funciona traduzindo `#smooth-content` dentro de um
+ * `#smooth-wrapper` de altura fixa, então tudo que precisa permanecer no
+ * lugar — o cabeçalho e o aviso de consentimento — deve ficar FORA do wrapper.
+ * Um elemento com `position: fixed` dentro dele usa o ancestral transformado
+ * como referência e rola junto com a página.
  *
- * Skipped entirely under prefers-reduced-motion: smoothing decouples
- * the page from the input device, which is exactly what that setting
- * asks us not to do. Touch is left native for the same reason.
+ * É totalmente desabilitada com prefers-reduced-motion: a suavização separa
+ * a página do dispositivo de entrada, exatamente o que essa configuração
+ * pede que não façamos. O toque permanece nativo pelo mesmo motivo.
  */
 export function useSmoothScroll() {
   useLayoutEffect(() => {
@@ -27,11 +27,16 @@ export function useSmoothScroll() {
         wrapper: "#smooth-wrapper",
         content: "#smooth-content",
         smooth: 1,
-        // Pointer devices only. On touch the OS already owns the
-        // scroll feel, and overriding it reads as broken.
+        // Serve como fallback para rolagens programáticas que não geram
+        // eventos de entrada; o caminho normal agenda o snap logo após o
+        // último gesto, sem esperar o smoother terminar.
+        onStop: () =>
+          window.dispatchEvent(new Event("baita:smooth-scroll-stop")),
+        // Apenas dispositivos com ponteiro. No toque, o sistema operacional
+        // já controla a rolagem, e sobrescrevê-la parece um erro.
         smoothTouch: 0,
-        // Keeps the pinned sections in step with the smoothed
-        // position instead of the raw one.
+        // Mantém as seções fixadas alinhadas à posição suavizada, em vez da
+        // posição bruta.
         ignoreMobileResize: true,
       });
 

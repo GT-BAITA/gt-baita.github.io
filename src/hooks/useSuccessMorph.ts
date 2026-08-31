@@ -1,25 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Choreographs the newsletter form → success banner morph.
+ * Coordena a transformação do formulário de newsletter → aviso de sucesso.
  *
- * Forward: the fields collapse (400ms) while the CTA pill travels up
- * and becomes a check badge, then the Obrigado block staggers in.
- * Reverse: the block fades out as one (200ms), then the fields reopen.
+ * Ida: os campos recolhem (400ms) enquanto a pílula do CTA sobe e se torna
+ * um badge de confirmação; depois, o bloco de obrigado entra em sequência.
+ * Volta: o bloco desaparece de uma vez (200ms) e então os campos reabrem.
  *
- * Both panels open and close on the same clock. The card's height is
- * never set — it follows the two grid tracks — so the tracks have to
- * move together for it to read as one gesture: with a shared easing
- * curve E the height is `full − net · E(t)`, which is monotonic. Open
- * the second panel after the first has closed and the card visibly
- * undershoots its final height by the difference, then grows back.
- * The text is held back by `is-shown` instead, which costs no height.
+ * Os dois painéis abrem e fecham no mesmo relógio. A altura do card nunca é
+ * definida — ela acompanha as duas faixas do grid —, então as faixas precisam
+ * se mover juntas para parecer um único gesto: com uma curva de easing E
+ * compartilhada, a altura é `full − net · E(t)`, que é monotônica. Abrir o
+ * segundo painel depois que o primeiro fechou faz o card passar visualmente
+ * abaixo da altura final pela diferença e depois crescer de novo. O texto é
+ * controlado por `is-shown`, sem alterar a altura.
  *
- * Durations are read from the CSS custom properties so the timers stay
- * in sync with the values in global.css.
+ * As durações são lidas das propriedades customizadas do CSS para manter os
+ * temporizadores sincronizados com os valores de global.css.
  */
 
-const HIDE_DURATION = 200; // .t-stagger.is-hiding, fixed by the snippet
+const HIDE_DURATION = 200; // .t-stagger.is-hiding, definido pelo snippet
 
 function readDuration(name: string, fallback: number) {
   if (typeof window === "undefined") return fallback;
@@ -36,11 +36,11 @@ function readDuration(name: string, fallback: number) {
 }
 
 export function useSuccessMorph(isSucceeded: boolean) {
-  // `phase` lags isSucceeded on the way back: it drives the card's
-  // padding and the CTA, both of which affect height, so it has to
-  // flip on the same tick as the grid tracks. Reading isSucceeded
-  // directly starts the padding 200ms early and the card dips well
-  // below its final height before growing back.
+  // `phase` fica atrás de isSucceeded na volta: ele controla o padding do
+  // card e o CTA, ambos afetando a altura, então precisa mudar no mesmo
+  // instante que as faixas do grid. Ler isSucceeded diretamente inicia o
+  // padding 200ms antes e faz o card cair bem abaixo da altura final antes de
+  // crescer novamente.
   const [phase, setPhase] = useState<"form" | "success">("form");
   const [fieldsOpen, setFieldsOpen] = useState(true);
   const [messageOpen, setMessageOpen] = useState(false);
@@ -50,8 +50,8 @@ export function useSuccessMorph(isSucceeded: boolean) {
   const messageRef = useRef<HTMLDivElement | null>(null);
   const isFirstRun = useRef(true);
 
-  // Calibrate the stroke-draw to this path's real length, so the
-  // checkmark neither pre-reveals nor over-draws.
+  // Calibra o desenho do traço ao comprimento real deste caminho, para que o
+  // checkmark não apareça antes da hora nem seja desenhado além do necessário.
   useEffect(() => {
     const path = checkRef.current?.querySelector("path");
     if (!path) return;
@@ -90,11 +90,11 @@ export function useSuccessMorph(isSucceeded: boolean) {
     return () => window.clearTimeout(timer);
   }, [isSucceeded]);
 
-  // The block is already in the DOM — its height is what the card
-  // tweens into — so aria-live has nothing to announce. Move focus
-  // instead, since the form the user was in is gone. This has to wait
-  // for the render that clears `inert`: focusing into an inert
-  // subtree fails silently and leaves focus on <body>.
+  // O bloco já está no DOM — a altura dele é o destino do tween do card —,
+  // então aria-live não tem nada a anunciar. Em vez disso, move o foco, pois
+  // o formulário em que o usuário estava desapareceu. É preciso aguardar a
+  // renderização que remove `inert`: focar em uma subárvore inerte falha em
+  // silêncio e deixa o foco em <body>.
   useEffect(() => {
     if (messageState !== "is-shown") return;
     messageRef.current?.focus({ preventScroll: true });

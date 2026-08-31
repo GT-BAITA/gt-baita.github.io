@@ -1,38 +1,38 @@
 /**
- * Shared schedule for the scrubbed pinned sections, in units of one
- * item — the timeline is `count` units long, so timeline time and the
- * item index share a scale.
+ * Agenda compartilhada das seções fixadas com scrub, em unidades de um item
+ * — a timeline tem `count` unidades, então o tempo da timeline e o índice do
+ * item compartilham a mesma escala.
  *
- * Kept in one place because two things have to agree on it: the
- * timeline that animates the hand-offs, and the click target that
- * scrolls to an item. When they disagreed, clicking the first item
- * landed inside a hand-off and left it frozen half open.
+ * Mantida em um só lugar porque duas coisas precisam concordar: a timeline
+ * que anima as transições e o alvo de clique que rola até um item. Quando
+ * discordavam, clicar no primeiro item caía no meio de uma transição e o
+ * deixava congelado pela metade.
  */
 
-/** Static stretch before the first hand-off. Short on purpose: a long
- *  motionless run right after the pin engages reads as the page jamming. */
+/** Trecho estático antes da primeira transição. Curto de propósito: uma longa
+ *  pausa logo após a fixação parece que a página travou. */
 export const LEAD_IN = 0.25;
 
-/** How long one item takes to give way to the next. */
+/** Tempo que um item leva para dar lugar ao próximo. */
 export const HAND_OFF = 0.95;
 
-/** Static stretch between hand-offs, so an item can be read. */
+/** Trecho estático entre transições, para que o item possa ser lido. */
 export const DWELL = 0.3;
 
-/** Timeline time at which item `index` starts giving way to `index + 1`. */
+/** Instante da timeline em que o item `index` começa a dar lugar a `index + 1`. */
 export function handOffStart(index: number) {
   return LEAD_IN + index * (HAND_OFF + DWELL);
 }
 
 /**
- * Progress (0..1) at the middle of the window where `index` is fully
- * open — where a click should land.
+ * Progresso (0..1) no meio da janela em que `index` está totalmente aberto
+ * — onde um clique deve pousar.
  *
- * The obvious `(index + 0.5) / count` assumes each item owns the zone
- * `[i, i + 1)` with the item centred in it. That was true before the
- * hand-offs were scheduled independently; now the first item is only
- * whole for `[0, LEAD_IN]`, and that formula drops the click right in
- * the middle of its hand-off.
+ * A fórmula óbvia `(index + 0.5) / count` assume que cada item possui a zona
+ * `[i, i + 1)`, com o item centralizado nela. Isso era verdade antes de as
+ * transições serem agendadas independentemente; agora o primeiro item só fica
+ * inteiro em `[0, LEAD_IN]`, e essa fórmula coloca o clique bem no meio da
+ * sua transição.
  */
 export function restProgress(index: number, count: number) {
   const start = index === 0 ? 0 : handOffStart(index - 1) + HAND_OFF;

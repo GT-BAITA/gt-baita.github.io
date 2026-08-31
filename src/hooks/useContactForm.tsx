@@ -1,8 +1,8 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import type { TFunction } from "i18next";
 
-// Company and affiliation are collected but not validated — they are
-// optional fields, so they carry no error message.
+// Empresa e vínculo são coletados, mas não validados — são campos opcionais,
+// portanto não possuem mensagem de erro.
 type ContactFormField = "name" | "email";
 
 type Errors = Record<ContactFormField, string>;

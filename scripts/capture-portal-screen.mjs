@@ -1,18 +1,17 @@
 /**
- * Captures the still of the Portal de Benefícios catalogue used by the
- * solutions section.
+ * Captura a imagem estática do catálogo do Portal de Benefícios usada na
+ * seção de soluções.
  *
  *   npm i --no-save playwright
  *   node scripts/capture-portal-screen.mjs
  *
- * Writes public/media/screen-benefits-pt.jpg. Re-run it whenever the
- * portal changes — it is a testbed, so its catalogue will.
+ * Grava public/media/screen-benefits-pt.jpg. Execute novamente sempre que o
+ * portal mudar — ele é um testbed, então o catálogo também mudará.
  *
- * 1280x980 on purpose: that is the shape the preview window takes in
- * the pinned column (~1.3:1), so the still fills it with almost
- * nothing cropped. It is also the shape the recorded tour used, in
- * scripts/portal-tour/ — keeping them equal means swapping one for the
- * other is a one-line change with no layout consequences.
+ * 1280x980 de propósito: esse é o formato da janela de prévia na coluna
+ * fixada (~1,3:1), então a imagem preenche o espaço quase sem cortes. É
+ * também o formato usado pelo tour gravado em scripts/portal-tour/ — manter
+ * ambos iguais permite trocar um pelo outro sem consequências no layout.
  */
 import { chromium } from 'playwright';
 import fs from 'fs';
@@ -25,20 +24,21 @@ const W = 1280, H = 980;
 const browser = await chromium.launch();
 const ctx = await browser.newContext({
   viewport: { width: W, height: H },
-  // 1x: the still is shown in a 685px box, so 1280 already gives it
-  // ~1.9x. Capturing at 2x quadrupled the bytes for detail no display
-  // resolves at that size.
+  // 1x: a imagem é exibida em uma caixa de 685px, então 1280 já fornece
+  // ~1,9x. Capturar em 2x quadruplicou os bytes por um nível de detalhe que
+  // nenhuma tela consegue resolver nesse tamanho.
   locale: 'pt-BR',
 });
 const page = await ctx.newPage();
 await page.goto(`${BASE}/benefits`, { waitUntil: 'networkidle', timeout: 45000 });
 
-// The badge is fixed bottom-right and would sit in the corner of the
-// frame; the scrollbar would read as part of our own window chrome.
+// O badge é fixo no canto inferior direito e apareceria no canto da moldura;
+// a barra de rolagem pareceria parte da moldura da nossa janela.
 await page.addStyleTag({
   content: '.grecaptcha-badge{display:none !important} ::-webkit-scrollbar{display:none}',
 });
-// Card images are lazy: let them settle before the shutter.
+// As imagens dos cards usam carregamento tardio: deixe-as estabilizar antes
+// da captura.
 await page.evaluate(() => window.scrollTo(0, 400));
 await page.waitForTimeout(1200);
 await page.evaluate(() => window.scrollTo(0, 0));

@@ -28,8 +28,8 @@ export function InitSection() {
               {t("init.ctaPrimary")}
             </button>
 
-            {/* A plain Link, not a Button wrapping one: an <a> inside a
-                <button> is invalid and behaves inconsistently. */}
+            {/* Um Link simples, sem ser envolvido por um Button: um <a> dentro
+                de um <button> é inválido e se comporta de forma inconsistente. */}
             <Link
               to="/about"
               className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg border border-neutral-200 px-6 py-[9.5px] font-geist text-sm font-medium tracking-[0.07px] text-neutral-900 shadow-sm transition-colors hover:bg-neutral-100"

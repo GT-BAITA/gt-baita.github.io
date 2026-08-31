@@ -10,46 +10,46 @@ import {
 } from "@/lib/scrub-schedule";
 
 /**
- * "Feito para quem move a federação" — Figma node 1058:37302.
+ * "Feito para quem move a federação" — nó 1058:37302 do Figma.
  *
- * Desktop: four panes in a row, one open at a time. The open pane
- * takes the width the collapsed rails leave over; the rest stay as
- * dark vertical rails showing their number and a rotated label.
- * Scrolling through the pinned section shuffles which pane is open —
- * same driver as the solutions section above — and clicking a rail
- * jumps to that pane's scroll offset.
+ * Desktop: quatro painéis em uma linha, com apenas um aberto por vez. O
+ * painel aberto ocupa a largura deixada pelas réguas recolhidas; as demais
+ * permanecem como réguas verticais escuras com seu número e um rótulo girado.
+ * Rolar pela seção fixada alterna o painel aberto — com o mesmo controle da
+ * seção de soluções acima —, e clicar em uma régua salta para o deslocamento
+ * de rolagem daquele painel.
  *
- * Below lg the row becomes a vertical accordion — a 90px rail per
- * pane leaves nothing readable on a phone — reusing the same tap
- * behaviour as the solutions section above it.
+ * Abaixo de lg, a linha vira um acordeão vertical — uma régua de 90px por
+ * painel não deixa nada legível no celular — reutilizando o mesmo comportamento
+ * de toque da seção de soluções acima.
  */
 
 /**
- * `body` has a budget of ~260 characters. The pane is a fixed box on a
- * pinned viewport, so anything longer does not scroll — it eats the
- * image's height, and past a point the image is dropped entirely.
- * Longest today is tab1 at 254.
+ * `body` tem um limite de ~260 caracteres. O painel é uma caixa fixa em uma
+ * viewport fixada, então textos maiores não rolam — consomem a altura da
+ * imagem e, depois de certo ponto, a imagem é removida por completo.
+ * O maior texto atual é o da tab1, com 254 caracteres.
  */
 type Tab = {
   key: string;
   label: string;
   body: string;
-  /** Prefills the contact form's Message field for this audience. */
+  /** Preenche o campo de mensagem do formulário para este público. */
   message: string;
   image?: string;
 };
 
 
 /**
- * Viewports of page height per tab. At 1 each tab got ~675px of travel
- * on a 900px viewport — less than a screen, so one trackpad flick
- * crossed a whole tab. 1.5 fixed that but made the section 5400px of
- * page. 1.15 keeps each tab just over a screen (~810px) while cutting
- * ~1250px of scrolling out of the section.
+ * Viewports de altura de página por tab. Com 1, cada tab tinha ~675px de
+ * deslocamento em uma viewport de 900px — menos que uma tela, então um gesto
+ * do trackpad atravessava uma tab inteira. 1.5 corrigia isso, mas deixava a
+ * seção com 5400px de página. 1.15 mantém cada tab pouco acima de uma tela
+ * (~810px), removendo ~1250px de rolagem da seção.
  */
 const VIEWPORTS_PER_TAB = 1.15;
 
-/** Timeline schedule, in units of one tab. */
+/** Agenda da timeline, em unidades de uma tab. */
 
 function useTabs(): Tab[] {
   const { t } = useTranslation();
@@ -143,7 +143,7 @@ function TabBody({
   );
 }
 
-/** The dark rail: number on top, rotated label on the bottom. */
+/** A régua escura: número no topo e rótulo girado na parte inferior. */
 function TabRail({
   index,
   tab,
@@ -180,10 +180,10 @@ export function BenefitsSection() {
   const { t } = useTranslation();
   const tabs = useTabs();
 
-  // One unit of timeline time per tab. The hand-offs start almost
-  // immediately and are spaced so the row is in motion for ~70% of the
-  // pin: a long static stretch right after the pin engages is exactly
-  // what reads as the page jamming.
+  // Uma unidade de tempo da timeline por tab. As transições começam quase
+  // imediatamente e são espaçadas para que a linha esteja em movimento em
+  // ~70% da fixação: um longo trecho parado logo após a fixação é exatamente
+  // o que faz a página parecer travada.
   const buildTimeline = useCallback(
     (tl: gsap.core.Timeline, root: HTMLElement) => {
       const panes = Array.from(
@@ -203,8 +203,8 @@ export function BenefitsSection() {
 
         const start = handOffStart(i);
 
-        // ease: "none" — the scroll position is the easing. Any curve
-        // here would make the geometry lead or trail the finger.
+        // ease: "none" — a posição de rolagem é o easing. Qualquer curva aqui
+        // faria a geometria se adiantar ou ficar para trás do dedo.
         tl.to(pane, { flexGrow: 0, duration: HAND_OFF, ease: "none" }, start)
           .to(next, { flexGrow: 1, duration: HAND_OFF, ease: "none" }, start)
           .to(
@@ -219,14 +219,14 @@ export function BenefitsSection() {
           );
       });
 
-      // Pin the timeline's length to one unit per tab.
+      // Fixa o comprimento da timeline em uma unidade por tab.
       tl.set({}, {}, panes.length);
     },
     []
   );
 
-  // The open tab is whichever pane currently has the most grow, so the
-  // label and colours can never disagree with the geometry.
+  // A tab aberta é o painel com maior crescimento neste momento, então o
+  // rótulo e as cores nunca discordam da geometria.
   const deriveIndex = useCallback((root: HTMLElement) => {
     const panes = Array.from(root.querySelectorAll<HTMLElement>(".t-tab-pane"));
     let best = 0;
@@ -241,9 +241,9 @@ export function BenefitsSection() {
     return best;
   }, []);
 
-  // Clicking scrolls to the middle of the window where the item is
-  // whole. Sharing this with the timeline is the point of
-  // scrub-schedule: the two disagreeing is what froze item 0 half open.
+  // Clicar rola até o meio da janela, onde o item fica inteiro. Compartilhar
+  // isso com a timeline é o propósito de scrub-schedule: quando discordavam,
+  // o item 0 ficava congelado pela metade.
   const progressForIndex = useCallback(
     (index: number) => restProgress(index, tabs.length),
     []
@@ -262,7 +262,7 @@ export function BenefitsSection() {
     progressForIndex,
   });
 
-  // Tap drives the list when the pinned scroll is off.
+  // O toque controla a lista quando a rolagem fixada está desativada.
   const [tappedIndex, setTappedIndex] = useState(0);
   const openIndex = isPinned ? scrolledIndex : tappedIndex;
   const select = (index: number) =>
@@ -288,7 +288,7 @@ export function BenefitsSection() {
           </p>
         </div>
 
-        {/* Desktop: four panes side by side, one open. */}
+        {/* Desktop: quatro painéis lado a lado, com um aberto. */}
         <div
           className="t-tabs t-tab-row mt-14 hidden overflow-hidden rounded-2xl border border-neutral-200 lg:flex"
           data-scrub={String(isPinned)}
@@ -316,8 +316,8 @@ export function BenefitsSection() {
                   <TabRail index={index} tab={tab} isOpen={isOpen} />
                 </button>
 
-                {/* No inner scrollbar: the body fills the pane and the
-                    image gives up whatever height the text needs. */}
+                {/* Sem barra de rolagem interna: o texto preenche o painel e a
+                    imagem cede a altura necessária ao conteúdo. */}
                 <div className="t-tab-body flex h-full overflow-hidden px-10 py-8">
                   <TabBody
                     tab={tab}
@@ -330,7 +330,7 @@ export function BenefitsSection() {
           })}
         </div>
 
-        {/* Mobile: the same content as a vertical accordion. */}
+        {/* Mobile: o mesmo conteúdo em um acordeão vertical. */}
         <ol className="t-tab-stack mt-12 flex flex-col lg:hidden">
           {tabs.map((tab, index) => {
             const isOpen = index === openIndex;

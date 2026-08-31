@@ -1,13 +1,13 @@
-/* Lifted out of src/styles/global.css when the tour was parked.
-   Paste it back after the .t-screen-stage rules. The window chrome
-   (.t-screen-frame / .t-screen-bar / .t-screen-stage) stayed in
-   global.css — the still uses it too. */
+/* Removido temporariamente de src/styles/global.css quando o tour foi
+   arquivado. Recoloque depois das regras de .t-screen-stage. A moldura da
+   janela (.t-screen-frame / .t-screen-bar / .t-screen-stage) permaneceu em
+   global.css — a imagem estática também a utiliza. */
 
-/* One control, two jobs. Stopped, it is the obvious thing to click, so
-   a browser that refused autoplay never leaves a still with no way in.
-   Running, it retreats to a corner chip that only surfaces on hover —
-   the way out for anyone who does not want the motion, without a
-   button sitting over the demo the whole time. */
+/* Um controle, duas funções. Parado, ele é o alvo óbvio de clique, para que
+   um navegador que recusou o autoplay nunca deixe uma imagem sem entrada.
+   Em execução, recua para um chip no canto que só aparece ao passar o mouse
+   — uma saída para quem não quer o movimento, sem manter um botão sobre a
+   demonstração o tempo todo. */
 .t-screen-play {
   position: absolute;
   display: flex;

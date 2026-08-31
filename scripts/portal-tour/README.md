@@ -1,82 +1,81 @@
-# Portal de Benefícios — recorded tour (parked)
+# Portal de Benefícios — tour gravado (arquivado)
 
-A working, finished version of the solutions-section preview as a
-**recorded walkthrough of the live portal** instead of a still. Parked
-because the project is not ready to publish it yet, not because
-anything is broken — it was verified playing in Chrome, WebKit and at
-390px, with and without `prefers-reduced-motion`.
+Uma versão funcional e finalizada da prévia da seção de soluções como um
+**tour gravado do portal em produção**, em vez de uma imagem estática. Foi
+arquivada porque o projeto ainda não está pronto para publicá-la, não porque
+há algo quebrado — sua reprodução foi verificada no Chrome, WebKit e em 390px,
+com e sem `prefers-reduced-motion`.
 
-Nothing in this folder is referenced by the app or copied into `dist`.
+Nada nesta pasta é referenciado pela aplicação ou copiado para `dist`.
 
-## What is here
+## O que há aqui
 
-| File | What it is |
+| Arquivo | O que é |
 | --- | --- |
-| `record-portal-tour.mjs` | Records the tour against the live portal and transcodes it. |
-| `portal-tour-pt.mp4` | The recording it produced (H.264, 1280×980, 19s, 923KB). |
-| `portal-tour-pt-poster.jpg` | First frame, used as the `<video poster>`. |
-| `portal-screen-video.tsx` | The component that played it. |
-| `portal-screen-video.css` | The play/pause control's styles. |
+| `record-portal-tour.mjs` | Grava o tour no portal em produção e faz a conversão. |
+| `portal-tour-pt.mp4` | A gravação produzida (H.264, 1280×980, 19s, 923KB). |
+| `portal-tour-pt-poster.jpg` | Primeiro quadro, usado como `<video poster>`. |
+| `portal-screen-video.tsx` | O componente que o reproduzia. |
+| `portal-screen-video.css` | Estilos do controle de reprodução/pausa. |
 
-## The tour
+## O tour
 
-Home → cursor travels to "Acessar Benefícios" and clicks → catalogue →
-types "periódicos" in the filter, list narrows live to two results →
-hovers a card → opens its detail page → scrolls → returns home, so the
-loop seam is soft.
+Início → o cursor vai até "Acessar Benefícios" e clica → catálogo → digita
+"periódicos" no filtro, e a lista é reduzida ao vivo a dois resultados → passa
+o mouse sobre um card → abre sua página de detalhes → rola → volta ao início,
+para que a emenda do loop seja suave.
 
-Playwright's recorder draws no cursor, so the script injects one that
-follows the real mouse — the hovers in the video are genuine, not
-faked.
+O gravador do Playwright não desenha o cursor, então o script injeta um que
+acompanha o mouse real — os hovers no vídeo são genuínos, não simulados.
 
-## To bring it back
+## Como reativá-lo
 
 1. `mv portal-tour-pt.mp4 portal-tour-pt-poster.jpg ../../public/media/`
-   (the poster is expected as `portal-tour-pt.jpg`).
+   (o poster deve se chamar `portal-tour-pt.jpg`).
 2. Replace `src/components/home/demos/product-screen.tsx` with
-   `portal-screen-video.tsx` (and route only the Benefits Portal card
-   to it — the Management System card shares that component now).
+   `portal-screen-video.tsx` (e direcione apenas o card do Portal de Benefícios
+   para ele — o card do Sistema de Gestão agora compartilha esse componente).
 3. Paste `portal-screen-video.css` back into `src/styles/global.css`,
    after the `.t-screen-stage` rules.
-4. Re-add the `portalDemo.play` / `portalDemo.pause` keys to both
-   locale files, and point the component's alt text at
-   `screens.benefits.alt` — `portalDemo.alt` was renamed when the
-   management screen joined it.
+4. Readicione as chaves `portalDemo.play` / `portalDemo.pause` aos dois
+   arquivos de locale e aponte o texto alternativo do componente para
+   `screens.benefits.alt` — `portalDemo.alt` foi renomeada quando a tela de
+   gestão foi incorporada.
 
-The window chrome (`.t-screen-frame`, `.t-screen-bar`,
-`.t-screen-stage`) stayed in `global.css` — the still uses it too — and
-the still is captured at the same 1280×980, so swapping one for the
-other has no layout consequences.
+A moldura da janela (`.t-screen-frame`, `.t-screen-bar`, `.t-screen-stage`)
+permaneceu em `global.css` — a imagem estática também a utiliza — e a imagem
+é capturada no mesmo 1280×980, então trocar uma pela outra não tem
+consequências no layout.
 
-## To re-record
+## Como gravar novamente
 
 ```
 npm i --no-save playwright ffmpeg-static
 node scripts/portal-tour/record-portal-tour.mjs
 ```
 
-Worth doing before any real launch: the portal is a **testbed**, so its
-catalogue will have moved on. Two things to look at in whatever it
-captures next —
+Vale fazer isso antes de qualquer lançamento real: o portal é um **testbed**,
+então seu catálogo terá mudado. Duas coisas para observar no próximo conteúdo
+capturado —
 
-- The catalogue's filter chips render in English on the Portuguese page
-  ("Students (9)", "Teaching & Learning (8)"), as do the cards' category
-  badges. That is a gap in the portal's own translations, and a
-  recording puts it on the landing page.
-- There is a placeholder entry called "Biblioteca Fictícia". The script
-  searches for "periódicos" partly to keep it out of frame.
+- Os chips de filtro do catálogo são renderizados em inglês na página em
+  português ("Students (9)", "Teaching & Learning (8)"), assim como os badges
+  de categoria dos cards. Isso é uma lacuna nas traduções do próprio portal, e
+  uma gravação levaria esse problema para a landing page.
+- Existe uma entrada de placeholder chamada "Biblioteca Fictícia". O script
+  procura por "periódicos" em parte para mantê-la fora do quadro.
 
-## Two things that cost time, so they are worth writing down
+## Duas coisas que custam tempo e vale registrar
 
-**H.264, never WebM.** Playwright's recorder emits WebM/VP8. It plays
-in Chrome and in Playwright's WebKit — but Playwright's WebKit is not
-Safari, it has its own media stack, so that is not evidence about
-Safari. On real Safari the file never loaded: no autoplay, and the play
-button did nothing either, because there was nothing decoded to play.
-The script now transcodes to H.264, which also happens to be less than
-half the size.
+**H.264, nunca WebM.** O gravador do Playwright emite WebM/VP8. Ele funciona
+no Chrome e no WebKit do Playwright — mas o WebKit do Playwright não é o
+Safari e tem sua própria pilha de mídia, então isso não é evidência sobre o
+Safari. No Safari real, o arquivo nunca carregou: sem autoplay, o botão de
+reprodução também não fazia nada, porque não havia nada decodificado para
+reproduzir. Agora o script converte para H.264, que também ocupa menos da
+metade do tamanho.
 
-**The bundled ffmpeg cannot do it.** Playwright ships an ffmpeg built
-`--disable-everything`, with libvpx and no H.264 encoder at all. Hence
-the `ffmpeg-static` dependency, installed with `--no-save` so it never
-enters `package.json`.
+**O ffmpeg incluído não consegue fazer isso.** O Playwright distribui um
+ffmpeg compilado com `--disable-everything`, com libvpx e sem qualquer
+codificador H.264. Por isso a dependência `ffmpeg-static`, instalada com
+`--no-save` para nunca entrar em `package.json`.

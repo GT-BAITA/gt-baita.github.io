@@ -32,23 +32,23 @@ export function ContactFormSection() {
     messageRef,
   } = useSuccessMorph(isSucceeded);
 
-  // The Message field is controlled so a CTA elsewhere on the page can
-  // arrive with it already filled in.
+  // O campo de mensagem é controlado para que um CTA de outra parte da
+  // página possa abri-lo já preenchido.
   const [message, setMessage] = useState("");
   const injectedRef = useRef("");
 
   useEffect(
     () =>
       onContactRequest((requested) => {
-        // Read the previous injection before overwriting it: the
-        // functional updater runs on the next render, by which point
-        // the ref would already hold `requested` and the comparison
-        // would never match — every CTA after the first was ignored.
+        // Lê a injeção anterior antes de sobrescrevê-la: o atualizador
+        // funcional roda na próxima renderização, quando a ref já teria
+        // recebido `requested` e a comparação nunca coincidiria — todo CTA
+        // depois do primeiro seria ignorado.
         const previous = injectedRef.current;
         injectedRef.current = requested;
 
-        // Never clobber something the visitor typed themselves — only
-        // an empty field or a previous injection gets replaced.
+        // Nunca sobrescreve algo digitado pelo visitante — apenas um campo
+        // vazio ou uma injeção anterior pode ser substituído.
         setMessage((current) =>
           current === "" || current === previous ? requested : current
         );
@@ -56,7 +56,7 @@ export function ContactFormSection() {
     []
   );
 
-  // reset() clears the uncontrolled fields but cannot touch React state.
+  // reset() limpa os campos não controlados, mas não altera o estado do React.
   useEffect(() => {
     if (!isSucceeded) return;
     setMessage("");
@@ -66,9 +66,9 @@ export function ContactFormSection() {
   const title = t("contactForm.title");
   const successTitle = t("contactForm.successTitle");
 
-  // The section is lg:items-center, so a shrinking card would drag the
-  // copy on the left up with it. Reserve the form's height on desktop
-  // and let the banner settle inside a frame that never moves.
+  // A seção usa lg:items-center, então um card que encolhe puxaria o texto
+  // à esquerda para cima. Reserva a altura do formulário no desktop e deixa
+  // o aviso se acomodar dentro de uma moldura que nunca se move.
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [reservedHeight, setReservedHeight] = useState<number>();
 
@@ -144,9 +144,9 @@ export function ContactFormSection() {
             className="t-morph-card"
             data-phase={phase}
           >
-            {/* Fields — collapse via grid-template-rows, no measurement.
-                The card's height follows them, and the CTA below rides
-                the closing track up to where the banner's badge lands. */}
+            {/* Campos — recolhem via grid-template-rows, sem medição. A altura
+                do card os acompanha, e o CTA abaixo sobe pela faixa que fecha
+                até onde o badge do aviso pousa. */}
             <div
               className="t-acc t-morph-fields"
               data-open={String(fieldsOpen)}
@@ -237,8 +237,8 @@ export function ContactFormSection() {
               </div>
             </div>
 
-            {/* The one element that survives both states: submit pill,
-                then spinner, then the check badge of the banner. */}
+            {/* O único elemento que sobrevive aos dois estados: pílula de envio,
+                depois spinner e, por fim, o badge de confirmação do aviso. */}
             <button
               className="g-recaptcha t-cta-morph mt-4 disabled:cursor-default"
               data-phase={phase}
@@ -280,11 +280,11 @@ export function ContactFormSection() {
               </span>
             </button>
 
-            {/* Obrigado block — same collapse mechanism, on the same
-                clock as the fields so the card's height stays
-                monotonic. Its content is invisible until is-shown, so
-                opening the track early costs nothing visually.
-                .t-stagger owns the visuals. */}
+            {/* Bloco de obrigado — usa o mesmo mecanismo de recolhimento e o
+                mesmo relógio dos campos para manter a altura do card
+                monotônica. O conteúdo fica invisível até is-shown, então
+                abrir a faixa antes não tem custo visual. .t-stagger controla
+                os elementos visuais. */}
             <div
               className="t-acc t-morph-message"
               data-open={String(messageOpen)}

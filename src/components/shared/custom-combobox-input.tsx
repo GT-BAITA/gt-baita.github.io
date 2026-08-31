@@ -26,10 +26,10 @@ export function CustomComboboxInput({
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  // Close when the pointer goes down anywhere outside the combobox.
-  // pointerdown rather than click, so the list is gone before focus
-  // moves — a click landing on another field would otherwise leave
-  // the list open behind it.
+  // Fecha quando o ponteiro é pressionado em qualquer lugar fora do
+  // combobox. Usa pointerdown em vez de click para que a lista desapareça
+  // antes da mudança de foco — um clique em outro campo poderia deixá-la
+  // aberta atrás dele.
   useEffect(() => {
     if (!isOpen) return;
 

@@ -3,12 +3,12 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 
 /**
- * "De uma rede de acesso a um ecossistema de serviços" — Figma node
- * 1058:35759.
+ * "De uma rede de acesso a um ecossistema de serviços" — nó 1058:35759
+ * do Figma.
  *
- * Rendered twice by design, never at the same time: InitSection places
- * it inside the hero from md up, and the home page places it below the
- * hero on mobile. See the note in src/pages/index.tsx.
+ * Renderizada duas vezes por projeto, nunca ao mesmo tempo: InitSection a
+ * coloca dentro do hero a partir de md, e a página inicial a coloca abaixo
+ * do hero no mobile. Veja a observação em src/pages/index.tsx.
  */
 export function AboutSection() {
   const { t } = useTranslation();

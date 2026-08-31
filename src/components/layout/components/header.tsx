@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { LanguageToggle } from "./language-toggle";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 type NavItem = {
   href: string;
@@ -57,6 +58,18 @@ function scrollToSection(href: string, offset = -100) {
   window.history.pushState(null, "", href);
 }
 
+function scrollToTop() {
+  const smoother = ScrollSmoother.get();
+  if (smoother) {
+    // Atualiza também o alvo nativo do smoother; scrollTop() sozinho pode
+    // deixar o navegador apontando para a posição anterior.
+    smoother.scrollTo(0, false);
+    return;
+  }
+
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
+
 function ScrollToSectionOnLoad() {
   const location = useLocation();
 
@@ -102,9 +115,9 @@ export function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  // The brand is already the link home, so "Sobre" is the only other
-  // destination the site has. #roadmap / #team / #faq pointed at
-  // sections that are parked, and clicked into nothing.
+  // A marca já é o link para a página inicial, então "Sobre" é o único outro
+  // destino do site. #roadmap / #team / #faq apontavam para seções arquivadas
+  // e não levavam a lugar algum.
   const navItems: NavItem[] = [{ href: "/about", label: t("header.nav-1") }];
 
   const CTAButton = (
@@ -124,14 +137,17 @@ export function Header() {
   );
 
   const Brand = (
-    <h1
-      onClick={(e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }}
-      className="whitespace-nowrap text-lg font-bold font-domine text-neutral-900 transition hover:opacity-90 cursor-pointer sm:text-xl md:text-2xl"
-    >
-      <Link to="/">{t("header.brand")}</Link>
+    <h1 className="whitespace-nowrap text-lg font-bold font-domine text-neutral-900 transition hover:opacity-90 cursor-pointer sm:text-xl md:text-2xl">
+      <Link
+        to="/"
+        onClick={(e) => {
+          if (location.pathname !== "/") return;
+          e.preventDefault();
+          scrollToTop();
+        }}
+      >
+        {t("header.brand")}
+      </Link>
     </h1>
   );
 
@@ -197,15 +213,15 @@ export function Header() {
           ref={navRef}
           className="flex items-center justify-between gap-2 px-3 md:px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 hover:bg-white/70"
         >
-          {/* No hamburger: with one destination it would hide a single
-              link behind an extra tap. Everything sits in the bar. */}
+          {/* Sem menu hambúrguer: com um único destino, ele esconderia um
+              link atrás de um toque extra. Tudo fica na barra. */}
           <div className="flex min-w-0 items-center gap-3 md:gap-12">
             {Brand}
             <NavLinks items={navItems} />
           </div>
 
-          {/* Language and CTA group on the right: both are actions,
-              while the brand and the link are destinations. */}
+          {/* Grupo de idioma e CTA à direita: ambos são ações, enquanto a
+              marca e o link são destinos. */}
           <div className="flex shrink-0 items-center gap-1 md:gap-3">
             <LanguageToggle />
             {CTAButton}

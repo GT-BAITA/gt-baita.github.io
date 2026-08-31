@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 export function LanguageToggle() {
   const { i18n, t } = useTranslation();
 
-  const currentLang = i18n.language === "pt" ? "PT" : "EN";
+  const currentLang = i18n.language.startsWith("pt") ? "PT" : "EN";
 
   const options = [
     {

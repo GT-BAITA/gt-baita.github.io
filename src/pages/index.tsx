@@ -5,18 +5,18 @@ import { SolutionsSection } from "@/components/home/solutions-section";
 import { UseCasesSection } from "@/components/home/use-cases-section";
 
 /**
- * The page is being reworked from scratch against the Figma master
- * (file DRQsUf0HedIdSMsLCt8PcX, frame `/home`, node 1058:35737), so
- * everything between the hero and the footer is parked here.
+ * A página está sendo refeita do zero a partir do arquivo mestre do Figma
+ * (arquivo DRQsUf0HedIdSMsLCt8PcX, frame `/home`, nó 1058:35737), então tudo
+ * entre o hero e o rodapé fica arquivado aqui.
  *
- * Nothing was deleted: every section component still lives in
- * src/components/home/, so bringing one back is uncommenting its
- * import and its line in the tree below.
+ * Nada foi excluído: cada componente de seção continua em
+ * src/components/home/, então reativar uma seção é descomentar sua importação
+ * e sua linha na árvore abaixo.
  *
- * The footer is not listed here — it is rendered by Layout, and the
- * newsletter form lives inside it, so both stayed up automatically.
+ * O rodapé não aparece aqui — ele é renderizado por Layout, e o formulário de
+ * newsletter vive dentro dele, então ambos continuaram ativos automaticamente.
  *
- * Parked sections, in their original order:
+ * Seções arquivadas, na ordem original:
  *
  *   import { FeaturesSection } from "@/components/home/features-section";
  *   import { RoadmapSection } from "@/components/home/roadmap-section";
@@ -30,9 +30,8 @@ import { UseCasesSection } from "@/components/home/use-cases-section";
  *   <TeamSection />
  *   <FAQSection />
  *
- * A <YouTubeEmbed /> (src/components/home/youtube-player.tsx) sat
- * between TeamSection and FAQSection, already commented out before
- * this change.
+ * Um <YouTubeEmbed /> (src/components/home/youtube-player.tsx) ficava entre
+ * TeamSection e FAQSection e já estava comentado antes desta alteração.
  */
 
 export function Home() {
@@ -40,10 +39,10 @@ export function Home() {
     <>
       <InitSection />
 
-      {/* AboutSection is a responsive split, not a duplicate: InitSection
-          renders it inside the hero from md up, this renders it below the
-          hero on mobile. Both halves have to stay for the hero to match
-          across breakpoints. */}
+      {/* AboutSection é uma divisão responsiva, não uma duplicação: InitSection
+          a renderiza dentro do hero a partir de md, e esta página a renderiza
+          abaixo do hero no mobile. As duas metades precisam existir para que o
+          hero corresponda em todos os breakpoints. */}
       <div className="md:hidden visible">
         <AboutSection />
       </div>

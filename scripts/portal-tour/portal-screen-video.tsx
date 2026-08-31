@@ -3,31 +3,30 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 /**
- * A recorded tour of the live Portal de Benefícios
- * (servicos.baita.testbeds.rnp.br), framed in a browser window.
+ * Tour gravado do Portal de Benefícios em produção
+ * (servicos.baita.testbeds.rnp.br), emoldurado em uma janela de navegador.
  *
- * A recording rather than a replica, because it *is* the product: the
- * catalogue, the copy and the photos are the real ones, and the
- * portal's own hover states and route transitions come along for free.
- * A hand-built replica would drift from it and would need invented
- * content to fill the cards.
+ * É uma gravação em vez de uma réplica porque ela *é* o produto: o catálogo,
+ * os textos e as fotos são reais, e os estados de hover e as transições de
+ * rota do portal vêm junto. Uma réplica feita à mão se afastaria do produto
+ * e exigiria conteúdo inventado para preencher os cards.
  *
- * Re-record with scripts/record-portal-tour.mjs whenever the portal
- * changes — it is a testbed, so its catalogue will.
+ * Grave novamente com scripts/record-portal-tour.mjs sempre que o portal
+ * mudar — ele é um testbed, então o catálogo também mudará.
  */
 
 /**
- * H.264 in MP4, not WebM. WebM/VP8 is what the recorder emits and it
- * plays in Chrome and in Playwright's WebKit — but Playwright's WebKit
- * is not Safari, it has its own media stack, so that was never
- * evidence about Safari, and on a real Safari the file never loaded:
- * no autoplay, and the play button did nothing either. H.264 is the
- * one video codec every browser decodes. It also happens to be half
- * the size here.
+ * H.264 em MP4, não WebM. WebM/VP8 é o formato emitido pelo gravador e
+ * funciona no Chrome e no WebKit do Playwright — mas o WebKit do Playwright
+ * não é o Safari e tem sua própria pilha de mídia; portanto, isso nunca foi
+ * evidência sobre o Safari. Em um Safari real, o arquivo nem carregou: sem
+ * autoplay, o botão de reprodução também não fazia nada. H.264 é o único
+ * codec de vídeo que todos os navegadores decodificam. Além disso, aqui ele
+ * ocupa metade do tamanho.
  */
 const TOUR = "/media/portal-tour-pt.mp4";
-/** First frame of the same recording, so the still and the video can
- *  never show different framing. */
+/** Primeiro quadro da mesma gravação, para que a imagem estática e o vídeo
+ *  nunca mostrem enquadramentos diferentes. */
 const POSTER = "/media/portal-tour-pt.jpg";
 
 export function PortalScreen({
@@ -39,9 +38,9 @@ export function PortalScreen({
   const ref = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  // The section sits several screens down, and the recording is ~1.9MB.
-  // Nothing is fetched until the visitor is on their way to it — the
-  // poster carries the frame in the meantime.
+  // A seção fica várias telas abaixo e a gravação tem ~1,9 MB. Nada é
+  // carregado até que o visitante esteja a caminho dela — enquanto isso,
+  // o poster exibe o quadro correspondente.
   const [isNear, setIsNear] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -60,16 +59,16 @@ export function PortalScreen({
         setIsNear(true);
         observer.disconnect();
       },
-      // Close enough that it is the next thing on screen, far
-      // enough that the poster is rarely what the visitor arrives to.
+      // Perto o suficiente para ser o próximo elemento na tela, mas longe o
+      // bastante para que o visitante raramente chegue ao poster primeiro.
       { rootMargin: "300px" }
     );
 
-    // Two frames before observing: ScrollTrigger inserts the pin
-    // spacers for this section on its own pass, and until it has, the
-    // page is short enough that this element sits just under the fold.
-    // Observing immediately fired on that transient layout and fetched
-    // the recording for visitors still at the top of the page.
+    // Aguarda dois quadros antes de observar: o ScrollTrigger insere os
+    // espaçadores da fixação em seu próprio ciclo e, até isso acontecer, a
+    // página é curta o suficiente para este elemento ficar logo abaixo da
+    // dobra. Observar imediatamente usava esse layout transitório e baixava
+    // a gravação para visitantes ainda no topo da página.
     let frame = requestAnimationFrame(() => {
       frame = requestAnimationFrame(() => observer.observe(element));
     });
@@ -80,24 +79,26 @@ export function PortalScreen({
     };
   }, []);
 
-  // Plays unconditionally, prefers-reduced-motion included. That is a
-  // deliberate exception to the rest of the page, which honours the
-  // preference everywhere: this panel is the product demo and was
-  // asked to loop on its own, and a paused frame reads as broken here
-  // rather than as calm. The pause control below is the way out.
+  // Reproduz sempre, inclusive com prefers-reduced-motion. Essa é uma
+  // exceção deliberada ao restante da página, que respeita a preferência em
+  // todos os lugares: este painel é a demonstração do produto e foi pensado
+  // para repetir sozinho; aqui, um quadro pausado parece quebrado, não calmo.
+  // O controle de pausa abaixo oferece a saída.
   //
-  // Autoplay is still only a request — Safari refuses it in Low Power
-  // Mode — so every path that ends up paused shows a play button.
+  // Autoplay ainda é apenas uma solicitação — o Safari o recusa no Modo de
+  // Pouca Energia —, então todo caminho que termina pausado mostra o botão de
+  // reprodução.
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !isNear) return;
 
-    // Setting src after mount does not reliably re-arm the autoplay
-    // attribute, so ask explicitly once the source is in place.
+    // Definir src depois da montagem não reativa o atributo de autoplay de
+    // forma confiável; por isso, solicita a reprodução explicitamente assim
+    // que a fonte estiver pronta.
     video.play().catch(() => {});
 
-    // If the browser refused, the first tap or click anywhere counts
-    // as the gesture it was waiting for.
+    // Se o navegador recusou, o primeiro toque ou clique em qualquer lugar
+    // conta como o gesto que ele estava aguardando.
     const retry = () => {
       if (video.paused) video.play().catch(() => {});
     };
@@ -105,9 +106,9 @@ export function PortalScreen({
     return () => document.removeEventListener("pointerdown", retry);
   }, [isNear]);
 
-  // Bound imperatively rather than through React's onPlaying/onPause
-  // props: those did not fire here — the native events do, so the
-  // button stayed on screen over a video that was already running.
+  // Vinculado imperativamente em vez de usar as props onPlaying/onPause do
+  // React: elas não dispararam aqui — os eventos nativos disparam, então o
+  // botão permanecia sobre um vídeo que já estava sendo reproduzido.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -130,9 +131,9 @@ export function PortalScreen({
   return (
     <div ref={ref} className="t-screen-slot" data-variant={variant}>
       <figure className="t-screen-frame m-0">
-        {/* The window chrome is markup, not part of the recording: the
-            capture is only the viewport, and drawing the frame here
-            keeps it crisp and lets it follow the page's own radii. */}
+        {/* A moldura da janela é marcação, não parte da gravação: a captura é
+            apenas a área visível, e desenhar a moldura aqui a mantém nítida
+            e permite seguir os raios da própria página. */}
         <div className="t-screen-bar" aria-hidden="true">
           <span />
           <span />
@@ -143,15 +144,15 @@ export function PortalScreen({
           <video
             ref={videoRef}
             className="t-screen-video"
-            // Any of these missing and iOS opens it fullscreen or
-            // refuses to start: muted + playsInline are what make
-            // autoplay legal.
+            // Se algum destes atributos faltar, o iOS abre em tela cheia ou
+            // recusa o início: muted + playsInline tornam o autoplay válido.
             autoPlay
             muted
             loop
             playsInline
-            // Not "none": Safari takes that literally and then never
-            // autoplays. Laziness is the src gate above, not preload.
+            // Não usar "none": o Safari interpreta isso literalmente e nunca
+            // inicia o autoplay. O carregamento tardio é controlado pelo src,
+            // não pelo preload.
             preload="auto"
             poster={POSTER}
             aria-label={t("portalDemo.alt")}

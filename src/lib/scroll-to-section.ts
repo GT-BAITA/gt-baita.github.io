@@ -1,27 +1,27 @@
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 
 /**
- * Scrolls to an in-page section by selector.
+ * Rola até uma seção da página usando um seletor.
  *
- * Two reasons this cannot just be `<a href="#contact-form">`:
+ * Há dois motivos para não usar apenas `<a href="#contact-form">`:
  *
- * 1. The app mounts a HashRouter, so the URL hash *is* the route.
- *    A bare `#contact-form` href navigates to a route named
- *    "contact-form", which matches nothing and renders NotFound — the
- *    whole page content disappears.
- * 2. ScrollSmoother owns the scroll position; going through it keeps
- *    the jump in step with the smoothed content instead of fighting it.
+ * 1. A aplicação monta um HashRouter, então o hash da URL *é* a rota. Um
+ *    href `#contact-form` simples navega para uma rota chamada
+ *    "contact-form", que não corresponde a nada e renderiza NotFound — todo
+ *    o conteúdo da página desaparece.
+ * 2. O ScrollSmoother controla a posição de rolagem; passar por ele mantém o
+ *    salto sincronizado com o conteúdo suavizado, em vez de competir com ele.
  */
-export function scrollToSection(selector: string, offset = 100) {
+export function scrollToSection(selector: string, offset = 100, smooth = true) {
   const target = document.querySelector<HTMLElement>(selector);
   if (!target) return;
 
   const smoother = ScrollSmoother.get();
   if (smoother) {
-    smoother.scrollTo(target, true, `top ${offset}px`);
+    smoother.scrollTo(target, smooth, `top ${offset}px`);
     return;
   }
 
   const top = target.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top, behavior: "smooth" });
+  window.scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
 }

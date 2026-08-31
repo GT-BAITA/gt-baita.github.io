@@ -3,97 +3,99 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { onContactRequest } from "@/lib/contact-request";
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 /**
- * Pins a section with ScrollTrigger and turns its scroll progress into
- * a discrete active index, so a fixed viewport can roll through N items.
+ * Fixa uma seção com ScrollTrigger e transforma o progresso da rolagem em um
+ * índice ativo discreto, para que uma viewport fixa percorra N itens.
  *
- * Replaces a hand-rolled `position: sticky` + scroll listener. The pin
- * has to come from ScrollTrigger rather than CSS because ScrollSmoother
- * puts the page inside a transformed wrapper, and native sticky resolves
- * against that wrapper — which never scrolls — so it silently stops
- * pinning.
+ * Substitui uma combinação feita à mão de `position: sticky` e listener de
+ * rolagem. A fixação precisa vir do ScrollTrigger, e não do CSS, porque o
+ * ScrollSmoother coloca a página dentro de um wrapper transformado; o sticky
+ * nativo usa esse wrapper como referência — e ele nunca rola —, então para de
+ * fixar silenciosamente.
  *
- * Progress is written to the DOM as a custom property instead of state:
- * a React render per scroll frame to move one element is wasted work.
+ * O progresso é escrito no DOM como uma propriedade customizada, em vez de
+ * state: renderizar no React a cada quadro de rolagem para mover um elemento
+ * seria trabalho desperdiçado.
  */
 
-/** Deadband around each boundary, as a fraction of one item's zone. */
+/** Faixa de tolerância em torno de cada limite, como fração da zona de um item. */
 const HYSTERESIS = 0.06;
 
-/** Ceiling on how long a click-driven jump suppresses scroll updates. */
+/** Limite de tempo em que um salto iniciado por clique suprime atualizações. */
 const JUMP_TIMEOUT = 1500;
 
 /**
- * Quiet time after the reader stops scrolling before the section
- * settles onto the nearest item.
+ * Tempo de silêncio depois que o leitor para de rolar antes de a seção se
+ * acomodar no item mais próximo.
  *
- * Counted from the *native* scroll position going quiet, not from
- * ScrollTrigger's updates. ScrollSmoother keeps easing the page for
- * close to a second after the wheel stops and every one of those
- * frames is an update, so waiting for those to stop added that whole
- * second to the wait before this timer even started.
+ * Contado a partir do momento em que a posição de rolagem *nativa* fica
+ * quieta, não a partir das atualizações do ScrollTrigger. O ScrollSmoother
+ * continua suavizando a página depois que a roda para, mas o snap já pode
+ * apontar para a âncora nesse momento; esperar o smoother terminar deixaria
+ * uma espera perceptível antes de iniciar a transição.
  */
-const SETTLE_DELAY = 90;
+const SETTLE_DELAY = 60;
 
-/** Close enough to a rest point that settling would not be visible. */
+/** Perto o suficiente de um ponto de repouso para que o ajuste não seja visível. */
 const SETTLE_EPSILON = 0.012;
 
 /**
- * How far back into the item they came from the reader has to be, as a
- * fraction of the gap, to be put back there rather than carried on.
+ * Quão para trás, dentro do item de origem, o leitor precisa estar — como
+ * fração do intervalo — para voltar a ele em vez de continuar.
  *
- * A quarter, against the three quarters it leaves for going on, so
- * the two are deliberately uneven: scrolling down should mean the next
- * item rather than a tug-of-war with the one behind you. At an even
- * half — plain "nearest" — a click wheel could never win that, since
- * one notch moves far less than half a gap.
+ * Um quarto, contra os três quartos reservados para continuar, para que os
+ * dois lados sejam deliberadamente desiguais: rolar para baixo deve significar
+ * o próximo item, e não uma disputa com o item anterior. Na metade exata — o
+ * simples "nearest" — uma roda de clique nunca venceria, pois um passo move
+ * muito menos que metade de um intervalo.
  *
- * It went 0.12 → 0.25 because an eighth of a gap is only about 140px
- * of scroll here, so two notches on the way into the section carried
- * the reader straight past the first card.
+ * O valor passou de 0,12 para 0,25 porque um oitavo de intervalo representa
+ * apenas cerca de 140px de rolagem aqui; assim, dois passos ao entrar na seção
+ * levavam o leitor diretamente além do primeiro card.
  */
 const RETURN_TOLERANCE = 0.25;
 
 /**
- * How long input has to have stopped before a small, undecided
- * position is settled anyway.
+ * Quanto tempo a entrada precisa ficar parada antes de uma posição pequena e
+ * indecisa ser ajustada mesmo assim.
  *
- * A decisive flick is acted on at SETTLE_DELAY and never waits for
- * this. This is for the opposite input: a click wheel, whose notches
- * move a fraction of a gap and arrive a couple of hundred ms apart.
- * Snapping between those notches undoes every one of them and the
- * section becomes impossible to scroll through, so while input is
- * still arriving small displacements are left alone to accumulate.
+ * Um gesto decisivo é tratado em SETTLE_DELAY e nunca espera por este valor.
+ * Isto serve para a entrada oposta: uma roda de clique, cujos passos movem
+ * uma fração do intervalo e chegam separados por algumas centenas de ms.
+ * Ajustar entre esses passos desfaz cada um deles e torna a seção impossível
+ * de percorrer; por isso, enquanto a entrada continua chegando, pequenos
+ * deslocamentos são deixados acumular. O intervalo curto mantém essa proteção
+ * sem deixar o snap parado por tempo demais depois do último passo.
  */
-const INPUT_SETTLED = 500;
+const INPUT_SETTLED = 250;
 
 /**
- * Glide length for the fallback path only. With ScrollSmoother present
- * — which is every real page here — the smoother owns the curve, and
- * measured that way the release runs 0.18 → 0.24 → 0.10 → 0.03 → 0.006
- * of progress per 200ms: one peak, then a steady decay into the
- * anchor, which is the coasting stop this was after.
+ * Duração do deslizamento apenas para o caminho alternativo. Com o
+ * ScrollSmoother presente — como ocorre em toda página real daqui —, o
+ * smoother controla a curva; medido dessa forma, a soltura percorre 0,18 →
+ * 0,24 → 0,10 → 0,03 → 0,006 de progresso a cada 200ms: um pico seguido de
+ * uma redução constante até a âncora, que era a parada por inércia desejada.
  */
 const SETTLE_DURATION = 0.3;
 
 /**
- * Fallback path only, as above. Decelerating only, with no ease-in.
- * Measured, per 100ms of progress
- * after release: power2.inOut ran 0.070 → 0.0005 → 0.003 → 0.013,
- * i.e. it stalled dead for a fifth of a second before picking up
- * again, because an ease-in starts from zero velocity while the page
- * is still moving. sine.inOut stalled the same way. power2.out goes
- * 0.065 → 0.033 → 0.017 → 0.009 → 0, taking over at very nearly the
- * speed the scroll already had and coasting down from there — which
- * is what "keeps sliding to the next anchor" actually feels like. The
- * soft end is the ease-out.
+ * Apenas o caminho alternativo, como acima. Somente desaceleração, sem
+ * ease-in. Medido a cada 100ms de progresso após a soltura: power2.inOut
+ * percorreu 0,070 → 0,0005 → 0,003 → 0,013; ou seja, parou completamente por
+ * um quinto de segundo antes de retomar, porque um ease-in começa com
+ * velocidade zero enquanto a página ainda se move. sine.inOut parou da mesma
+ * forma. power2.out percorre 0,065 → 0,033 → 0,017 → 0,009 → 0, assumindo o
+ * controle quase na velocidade que a rolagem já tinha e desacelerando daí —
+ * exatamente a sensação de "continuar deslizando até a próxima âncora". O
+ * final suave é o ease-out.
  */
 const SETTLE_EASE = "power2.out";
 
-/** Ceiling on how long a settle suppresses scheduling another one. */
+/** Limite de tempo em que um ajuste impede o agendamento de outro. */
 const SETTLE_TIMEOUT = 1100;
 
 export function useScrollPin(
@@ -108,23 +110,22 @@ export function useScrollPin(
     viewportsPerItem?: number;
     minWidth?: number;
     /**
-     * Builds the scrubbed animation. The timeline is `count` units
-     * long — one per item — so timeline time and the index derivation
-     * below share a scale. Put each transition inside a unit and leave
-     * the rest as dwell.
+     * Cria a animação com scrub. A timeline tem `count` unidades — uma por
+     * item —, então o tempo da timeline e o cálculo do índice abaixo usam a
+     * mesma escala. Coloque cada transição dentro de uma unidade e deixe o
+     * restante como permanência.
      */
     buildTimeline?: (tl: gsap.core.Timeline, root: HTMLElement) => void;
     /**
-     * Reads the active index off the scrubbed state instead of off raw
-     * progress. With a freely scheduled timeline the two would drift
-     * apart, and the labels would flip while the geometry was still
-     * mid-hand-off.
+     * Lê o índice ativo do estado com scrub, em vez do progresso bruto. Com
+     * uma timeline agendada livremente, os dois se afastariam e os rótulos
+     * mudariam enquanto a geometria ainda estivesse no meio da transição.
      */
     deriveIndex?: (root: HTMLElement) => number;
     /**
-     * Progress (0..1) a click on `index` should scroll to. Defaults to
-     * the middle of an even split, which is only right when the items
-     * are evenly spread across the timeline.
+     * Progresso (0..1) para o qual um clique em `index` deve rolar. O padrão é
+     * o meio de uma divisão uniforme, correto apenas quando os itens estão
+     * distribuídos igualmente pela timeline.
      */
     progressForIndex?: (index: number) => number;
   } = {}
@@ -135,29 +136,33 @@ export function useScrollPin(
 
   const activeRef = useRef(0);
   const triggerRef = useRef<ScrollTrigger | null>(null);
-  // Set while a click is animating the scroll to a target item.
-  // Without it onUpdate keeps deriving the index on the way there, so
-  // jumping from 01 to 04 flashes 02 and 03 in passing.
+  // Definido enquanto um clique anima a rolagem até um item-alvo. Sem ele,
+  // onUpdate continua calculando o índice no caminho, então saltar de 01 para
+  // 04 exibe rapidamente 02 e 03.
   const jumpRef = useRef<{ index: number; expires: number } | null>(null);
 
-  // Latest scroll progress, plus the pending settle. Refs rather than
-  // state: these change every frame and drive no rendering.
+  // Progresso mais recente da rolagem, além do ajuste pendente. Refs em vez de
+  // state: mudam a cada quadro e não acionam renderizações.
   const progressValueRef = useRef(0);
   const settleTimerRef = useRef<number | null>(null);
   const isSettlingRef = useRef(false);
-  /** Which way the reader is going, and where they were last frame. */
+  // Mantém a apresentação atual enquanto um CTA conduz o leitor ao formulário
+  // através de uma seção fixada. O movimento continua, mas os painéis
+  // intermediários não abrem durante a passagem.
+  const suppressUpdatesRef = useRef(false);
+  /** Direção do leitor e posição no quadro anterior. */
   const directionRef = useRef(1);
   const lastScrollRef = useRef(0);
   const settleTweenRef = useRef<gsap.core.Tween | null>(null);
-  /** When the reader last touched the wheel, screen or keyboard. */
+  /** Momento em que o leitor interagiu por último com roda, tela ou teclado. */
   const lastInputAtRef = useRef(0);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isEnabled, setIsEnabled] = useState(false);
 
-  // Read inside the effect rather than listed as a dependency: the
-  // effect builds and pins a ScrollTrigger, and re-running it on a
-  // changed callback identity would tear the pin down mid-scroll.
+  // Lido dentro do efeito em vez de listado como dependência: o efeito cria e
+  // fixa um ScrollTrigger, e executá-lo novamente por uma mudança de identidade
+  // do callback desmontaria a fixação no meio da rolagem.
   const progressForIndexRef = useRef(progressForIndex);
   progressForIndexRef.current = progressForIndex;
 
@@ -177,18 +182,19 @@ export function useScrollPin(
 
         setIsEnabled(true);
 
-        // A pinned section stops the page dead: the scroll keeps taking
-        // input while nothing translates, which reads as the page
-        // jamming. Scrubbing the geometry to scroll progress gives back
-        // motion proportional to the input for every pixel.
+        // Uma seção fixada para a página: a rolagem continua recebendo entrada
+        // enquanto nada se traduz, o que parece um travamento. Aplicar scrub à
+        // geometria pelo progresso da rolagem devolve movimento proporcional à
+        // entrada para cada pixel.
         const tl = buildTimeline
           ? gsap.timeline({ paused: true })
           : null;
         if (tl && buildTimeline) buildTimeline(tl, pin);
 
-        // Where each item sits fully open — the same positions a click
-        // scrolls to. Sharing them is the point: released mid-hand-off,
-        // the scroll settles exactly where clicking that item lands.
+        // Onde cada item fica totalmente aberto — as mesmas posições para as
+        // quais um clique rola. Compartilhá-las é o objetivo: ao soltar no
+        // meio de uma transição, a rolagem se ajusta exatamente onde o clique
+        // naquele item chegaria.
         const resolve = progressForIndexRef.current;
         const restPoints = Array.from({ length: count }, (_, i) =>
           resolve ? resolve(i) : (i + 0.5) / count
@@ -202,55 +208,67 @@ export function useScrollPin(
           settleTimerRef.current = null;
         };
 
+        const suppressUpdatesUntilLeave = () => {
+          suppressUpdatesRef.current = true;
+          jumpRef.current = null;
+          clearSettle();
+          settleTweenRef.current?.kill();
+          settleTweenRef.current = null;
+          isSettlingRef.current = false;
+        };
+
+        const unsubscribeContactRequest = onContactRequest(
+          suppressUpdatesUntilLeave
+        );
+
         /**
-         * Eases onto the nearest item once the scroll has come to rest,
-         * so letting go mid-hand-off never leaves a card half open.
+         * Desliza até o item mais próximo quando a rolagem para, para que soltar
+         * no meio de uma transição nunca deixe um card aberto pela metade.
          *
-         * Hand-rolled rather than ScrollTrigger's own `snap`. That one
-         * calls `snapTo` with progress values from outside the
-         * trigger's range — it was handed −0.37 and −1.17 during load —
-         * and acts on whatever comes back, so a "leave it alone" return
-         * of the same value scrolled the page clean off the top. Going
-         * through the smoother is also exactly what a click already
-         * does, so both land identically by construction.
+         * Feito manualmente em vez de usar o `snap` do ScrollTrigger. Ele chama
+         * `snapTo` com valores de progresso fora do intervalo do trigger —
+         * recebeu −0,37 e −1,17 durante o carregamento — e age sobre o valor
+         * retornado; assim, um retorno "não fazer nada" do mesmo valor rolou a
+         * página completamente para fora do topo. Passar pelo smoother também
+         * é exatamente o que um clique já faz, então ambos chegam ao mesmo
+         * ponto por construção.
          */
         const settle = () => {
           settleTimerRef.current = null;
 
           const trigger = triggerRef.current;
           if (!trigger || !trigger.isActive) return;
-          // A click is already animating towards its own target.
+          if (suppressUpdatesRef.current) return;
+          // Um clique já está animando em direção ao próprio alvo.
           if (jumpRef.current || isSettlingRef.current) return;
 
-          // Read from the native scroll rather than the trigger's own
-          // progress: the smoother is still gliding towards this
-          // position, so it is the destination, while `progress` is
-          // wherever the easing has got to so far. Targeting the
-          // destination is what lets the settle start early without
-          // picking the item the reader was already leaving.
+          // Lê da rolagem nativa, e não do progresso do próprio trigger: o
+          // smoother ainda desliza até esta posição, que é o destino, enquanto
+          // `progress` está onde o easing conseguiu chegar até agora. Mirar o
+          // destino permite iniciar o ajuste cedo sem escolher o item que o
+          // leitor já estava deixando.
           const span = trigger.end - trigger.start;
           if (span <= 0) return;
           const value = Math.min(
             1,
             Math.max(0, (window.scrollY - trigger.start) / span)
           );
-          // Outside the outermost rest points nothing is mid-transition
-          // — the first and last items are already whole there — so
-          // leave the reader alone as they enter or leave the section.
+          // Fora dos pontos de repouso extremos, nada está no meio de uma
+          // transição — o primeiro e o último item já estão inteiros —, então
+          // deixa o leitor em paz ao entrar ou sair da seção.
           if (value <= firstRest || value >= lastRest) return;
 
-          // Which anchor to land on is decided by direction, not by
-          // distance. Nearest alone is only right for a long flick; for
-          // anything shorter the nearest anchor is the one the reader
-          // is trying to leave, so it drags them back.
+          // A âncora de destino é decidida pela direção, não pela distância.
+          // Escolher apenas a mais próxima funciona para um gesto longo; para
+          // qualquer gesto menor, a âncora mais próxima é aquela que o leitor
+          // está tentando deixar, então isso o arrastaria de volta.
           //
-          // Derived from the position each time rather than remembered:
-          // a stored "anchor we came from" is wrong the moment a glide
-          // is interrupted, and an interrupted glide left it holding
-          // the abandoned *target*. The next settle then read the page
-          // as being behind where it started, decided the reader was
-          // going backwards, and returned them a step — on screen, the
-          // card advancing and then snapping back.
+          // Derivada da posição a cada vez, em vez de ser lembrada: uma
+          // "âncora de origem" armazenada fica errada assim que um deslize é
+          // interrompido, e um deslize interrompido a deixou segurando o
+          // *alvo* abandonado. O ajuste seguinte lia a página como se estivesse
+          // atrás do início, concluía que o leitor voltava e o retornava um
+          // passo — na tela, o card avançava e depois voltava.
           const direction = directionRef.current;
           const behind = restPoints.filter((point) =>
             direction > 0 ? point <= value : point >= value
@@ -274,11 +292,11 @@ export function useScrollPin(
           const nearest = restPoints[index];
           if (Math.abs(nearest - value) < SETTLE_EPSILON) return;
 
-          // `index` only moved off `from` if the reader cleared the
-          // tolerance, so this is "they have decided where they are
-          // going". Undecided and still scrolling means leaving them
-          // be — but check again once the input really has stopped,
-          // otherwise a half-open card could sit there for good.
+          // `index` só saiu de `from` se o leitor ultrapassou a tolerância,
+          // então isso significa que "ele decidiu para onde está indo". Se
+          // ainda está rolando sem decidir, deixa como está — mas verifica
+          // novamente quando a entrada realmente parar, senão um card aberto
+          // pela metade poderia permanecer assim para sempre.
           const hasCommitted = nearest !== from;
           const sinceInput = Date.now() - lastInputAtRef.current;
           if (!hasCommitted && sinceInput < INPUT_SETTLED) {
@@ -302,19 +320,18 @@ export function useScrollPin(
             isSettlingRef.current = false;
           };
 
-          // Handed to the smoother, which is the only thing that owns
-          // the scroll position while it is running — the same call the
-          // click-to-card path has always used.
+          // Entregue ao smoother, que é o único dono da posição de rolagem
+          // enquanto está ativo — a mesma chamada usada pelo caminho de
+          // clique-para-card.
           //
-          // Both alternatives were measured and both fight it. Writing
-          // `scrollTo(v, false)` frame by frame from a tween seeded on
-          // `smoother.scrollTop()` uses the *smoothed* value, which
-          // lags, while the smoother's own lerp is still running
-          // towards the native one: on a flick the page glided to
-          // progress 0.904, snapped back to 0.628 as the tween's writes
-          // won, then played the transition again. Tweening the native
-          // scroll instead is filtered by the smoother — 0.85s of tween
-          // moved it 34px of 496 — leaving a visible plateau partway.
+          // As duas alternativas foram medidas e ambas entram em conflito.
+          // Escrever `scrollTo(v, false)` quadro a quadro a partir de um tween
+          // iniciado em `smoother.scrollTop()` usa o valor *suavizado*, que fica
+          // atrasado enquanto o lerp do smoother ainda corre até o valor nativo:
+          // em um gesto, a página deslizou até o progresso 0,904, voltou a
+          // 0,628 quando as escritas do tween venceram e repetiu a transição.
+          // Animar a rolagem nativa é filtrado pelo smoother — 0,85s de tween
+          // a moveu 34px de 496 —, deixando um platô visível no caminho.
           const smoother = ScrollSmoother.get();
           if (smoother) {
             smoother.scrollTo(target, true);
@@ -331,11 +348,22 @@ export function useScrollPin(
           });
         };
 
+        const setBoundaryState = (index: number, progress: number) => {
+          progressValueRef.current = progress;
+          progressRef.current?.style.setProperty(
+            "--progress",
+            String(progress)
+          );
+          tl?.progress(progress);
+          activeRef.current = index;
+          setActiveIndex(index);
+        };
+
         const trigger = ScrollTrigger.create({
           trigger: section,
           start: "top top",
-          // The whole section is `count * viewportsPerItem` viewports
-          // tall; one of those is spent standing still while pinned.
+          // A seção inteira tem `count * viewportsPerItem` viewports de altura;
+          // uma delas é gasta parada enquanto a seção está fixada.
           end: () =>
             `+=${count * viewportsPerItem * window.innerHeight - window.innerHeight}`,
           pin,
@@ -343,6 +371,8 @@ export function useScrollPin(
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
+            if (suppressUpdatesRef.current) return;
+
             progressRef.current?.style.setProperty(
               "--progress",
               String(self.progress)
@@ -350,19 +380,19 @@ export function useScrollPin(
 
             progressValueRef.current = self.progress;
 
-            // Drive the scrub directly off progress rather than
-            // ScrollTrigger's own `scrub`, so the smoother's eased
-            // position is what the geometry follows.
+            // Controla o scrub diretamente pelo progresso, e não pelo `scrub`
+            // do ScrollTrigger, para que a geometria siga a posição suavizada
+            // pelo smoother.
             tl?.progress(self.progress);
 
             const position = self.progress * count;
             const current = activeRef.current;
 
-            // Hold the current item until the position clears its zone
-            // by the deadband, so jitter parked on a boundary does not
-            // flip the item back and forth. When the geometry is
-            // scrubbed, read the index off it instead — the two would
-            // otherwise disagree mid hand-off.
+            // Mantém o item atual até que a posição atravesse sua zona pela
+            // faixa de tolerância, evitando que uma oscilação no limite alterne
+            // o item de um lado para outro. Quando a geometria usa scrub, lê o
+            // índice dela — de outro modo, os dois discordariam no meio da
+            // transição.
             const next = deriveIndex
               ? deriveIndex(pin)
               : position < current - HYSTERESIS ||
@@ -370,11 +400,11 @@ export function useScrollPin(
                 ? Math.min(count - 1, Math.max(0, Math.floor(position)))
                 : current;
 
-            // Mid-jump: hold the target open and let the scroll pass
-            // under it, so the items in between never flash. This
-            // release has to run for BOTH paths — when it only ran on
-            // the non-scrubbed one, any click left the jump latched and
-            // the label froze while the geometry carried on.
+            // No meio de um salto: mantém o alvo aberto e deixa a rolagem passar
+            // por baixo, para que os itens intermediários nunca pisquem. Essa
+            // liberação precisa ocorrer nos DOIS caminhos — quando ocorria
+            // apenas no caminho sem scrub, qualquer clique deixava o salto
+            // preso e o rótulo congelava enquanto a geometria continuava.
             const jump = jumpRef.current;
             if (jump) {
               if (next === jump.index || Date.now() > jump.expires) {
@@ -388,33 +418,55 @@ export function useScrollPin(
               setActiveIndex(next);
             }
           },
-          // A CTA elsewhere on the page can scroll clean past this
-          // section, so a jump in flight would never reach its target.
-          // Leaving resets where "here" was, so coming back in does not
-          // measure the reader's first nudge against a stale rest point.
+          // Um CTA em outra parte da página pode rolar diretamente além desta
+          // seção, então um salto em andamento nunca alcançaria o alvo. Sair
+          // redefine onde fica o "aqui", para que voltar não meça o primeiro
+          // movimento do leitor contra um ponto de repouso antigo.
           onLeave: () => {
+            suppressUpdatesRef.current = false;
             jumpRef.current = null;
             clearSettle();
+            // Se um CTA atravessou a seção enquanto as atualizações estavam
+            // congeladas, consolida o último ponto antes de ela sair. Assim,
+            // ao voltar, a seção começa no último item em vez de saltar do
+            // item que estava aberto quando o CTA foi clicado.
+            setBoundaryState(count - 1, 1);
           },
           onLeaveBack: () => {
+            suppressUpdatesRef.current = false;
             jumpRef.current = null;
             clearSettle();
+            setBoundaryState(0, 0);
           },
         });
 
         triggerRef.current = trigger;
 
-        // Grabbing the page again cancels both the pending settle and
-        // any settle in flight, so it never pulls against a live scroll.
-        const noteInput = () => {
-          lastInputAtRef.current = Date.now();
+        const scheduleSettle = () => {
+          const y = window.scrollY;
+          if (y !== lastScrollRef.current) {
+            directionRef.current = y > lastScrollRef.current ? 1 : -1;
+            lastScrollRef.current = y;
+          }
+          clearSettle();
+          // O smoother continua a transição visual até a âncora escolhida;
+          // não espere o evento de parada dele para começar o snap.
+          settleTimerRef.current = window.setTimeout(settle, SETTLE_DELAY);
         };
-        window.addEventListener("wheel", noteInput, { passive: true });
-        window.addEventListener("touchmove", noteInput, { passive: true });
-        window.addEventListener("keydown", noteInput);
 
+        // O evento de entrada ocorre antes do scroll nativo. Reagenda no
+        // próximo ciclo para ler a posição atualizada e iniciar o snap logo
+        // depois que o último gesto terminar.
+        const scheduleSettleAfterInput = () => {
+          lastInputAtRef.current = Date.now();
+          window.setTimeout(scheduleSettle, 0);
+        };
+
+        // Interagir novamente com a página cancela o ajuste pendente e qualquer
+        // ajuste em andamento, para nunca puxar contra uma rolagem ativa.
         const cancelJump = () => {
           lastInputAtRef.current = Date.now();
+          suppressUpdatesRef.current = false;
           jumpRef.current = null;
           isSettlingRef.current = false;
           clearSettle();
@@ -424,18 +476,22 @@ export function useScrollPin(
         window.addEventListener("wheel", cancelJump, { passive: true });
         window.addEventListener("touchstart", cancelJump, { passive: true });
 
-        const scheduleSettle = () => {
-          const y = window.scrollY;
-          if (y !== lastScrollRef.current) {
-            directionRef.current = y > lastScrollRef.current ? 1 : -1;
-            lastScrollRef.current = y;
-          }
-          clearSettle();
-          settleTimerRef.current = window.setTimeout(settle, SETTLE_DELAY);
-        };
+        window.addEventListener("wheel", scheduleSettleAfterInput, {
+          passive: true,
+        });
+        window.addEventListener("touchmove", scheduleSettleAfterInput, {
+          passive: true,
+        });
+        window.addEventListener("keydown", scheduleSettleAfterInput);
+        const settleAfterSmootherStops = () => settle();
         window.addEventListener("scroll", scheduleSettle, { passive: true });
+        window.addEventListener(
+          "baita:smooth-scroll-stop",
+          settleAfterSmootherStops
+        );
 
         return () => {
+          unsubscribeContactRequest();
           tl?.kill();
           clearSettle();
           settleTweenRef.current?.kill();
@@ -443,11 +499,16 @@ export function useScrollPin(
           isSettlingRef.current = false;
           window.removeEventListener("wheel", cancelJump);
           window.removeEventListener("touchstart", cancelJump);
+          window.removeEventListener("wheel", scheduleSettleAfterInput);
+          window.removeEventListener("touchmove", scheduleSettleAfterInput);
+          window.removeEventListener("keydown", scheduleSettleAfterInput);
           window.removeEventListener("scroll", scheduleSettle);
-          window.removeEventListener("wheel", noteInput);
-          window.removeEventListener("touchmove", noteInput);
-          window.removeEventListener("keydown", noteInput);
+          window.removeEventListener(
+            "baita:smooth-scroll-stop",
+            settleAfterSmootherStops
+          );
           triggerRef.current = null;
+          suppressUpdatesRef.current = false;
           setIsEnabled(false);
           activeRef.current = 0;
           setActiveIndex(0);
@@ -458,11 +519,13 @@ export function useScrollPin(
     return () => mm.revert();
   }, [count, viewportsPerItem, minWidth, buildTimeline, deriveIndex]);
 
-  /** Scrolls to the offset that makes `index` the active item. */
+  /** Rola até o deslocamento que torna `index` o item ativo. */
   const scrollToIndex = useCallback(
     (index: number) => {
       const trigger = triggerRef.current;
       if (!trigger) return;
+
+      suppressUpdatesRef.current = false;
 
       const progress = progressForIndex
         ? progressForIndex(index)
@@ -470,8 +533,8 @@ export function useScrollPin(
       const target =
         trigger.start + (trigger.end - trigger.start) * progress;
 
-      // Open the target immediately and let the scroll catch up, so the
-      // items in between never flash open on the way there.
+      // Abre o alvo imediatamente e deixa a rolagem alcançá-lo, para que os
+      // itens intermediários nunca pisquem abertos no caminho.
       activeRef.current = index;
       setActiveIndex(index);
       jumpRef.current = { index, expires: Date.now() + JUMP_TIMEOUT };

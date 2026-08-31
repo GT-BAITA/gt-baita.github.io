@@ -8,9 +8,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div>
-      {/* Both of these are position: fixed, so they stay outside the
-          smooth wrapper — inside it they would resolve against the
-          transformed content and scroll away with the page. */}
+      {/* Ambos usam position: fixed, então ficam fora do wrapper suave —
+          dentro dele, resolveriam em relação ao conteúdo transformado e
+          sairiam da tela junto com a página. */}
       <ClarityNotice />
       <Header />
 

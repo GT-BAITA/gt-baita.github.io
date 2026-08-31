@@ -8,12 +8,13 @@ export function getConsent(): ConsentChoice {
 }
 
 /**
- * Signal the choice to both analytics providers. Neither call is guarded by
- * the other, so a provider that fails to load cannot suppress the signal to
- * the one that did.
+ * Informa a escolha aos dois provedores de análise. Uma chamada não depende
+ * da outra, então uma falha ao carregar um provedor não impede o aviso ao
+ * outro que foi carregado.
  *
- * Google Analytics denies these by default in index.html, so this update is
- * what turns it on; Clarity has no default, so this is also what turns it off.
+ * O Google Analytics nega essas opções por padrão em index.html, então esta
+ * atualização é o que o habilita; o Clarity não tem um padrão, então ela
+ * também é o que o desabilita.
  */
 export function sendConsent(granted: boolean) {
   const state: ConsentState = granted ? "granted" : "denied";
