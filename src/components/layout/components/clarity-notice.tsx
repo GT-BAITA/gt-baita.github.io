@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ClarityNotice() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -43,31 +45,31 @@ export function ClarityNotice() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-neutral-900 border-t border-neutral-800 shadow-2xl">
-      <div className="max-w-[1264px] mx-auto px-6 py-6 sm:py-8 flex flex-col items-center gap-6">
-        <p className="text-base sm:text-lg text-neutral-200 font-geist text-center">
-          Utilizamos ferramentas de análise para melhorar sua experiência no site.{" "}
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-neutral-200 shadow-md">
+      <div className="max-w-[1264px] mx-auto px-4 py-3 flex flex-row items-center justify-between gap-4">
+        <p className="text-xs sm:text-sm text-neutral-600 font-geist">
+          {t("clarityNotice.text")}{" "}
           <a
             href="https://clarity.microsoft.com/privacy"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-400 underline hover:text-blue-300"
+            className="underline hover:text-neutral-900"
           >
-            Saiba mais
+            {t("clarityNotice.learnMore")}
           </a>
         </p>
-        <div className="flex gap-4 shrink-0 w-full sm:w-auto">
+        <div className="flex gap-2 shrink-0">
           <button
             onClick={handleReject}
-            className="flex-1 sm:flex-none px-6 h-12 rounded-lg bg-neutral-800 text-neutral-100 text-base font-medium hover:bg-neutral-700 transition-colors"
+            className="px-3 h-8 rounded-md border border-neutral-300 text-neutral-700 text-xs font-medium hover:bg-neutral-100 transition-colors"
           >
-            Não aceito
+            {t("clarityNotice.reject")}
           </button>
           <button
             onClick={handleAccept}
-            className="flex-1 sm:flex-none px-6 h-12 rounded-lg bg-neutral-100 text-neutral-900 text-base font-medium hover:bg-white transition-colors"
+            className="px-3 h-8 rounded-md bg-neutral-900 text-white text-xs font-medium hover:bg-neutral-800 transition-colors"
           >
-            Aceito
+            {t("clarityNotice.accept")}
           </button>
         </div>
       </div>
