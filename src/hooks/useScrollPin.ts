@@ -40,6 +40,18 @@ const JUMP_TIMEOUT = 1500;
  */
 const SETTLE_DELAY = 60;
 
+/**
+ * Trackpads emitem uma sequência de deltas pequenos durante o mesmo gesto.
+ * Mantê-los agrupados por este intervalo evita que cada evento avance um card.
+ */
+const TRACKPAD_SETTLE_DELAY = 120;
+
+/** Deltas em pixels abaixo deste valor são tratados como gesto de trackpad. */
+const TRACKPAD_DELTA_LIMIT = 50;
+
+/** Silêncio necessário para que o próximo gesto de trackpad seja novo. */
+const TRACKPAD_GESTURE_TIMEOUT = 260;
+
 /** Perto o suficiente de um ponto de repouso para que o ajuste não seja visível. */
 const SETTLE_EPSILON = 0.012;
 
@@ -153,6 +165,13 @@ export function useScrollPin(
   /** Direção do leitor e posição no quadro anterior. */
   const directionRef = useRef(1);
   const lastScrollRef = useRef(0);
+  const directionLockUntilRef = useRef(0);
+  const inputKindRef = useRef<"wheel" | "trackpad" | "keyboard" | null>(null);
+  const trackpadGestureRef = useRef<{
+    direction: number;
+    lastInputAt: number;
+    handled: boolean;
+  } | null>(null);
   const settleTweenRef = useRef<gsap.core.Tween | null>(null);
   /** Momento em que o leitor interagiu por último com roda, tela ou teclado. */
   const lastInputAtRef = useRef(0);
@@ -181,6 +200,9 @@ export function useScrollPin(
         if (!context.conditions?.pinned) return;
 
         setIsEnabled(true);
+        // A página pode montar já em uma posição restaurada pelo navegador;
+        // comparar o primeiro evento com zero inventaria uma direção.
+        lastScrollRef.current = window.scrollY;
 
         // Uma seção fixada para a página: a rolagem continua recebendo entrada
         // enquanto nada se traduz, o que parece um travamento. Aplicar scrub à
@@ -211,6 +233,8 @@ export function useScrollPin(
         const suppressUpdatesUntilLeave = () => {
           suppressUpdatesRef.current = true;
           jumpRef.current = null;
+          inputKindRef.current = null;
+          trackpadGestureRef.current = null;
           clearSettle();
           settleTweenRef.current?.kill();
           settleTweenRef.current = null;
@@ -237,7 +261,13 @@ export function useScrollPin(
           settleTimerRef.current = null;
 
           const trigger = triggerRef.current;
-          if (!trigger || !trigger.isActive) return;
+          if (!trigger || !trigger.isActive) {
+            // Não carregue a intenção de um gesto que aconteceu fora da
+            // seção para a próxima entrada nela.
+            inputKindRef.current = null;
+            trackpadGestureRef.current = null;
+            return;
+          }
           if (suppressUpdatesRef.current) return;
           // Um clique já está animando em direção ao próprio alvo.
           if (jumpRef.current || isSettlingRef.current) return;
@@ -253,44 +283,92 @@ export function useScrollPin(
             1,
             Math.max(0, (window.scrollY - trigger.start) / span)
           );
-          // Fora dos pontos de repouso extremos, nada está no meio de uma
-          // transição — o primeiro e o último item já estão inteiros —, então
-          // deixa o leitor em paz ao entrar ou sair da seção.
-          if (value <= firstRest || value >= lastRest) return;
-
-          // A âncora de destino é decidida pela direção, não pela distância.
-          // Escolher apenas a mais próxima funciona para um gesto longo; para
-          // qualquer gesto menor, a âncora mais próxima é aquela que o leitor
-          // está tentando deixar, então isso o arrastaria de volta.
-          //
-          // Derivada da posição a cada vez, em vez de ser lembrada: uma
-          // "âncora de origem" armazenada fica errada assim que um deslize é
-          // interrompido, e um deslize interrompido a deixou segurando o
-          // *alvo* abandonado. O ajuste seguinte lia a página como se estivesse
-          // atrás do início, concluía que o leitor voltava e o retornava um
-          // passo — na tela, o card avançava e depois voltava.
           const direction = directionRef.current;
-          const behind = restPoints.filter((point) =>
-            direction > 0 ? point <= value : point >= value
-          );
-          const from =
-            behind.length === 0
-              ? restPoints[direction > 0 ? 0 : restPoints.length - 1]
-              : direction > 0
-                ? Math.max(...behind)
-                : Math.min(...behind);
+          const wheelIntent =
+            inputKindRef.current === "wheel" ||
+            inputKindRef.current === "trackpad";
+          const trackpadIntent = inputKindRef.current === "trackpad";
+          const trackpadGesture = trackpadGestureRef.current;
 
-          let index = restPoints.indexOf(from);
-          const ahead = index + direction;
-          if (ahead >= 0 && ahead < restPoints.length) {
-            const gap = Math.abs(restPoints[ahead] - from);
-            if (Math.abs(value - from) > gap * RETURN_TOLERANCE) {
-              index = ahead;
+          // Depois que um gesto de trackpad já escolheu uma âncora, os deltas
+          // residuais desse mesmo gesto não podem iniciar outro snap.
+          if (trackpadIntent && trackpadGesture?.handled) return;
+
+          let index: number;
+          let from: number;
+
+          if (wheelIntent) {
+            // Uma roda pode produzir um delta muito pequeno, principalmente
+            // em mouses de alta resolução. Ainda assim, ela representa a
+            // intenção de avançar uma seção; exigir uma distância mínima aqui
+            // fazia esse gesto ser interpretado como uma volta para a âncora.
+            // Em trackpads, todos os deltas do gesto já foram agrupados antes
+            // de chegar aqui, então a sequência também avança só um card.
+            const currentIndex = Math.min(
+              restPoints.length - 1,
+              Math.max(0, activeRef.current)
+            );
+            from = restPoints[currentIndex];
+            index = currentIndex + direction;
+            if (index < 0 || index >= restPoints.length) {
+              if (trackpadIntent && trackpadGesture) {
+                trackpadGesture.handled = true;
+              } else {
+                inputKindRef.current = null;
+              }
+              return;
+            }
+          } else {
+            // Fora dos pontos de repouso extremos, nada está no meio de uma
+            // transição — o primeiro e o último item já estão inteiros —,
+            // então deixa o leitor em paz ao entrar ou sair da seção.
+            if (
+              direction > 0
+                ? value < firstRest || value >= lastRest
+                : value > lastRest || value <= firstRest
+            ) {
+              inputKindRef.current = null;
+              return;
+            }
+
+            // A âncora de destino é decidida pela direção, não pela distância.
+            // Escolher apenas a mais próxima funciona para um gesto longo; para
+            // qualquer gesto menor, a âncora mais próxima é aquela que o leitor
+            // está tentando deixar, então isso o arrastaria de volta.
+            //
+            // Derivada da posição a cada vez, em vez de ser lembrada: uma
+            // "âncora de origem" armazenada fica errada assim que um deslize é
+            // interrompido, e um deslize interrompido a deixou segurando o
+            // *alvo* abandonado. O ajuste seguinte lia a página como se
+            // estivesse atrás do início, concluía que o leitor voltava e o
+            // retornava um passo — na tela, o card avançava e depois voltava.
+            const behind = restPoints.filter((point) =>
+              direction > 0 ? point <= value : point >= value
+            );
+            from =
+              behind.length === 0
+                ? restPoints[direction > 0 ? 0 : restPoints.length - 1]
+                : direction > 0
+                  ? Math.max(...behind)
+                  : Math.min(...behind);
+            index = restPoints.indexOf(from);
+
+            const ahead = index + direction;
+            if (ahead >= 0 && ahead < restPoints.length) {
+              const gap = Math.abs(restPoints[ahead] - from);
+              if (Math.abs(value - from) > gap * RETURN_TOLERANCE) {
+                index = ahead;
+              }
             }
           }
 
           const nearest = restPoints[index];
-          if (Math.abs(nearest - value) < SETTLE_EPSILON) return;
+          if (Math.abs(nearest - value) < SETTLE_EPSILON) {
+            if (trackpadIntent && trackpadGesture) {
+              trackpadGesture.handled = true;
+            }
+            return;
+          }
 
           // `index` só saiu de `from` se o leitor ultrapassou a tolerância,
           // então isso significa que "ele decidiu para onde está indo". Se
@@ -299,7 +377,7 @@ export function useScrollPin(
           // pela metade poderia permanecer assim para sempre.
           const hasCommitted = nearest !== from;
           const sinceInput = Date.now() - lastInputAtRef.current;
-          if (!hasCommitted && sinceInput < INPUT_SETTLED) {
+          if (!wheelIntent && !hasCommitted && sinceInput < INPUT_SETTLED) {
             settleTimerRef.current = window.setTimeout(
               settle,
               INPUT_SETTLED - sinceInput + 20
@@ -308,6 +386,11 @@ export function useScrollPin(
           }
 
           const target = trigger.start + span * nearest;
+          if (trackpadIntent && trackpadGesture) {
+            trackpadGesture.handled = true;
+          } else {
+            inputKindRef.current = null;
+          }
 
           isSettlingRef.current = true;
           window.setTimeout(() => {
@@ -425,6 +508,8 @@ export function useScrollPin(
           onLeave: () => {
             suppressUpdatesRef.current = false;
             jumpRef.current = null;
+            inputKindRef.current = null;
+            trackpadGestureRef.current = null;
             clearSettle();
             // Se um CTA atravessou a seção enquanto as atualizações estavam
             // congeladas, consolida o último ponto antes de ela sair. Assim,
@@ -435,6 +520,8 @@ export function useScrollPin(
           onLeaveBack: () => {
             suppressUpdatesRef.current = false;
             jumpRef.current = null;
+            inputKindRef.current = null;
+            trackpadGestureRef.current = null;
             clearSettle();
             setBoundaryState(0, 0);
           },
@@ -444,28 +531,106 @@ export function useScrollPin(
 
         const scheduleSettle = () => {
           const y = window.scrollY;
-          if (y !== lastScrollRef.current) {
+          // Durante o snap, o ScrollSmoother continua emitindo scroll enquanto
+          // desacelera. Esses eventos podem parecer estar na direção contrária
+          // ao gesto original; não deixe a inércia substituir a intenção da
+          // roda antes que o ajuste termine.
+          if (y !== lastScrollRef.current && Date.now() >= directionLockUntilRef.current) {
             directionRef.current = y > lastScrollRef.current ? 1 : -1;
             lastScrollRef.current = y;
           }
           clearSettle();
           // O smoother continua a transição visual até a âncora escolhida;
           // não espere o evento de parada dele para começar o snap.
-          settleTimerRef.current = window.setTimeout(settle, SETTLE_DELAY);
+          const trackpadDelay =
+            TRACKPAD_SETTLE_DELAY -
+            (Date.now() - lastInputAtRef.current);
+          const delay =
+            inputKindRef.current === "trackpad"
+              ? Math.max(SETTLE_DELAY, trackpadDelay)
+              : SETTLE_DELAY;
+          settleTimerRef.current = window.setTimeout(settle, delay);
         };
 
         // O evento de entrada ocorre antes do scroll nativo. Reagenda no
         // próximo ciclo para ler a posição atualizada e iniciar o snap logo
         // depois que o último gesto terminar.
-        const scheduleSettleAfterInput = () => {
+        const setDirectionFromInput = (event: Event) => {
+          let direction = 0;
+          let isTrackpad = false;
+
+          if (event.type === "wheel") {
+            const wheelEvent = event as WheelEvent;
+            const deltaY = Number(wheelEvent.deltaY);
+            direction = deltaY > 0 ? 1 : deltaY < 0 ? -1 : 0;
+
+            // Mouse wheels normalmente entregam um passo grande (ou deltas
+            // em linhas). O trackpad entrega pixels pequenos e consecutivos;
+            // marcá-los aqui permite que scheduleSettle faça debounce do
+            // gesto inteiro, sem mudar o comportamento de um passo do mouse.
+            isTrackpad =
+              wheelEvent.deltaMode === WheelEvent.DOM_DELTA_PIXEL &&
+              Math.abs(deltaY) < TRACKPAD_DELTA_LIMIT;
+          } else if (event.type === "keydown") {
+            const key = (event as KeyboardEvent).key;
+            direction =
+              key === "ArrowDown" || key === "PageDown" || key === "End" || key === " "
+                ? 1
+                : key === "ArrowUp" || key === "PageUp" || key === "Home"
+                  ? -1
+                  : 0;
+          }
+
+          if (direction !== 0) {
+            if (isTrackpad) {
+              const now = Date.now();
+              const previous = trackpadGestureRef.current;
+              const gesture =
+                previous && now - previous.lastInputAt <= TRACKPAD_GESTURE_TIMEOUT
+                  ? previous
+                  : { direction, lastInputAt: now, handled: false };
+              gesture.lastInputAt = now;
+              trackpadGestureRef.current = gesture;
+              inputKindRef.current = "trackpad";
+              // A reversal while the fingers are still down belongs to the
+              // same gesture; use its initial direction and wait for the
+              // gesture to end before snapping.
+              directionRef.current = gesture.direction;
+            } else {
+              directionRef.current = direction;
+              trackpadGestureRef.current = null;
+              if (event.type === "wheel") inputKindRef.current = "wheel";
+            }
+            directionLockUntilRef.current = Date.now() + SETTLE_TIMEOUT;
+            if (event.type !== "wheel") {
+              inputKindRef.current = "keyboard";
+              trackpadGestureRef.current = null;
+            }
+          }
+        };
+
+        const scheduleSettleAfterInput = (event: Event) => {
+          setDirectionFromInput(event);
           lastInputAtRef.current = Date.now();
           window.setTimeout(scheduleSettle, 0);
         };
 
         // Interagir novamente com a página cancela o ajuste pendente e qualquer
         // ajuste em andamento, para nunca puxar contra uma rolagem ativa.
-        const cancelJump = () => {
+        const cancelJump = (event: Event) => {
+          setDirectionFromInput(event);
           lastInputAtRef.current = Date.now();
+
+          // O fim de uma sequência de deltas pequenos já iniciou o snap. Não
+          // o interrompa a cada evento residual do mesmo gesto de trackpad.
+          if (
+            event.type === "wheel" &&
+            inputKindRef.current === "trackpad" &&
+            trackpadGestureRef.current?.handled
+          ) {
+            return;
+          }
+
           suppressUpdatesRef.current = false;
           jumpRef.current = null;
           isSettlingRef.current = false;
@@ -508,6 +673,9 @@ export function useScrollPin(
             settleAfterSmootherStops
           );
           triggerRef.current = null;
+          directionLockUntilRef.current = 0;
+          inputKindRef.current = null;
+          trackpadGestureRef.current = null;
           suppressUpdatesRef.current = false;
           setIsEnabled(false);
           activeRef.current = 0;
@@ -526,6 +694,8 @@ export function useScrollPin(
       if (!trigger) return;
 
       suppressUpdatesRef.current = false;
+      inputKindRef.current = null;
+      trackpadGestureRef.current = null;
 
       const progress = progressForIndex
         ? progressForIndex(index)

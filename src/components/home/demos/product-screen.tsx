@@ -3,33 +3,33 @@ import { useTranslation } from "react-i18next";
 /**
  * Imagem estática de um dos produtos, emoldurada em uma janela de navegador.
  *
- * As duas telas são capturadas no mesmo 1280×980 — o formato da janela de
- * prévia na coluna fixada —, então a matemática do enquadramento é idêntica
- * para ambas e trocar uma pela outra não exige mudança de layout. O mesmo
- * vale para o tour gravado e arquivado em scripts/portal-tour/, capturado
- * nesse tamanho pelo mesmo motivo.
+ * A janela de prévia mantém o mesmo enquadramento nos dois idiomas. As artes
+ * em inglês são capturadas/exportadas das mesmas telas das versões em
+ * português:
  *
- * Elas vêm de lugares diferentes, porém, e apenas uma pode ser regenerada por
- * script — e uma ainda não tem nada para mostrar:
- *
- * - benefits: o portal em produção em servicos.baita.testbeds.rnp.br —
- *   recapture com scripts/capture-portal-screen.mjs sempre que ele mudar,
- *   pois é um testbed.
- * - management: nó 1081:47103 do Figma, exportado em 2x e cortado para os
- *   1280×980 superiores. Não há um sistema em execução para apontar um
- *   script, então reexportar é uma etapa manual.
+ * - benefits: capturas do Portal de Benefícios em pt-BR e inglês, no mesmo
+ *   viewport de 1280×980.
+ * - management: a versão em inglês é o frame 40004264:1680 exportado do
+ *   Figma e recortado no mesmo enquadramento da captura em português.
  * - idp: ainda não há nada construído para capturar. A janela continua sendo
  *   desenhada, com uma observação dentro, para manter os três cards iguais.
  */
 
 type Screen = "benefits" | "management" | "idp";
+type AssetLanguage = "pt" | "en";
 
 /** null quando ainda não há nada para mostrar — a janela continua sendo
  *  desenhada, com uma observação no lugar da captura. */
-const SOURCES: Record<Screen, string | null> = {
-  benefits: "/media/screen-benefits-pt.jpg",
-  management: "/media/screen-management-pt.jpg",
-  idp: null,
+const SOURCES: Record<Screen, Record<AssetLanguage, string | null>> = {
+  benefits: {
+    pt: "/media/screen-benefits-pt.jpg",
+    en: "/media/screen-benefits-en.jpg",
+  },
+  management: {
+    pt: "/media/screen-management-pt.jpg",
+    en: "/media/screen-management-en.png",
+  },
+  idp: { pt: null, en: null },
 };
 
 export function ProductScreen({
@@ -39,8 +39,11 @@ export function ProductScreen({
   screen: Screen;
   variant: "column" | "inline";
 }) {
-  const { t } = useTranslation();
-  const source = SOURCES[screen];
+  const { t, i18n } = useTranslation();
+  const assetLanguage: AssetLanguage = i18n.language.startsWith("pt")
+    ? "pt"
+    : "en";
+  const source = SOURCES[screen][assetLanguage];
 
   return (
     <div className="t-screen-slot" data-variant={variant}>
