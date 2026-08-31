@@ -1,12 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { Menu } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { LanguageToggle } from "./language-toggle";
 import { useTranslation } from "react-i18next";
@@ -48,7 +41,7 @@ export function CustomHref({
     <a
       href={href}
       onClick={handleScroll}
-      className={`text-neutral-700 hover:text-neutral-900 transition-all duration-300 font-geist hover:scale-[1.05] ${className}`}
+      className={`whitespace-nowrap text-neutral-700 hover:text-neutral-900 transition-all duration-300 font-geist hover:scale-[1.05] ${className}`}
     >
       {children}
     </a>
@@ -91,7 +84,7 @@ function NavLinks({ items }: { items: NavItem[] }) {
           <Link
             key={item.href}
             to={item.href}
-            className="text-neutral-700 hover:text-neutral-900 transition-all duration-300 font-geist hover:scale-[1.05]"
+            className="whitespace-nowrap text-neutral-700 hover:text-neutral-900 transition-all duration-300 font-geist hover:scale-[1.05]"
           >
             {item.label}
           </Link>
@@ -109,24 +102,22 @@ export function Header() {
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const navItems: NavItem[] = [
-    { href: "/about", label: t("header.nav-1") },
-    { href: "#roadmap", label: t("header.nav-2") },
-    { href: "#team", label: t("header.nav-3") },
-    { href: "#faq", label: t("header.nav-4") },
-  ];
+  // The brand is already the link home, so "Sobre" is the only other
+  // destination the site has. #roadmap / #team / #faq pointed at
+  // sections that are parked, and clicked into nothing.
+  const navItems: NavItem[] = [{ href: "/about", label: t("header.nav-1") }];
 
   const CTAButton = (
     <Button
       onClick={(e) => {
         e.preventDefault();
         if (location.pathname !== "/") {
-          navigate("/#newsletter");
+          navigate("/#contact-form");
           return;
         }
-        scrollToSection("#newsletter");
+        scrollToSection("#contact-form");
       }}
-      className="bg-neutral-900 text-white rounded-lg font-geist transition-all duration-300 hover:bg-neutral-800 hover:shadow-lg"
+      className="shrink-0 whitespace-nowrap bg-neutral-900 px-3 text-white rounded-lg font-geist transition-all duration-300 hover:bg-neutral-800 hover:shadow-lg md:px-4"
     >
       {t("header.cta")}
     </Button>
@@ -138,7 +129,7 @@ export function Header() {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }}
-      className="text-2xl font-bold font-domine text-neutral-900 transition hover:opacity-90 cursor-pointer"
+      className="whitespace-nowrap text-lg font-bold font-domine text-neutral-900 transition hover:opacity-90 cursor-pointer sm:text-xl md:text-2xl"
     >
       <Link to="/">{t("header.brand")}</Link>
     </h1>
@@ -204,38 +195,20 @@ export function Header() {
       >
         <nav
           ref={navRef}
-          className="flex items-center justify-between px-4 md:px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 hover:bg-white/70"
+          className="flex items-center justify-between gap-2 px-3 md:px-12 py-4 rounded-3xl bg-white/50 backdrop-blur-sm transition-all duration-300 hover:bg-white/70"
         >
-          <div className="flex items-center gap-12">
+          {/* No hamburger: with one destination it would hide a single
+              link behind an extra tap. Everything sits in the bar. */}
+          <div className="flex min-w-0 items-center gap-3 md:gap-12">
             {Brand}
-            <div className="hidden md:flex items-center gap-6">
-              <NavLinks items={navItems} />
-              <LanguageToggle />
-            </div>
+            <NavLinks items={navItems} />
           </div>
 
-          <div className="hidden md:block">{CTAButton}</div>
-
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" className="p-2">
-                  <Menu className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-
-              <SheetContent side="right" className="px-6 py-10">
-                <SheetHeader>
-                  <div className="mb-8">{Brand}</div>
-                </SheetHeader>
-
-                <div className="flex flex-col gap-6 text-lg font-geist">
-                  <NavLinks items={navItems} />
-                  <LanguageToggle />
-                  <div className="mt-2">{CTAButton}</div>
-                </div>
-              </SheetContent>
-            </Sheet>
+          {/* Language and CTA group on the right: both are actions,
+              while the brand and the link are destinations. */}
+          <div className="flex shrink-0 items-center gap-1 md:gap-3">
+            <LanguageToggle />
+            {CTAButton}
           </div>
         </nav>
       </header>

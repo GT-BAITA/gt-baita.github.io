@@ -17,6 +17,16 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      // Deny by default until the visitor accepts in the consent banner.
+      // This is set once, before any config call, and applies to every
+      // property configured on this shared dataLayer. The stored choice is
+      // replayed on load, and updates, from src/components/layout/components/consent.ts
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+      });
       gtag('js', new Date());
       gtag('config', 'G-3TPV66VT1F');
     </script>

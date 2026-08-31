@@ -1,22 +1,22 @@
 import { ChevronDown, GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { CustomAccordionSelect } from "@/components/shared/custom-accordion-select";
 import { CustomDropdown } from "@/components/shared/custom-dropdown";
 import { Button } from "@/components/ui/button";
 
 /**
- * Botão de seleção de idioma da aplicação.
+ * Seletor de idioma da aplicação.
  *
- * Exibe um ícone de globo e abre um menu com as opções de idioma (Português e Inglês).
- * Ao clicar em uma opção, o idioma é alterado via `i18next`.
+ * Usa um dropdown flutuante em todos os tamanhos de tela. Antes o
+ * mobile usava um acordeão que abria embutido, o que funcionava dentro
+ * do menu lateral — uma pilha vertical. Agora que o seletor vive na
+ * barra horizontal, abrir embutido empurra os itens e quebra a linha.
  */
 export function LanguageToggle() {
   const { i18n, t } = useTranslation();
 
   const currentLang = i18n.language === "pt" ? "PT" : "EN";
 
-  /** Lista de opções disponíveis para troca de idioma. */
   const options = [
     {
       value: "pt",
@@ -31,33 +31,17 @@ export function LanguageToggle() {
   ];
 
   return (
-    <>
-      <div className="md:hidden">
-        <CustomAccordionSelect value={i18n.language} options={options}>
-          <div className="flex items-center gap-3 text-neutral-700 hover:text-neutral-900 text-base font-normal select-none">
-            <GlobeIcon className="h-4 w-4 text-neutral-700 hover:text-neutral-900" />
-            {currentLang}
-          </div>
-        </CustomAccordionSelect>
-      </div>
-
-      <div className="hidden md:block">
-        <CustomDropdown options={options}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={
-              "text-neutral-700 hover:text-neutral-900  hover:bg-white/10 focus-visible:ring-white/50 transition-colors duration-300 cursor-pointer flex gap-3 md:hover:bg-transparent md:w-fit"
-            }
-          >
-            <GlobeIcon className="h-5 w-5 text-neutral-700 hover:text-neutral-900 " />
-            <span className="text-neutral-700 hover:text-neutral-900  text-sm font-normal">
-              {currentLang}
-            </span>
-            <ChevronDown className="h-4 w-4 text-neutral-700 hover:text-neutral-900 " />
-          </Button>
-        </CustomDropdown>
-      </div>
-    </>
+    <CustomDropdown options={options}>
+      <Button
+        variant="ghost"
+        aria-label={t("language-pt") + " / " + t("language-en")}
+        className="flex h-auto shrink-0 cursor-pointer gap-1.5 whitespace-nowrap px-1.5 py-1 text-neutral-700 transition-colors duration-300 hover:bg-transparent hover:text-neutral-900 focus-visible:ring-white/50 md:gap-3 md:px-3"
+      >
+        {/* Dropped below sm: on a 320px bar every icon costs a link its room. */}
+        <GlobeIcon className="hidden h-4 w-4 sm:block md:h-5 md:w-5" />
+        <span className="text-sm font-normal md:text-sm">{currentLang}</span>
+        <ChevronDown className="h-4 w-4" />
+      </Button>
+    </CustomDropdown>
   );
 }

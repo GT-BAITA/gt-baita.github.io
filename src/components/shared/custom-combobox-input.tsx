@@ -1,5 +1,5 @@
 import { ChevronDown } from "lucide-react";
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { CustomLabel } from "./custom-label";
 
 type ComboboxOption = {
@@ -17,13 +17,30 @@ export function CustomComboboxInput({
   ...props
 }: {
   label: string;
-  error: string | undefined;
+  error?: string;
   options: ComboboxOption[];
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   const listboxId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  // Close when the pointer goes down anywhere outside the combobox.
+  // pointerdown rather than click, so the list is gone before focus
+  // moves — a click landing on another field would otherwise leave
+  // the list open behind it.
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (containerRef.current?.contains(event.target as Node)) return;
+      setIsOpen(false);
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, [isOpen]);
 
   const handleSelect = (optionValue: string) => {
     setValue(optionValue);
@@ -39,7 +56,7 @@ export function CustomComboboxInput({
   return (
     <div className="space-y-1">
       <CustomLabel>{label}</CustomLabel>
-      <div className="relative">
+      <div className="relative" ref={containerRef}>
         <input
           {...props}
           ref={inputRef}
@@ -95,7 +112,7 @@ export function CustomComboboxInput({
           </div>
         )}
       </div>
-      <div className="h-5">
+      <div className="min-h-5">
         {error && (
           <p className="text-red-600 text-sm  font-light font-geist">{error}</p>
         )}

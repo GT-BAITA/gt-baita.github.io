@@ -1,73 +1,74 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { CONSENT_KEY, sendConsent, storeConsent } from "./consent";
 
 export function ClarityNotice() {
   const { t } = useTranslation();
-  const [isVisible, setIsVisible] = useState(true);
+  // Read the stored choice up front so the banner never flashes for someone
+  // who has already answered it.
+  const [isVisible, setIsVisible] = useState(
+    () => !localStorage.getItem(CONSENT_KEY)
+  );
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     // Re-send the user's previous choice to Clarity on every page load,
     // since consent state is not persisted by Clarity itself.
-    const userChoice = localStorage.getItem("clarity-consent");
-    if (userChoice && window.clarity) {
-      window.clarity("consentv2", {
-        ad_Storage: userChoice === "accepted" ? "granted" : "denied",
-        analytics_Storage: userChoice === "accepted" ? "granted" : "denied",
-      });
-    }
+    const userChoice = localStorage.getItem(CONSENT_KEY);
     if (userChoice) {
-      setIsVisible(false);
+      sendConsent(userChoice === "accepted");
+      return;
     }
+
+    const frame = window.requestAnimationFrame(() => setIsMounted(true));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  const handleAccept = () => {
-    localStorage.setItem("clarity-consent", "accepted");
-    if (window.clarity) {
-      window.clarity("consentv2", {
-        ad_Storage: "granted",
-        analytics_Storage: "granted",
-      });
-    }
-    setIsVisible(false);
-  };
-
-  const handleReject = () => {
-    localStorage.setItem("clarity-consent", "rejected");
-    if (window.clarity) {
-      window.clarity("consentv2", {
-        ad_Storage: "denied",
-        analytics_Storage: "denied",
-      });
-    }
+  const handleChoice = (granted: boolean) => {
+    storeConsent(granted);
     setIsVisible(false);
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-neutral-200 shadow-md">
-      <div className="max-w-[1264px] mx-auto px-4 py-3 flex flex-row items-center justify-between gap-4">
-        <p className="text-xs sm:text-sm text-neutral-600 font-geist">
-          {t("clarityNotice.text")}{" "}
-          <a
-            href="https://clarity.microsoft.com/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline hover:text-neutral-900"
+    <div
+      role="dialog"
+      aria-modal="false"
+      aria-labelledby="clarity-notice-title"
+      className={`fixed inset-x-4 bottom-4 z-50 sm:inset-x-auto sm:bottom-6 sm:right-6 sm:max-w-md transition-all duration-300 ${
+        isMounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+      }`}
+    >
+      <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-6 shadow-2xl">
+        <h2
+          id="clarity-notice-title"
+          className="font-domine text-lg text-neutral-50"
+        >
+          {t("clarityNotice.title")}
+        </h2>
+
+        <p className="mt-2 font-geist text-sm leading-relaxed text-neutral-400">
+          {t("clarityNotice.description")}{" "}
+          <Link
+            to="/privacy"
+            className="text-neutral-200 underline underline-offset-2 transition-colors hover:text-white"
           >
-            {t("clarityNotice.learnMore")}
-          </a>
+            {t("clarityNotice.link")}
+          </Link>
         </p>
-        <div className="flex gap-2 shrink-0">
+
+        <div className="mt-5 flex gap-3 sm:justify-end">
           <button
-            onClick={handleReject}
-            className="px-3 h-8 rounded-md border border-neutral-300 text-neutral-700 text-xs font-medium hover:bg-neutral-100 transition-colors"
+            onClick={() => handleChoice(false)}
+            className="flex-1 h-10 rounded-lg border border-neutral-700 bg-transparent px-4 font-geist text-sm font-medium text-neutral-200 transition-colors hover:bg-neutral-800 sm:flex-none"
           >
             {t("clarityNotice.reject")}
           </button>
           <button
-            onClick={handleAccept}
-            className="px-3 h-8 rounded-md bg-neutral-900 text-white text-xs font-medium hover:bg-neutral-800 transition-colors"
+            onClick={() => handleChoice(true)}
+            className="flex-1 h-10 rounded-lg bg-neutral-50 px-4 font-geist text-sm font-medium text-neutral-900 transition-colors hover:bg-white sm:flex-none"
           >
             {t("clarityNotice.accept")}
           </button>

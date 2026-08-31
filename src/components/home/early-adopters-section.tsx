@@ -32,7 +32,7 @@ export function EarlyAdoptersSection() {
   const { t } = useTranslation();
 
   const handleScrollToNewsletter = () => {
-    const section = document.querySelector("#newsletter");
+    const section = document.querySelector("#contact-form");
     if (section) {
       const y = section.getBoundingClientRect().top + window.pageYOffset - 50;
       window.scrollTo({ top: y, behavior: "smooth" });

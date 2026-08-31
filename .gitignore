@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# scratch dir for scripts/record-portal-tour.mjs
+scripts/.rec/
