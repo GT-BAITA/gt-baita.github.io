@@ -42,9 +42,20 @@ export function CustomDropdown({
   return (
     <DropdownMenu modal={false} {...props}>
       <DropdownMenuTrigger asChild>
-        <div>{children}</div>
+        {children}
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent
+        onOpenAutoFocus={(event) => {
+          // O menu é portado para o body. Focar seu container sem
+          // `preventScroll` faz o navegador reposicionar o alvo nativo do
+          // ScrollSmoother e a página sobe ao abrir o seletor.
+          event.preventDefault();
+          const content = event.currentTarget as HTMLElement | null;
+          window.requestAnimationFrame(() =>
+            content?.focus({ preventScroll: true })
+          );
+        }}
+      >
         {options.map((option) => {
           const Component = (
             <DropdownMenuItem key={option.value} onClick={option.onClick}>

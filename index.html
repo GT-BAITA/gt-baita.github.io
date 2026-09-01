@@ -17,6 +17,17 @@
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      // Nega por padrão até que o visitante aceite no aviso de consentimento.
+      // Isso é definido uma vez, antes de qualquer chamada de configuração,
+      // e vale para todas as propriedades deste dataLayer compartilhado. A
+      // escolha armazenada é reaplicada no carregamento e atualizada por
+      // src/components/layout/components/consent.ts.
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+      });
       gtag('js', new Date());
       gtag('config', 'G-3TPV66VT1F');
     </script>

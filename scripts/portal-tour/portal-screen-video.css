@@ -1,0 +1,54 @@
+/* Removido temporariamente de src/styles/global.css quando o tour foi
+   arquivado. Recoloque depois das regras de .t-screen-stage. A moldura da
+   janela (.t-screen-frame / .t-screen-bar / .t-screen-stage) permaneceu em
+   global.css — a imagem estática também a utiliza. */
+
+/* Um controle, duas funções. Parado, ele é o alvo óbvio de clique, para que
+   um navegador que recusou o autoplay nunca deixe uma imagem sem entrada.
+   Em execução, recua para um chip no canto que só aparece ao passar o mouse
+   — uma saída para quem não quer o movimento, sem manter um botão sobre a
+   demonstração o tempo todo. */
+.t-screen-play {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background-color: rgba(23, 23, 23, 0.82);
+  color: #fafafa;
+  box-shadow: 0 6px 20px -6px rgba(23, 23, 23, 0.5);
+  transition:
+    opacity var(--duration-fast) var(--ease-in-out),
+    background-color var(--duration-fast) var(--ease-smooth-out),
+    transform var(--duration-fast) var(--ease-smooth-out);
+}
+
+.t-screen-play[data-playing="false"] {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  padding-left: 3px;
+  opacity: 1;
+}
+.t-screen-play[data-playing="false"]:hover {
+  background-color: rgba(23, 23, 23, 0.95);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.t-screen-play[data-playing="true"] {
+  left: 14px;
+  bottom: 14px;
+  width: 34px;
+  height: 34px;
+  opacity: 0;
+}
+.t-screen-frame:hover .t-screen-play[data-playing="true"],
+.t-screen-play[data-playing="true"]:focus-visible {
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-screen-play { transition: none !important; }
+}

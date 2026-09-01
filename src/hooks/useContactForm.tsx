@@ -1,19 +1,15 @@
 import { useRef, useState, useCallback, useEffect } from "react";
 import type { TFunction } from "i18next";
 
-type ContactFormField =
-  | "name"
-  | "email"
-  | "companyOrInstitution"
-  | "affiliation";
+// Empresa e vínculo são coletados, mas não validados — são campos opcionais,
+// portanto não possuem mensagem de erro.
+type ContactFormField = "name" | "email";
 
 type Errors = Record<ContactFormField, string>;
 
 const emptyErrors: Errors = {
   name: "",
   email: "",
-  companyOrInstitution: "",
-  affiliation: "",
 };
 
 type ContactFormElements = HTMLFormElement & {
@@ -37,29 +33,15 @@ export function useContactForm(t: TFunction) {
 
     const name = formRef.current.name.value.trim();
     const email = formRef.current.email.value.trim();
-    const companyOrInstitution =
-      formRef.current.companyOrInstitution.value.trim();
-    const affiliation = formRef.current.affiliation.value.trim();
-
     const newErrors: Errors = { ...emptyErrors };
 
     if (name.length < 3) {
-      newErrors.name = t("newsletter.form.validation.name");
+      newErrors.name = t("contactForm.form.validation.name");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      newErrors.email = t("newsletter.form.validation.email");
-    }
-
-    if (companyOrInstitution.length < 3) {
-      newErrors.companyOrInstitution = t(
-        "newsletter.form.validation.companyOrInstitution"
-      );
-    }
-
-    if (affiliation.length < 3) {
-      newErrors.affiliation = t("newsletter.form.validation.affiliation");
+      newErrors.email = t("contactForm.form.validation.email");
     }
 
     setErrors(newErrors);

@@ -65,7 +65,7 @@ export function RoadmapSection() {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           <motion.div
             initial={{ opacity: 0, y: 80 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -104,6 +104,19 @@ export function RoadmapSection() {
               image={`/svgs/roadmap-portal-${assetLanguage}.svg`}
               buttonLabel={t("roadmap.card3.button")}
               buttonHref="https://servicos.baita.testbeds.rnp.br/"
+            />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            viewport={{ once: true }}
+          >
+            <RoadmapCard
+              title={t("roadmap.card4.title")}
+              description={t("roadmap.card4.description")}
+              image="/svgs/roadmap-portal.svg"
             />
           </motion.div>
         </div>

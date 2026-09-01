@@ -4,16 +4,18 @@
 @custom-variant dark (&:is(.dark *));
 
 html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
+  /* `clip` em vez de `hidden`: hidden transforma html/body em um container
+     de rolagem, quebrando silenciosamente `position: sticky` para todos os
+     descendentes (a seção de soluções fixa em relação à viewport). `clip`
+     ainda impede overflow horizontal, mas não cria um container de rolagem. */
+  overflow-x: clip;
 }
 
 body {
   height: 100%;
   width: 100%;
-  scroll-behavior: smooth;
   background-color: #fafaf7;
-  overflow-x: hidden;
+  overflow-x: clip;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -162,4 +164,946 @@ button {
 
 .grecaptcha-badge {
   z-index: 10;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   transitions.dev — tokens de movimento e snippets usados pela
+   transformação do formulário de newsletter → sucesso. Os snippets foram
+   colados literalmente da skill transitions-dev; o ajuste de cada instância
+   fica na integração do projeto ao final deste arquivo.
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Tokens de movimento — escala compartilhada ───────────────── */
+  /* Durações */
+  --duration-stagger: 40ms;
+  --duration-micro: 80ms;
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-medium: 350ms;
+  --duration-slow: 400ms;
+  --duration-very-slow: 500ms;
+  /* Curvas de easing */
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: ease-in-out;
+  --ease-out: ease-out;
+  --ease-linear: linear;
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --ease-bounce-strong: cubic-bezier(0.34, 3.85, 0.64, 1);
+  /* Distâncias */
+  --distance-micro: 4px;
+  --distance-small: 6px;
+  --distance-base: 8px;
+  --distance-medium: 12px;
+  --distance-large: 30px;
+  /* Desfoque */
+  --blur-small: 2px;
+  --blur-medium: 3px;
+  --blur-large: 8px;
+
+  /* Expansão do acordeão (21) — controla os dois painéis recolhíveis */
+  --acc-expand: 250ms;
+  --acc-collapse: 250ms;
+  --acc-chevron: 250ms;
+  --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Troca de ícone (09) — rótulo ↔ spinner no CTA */
+  --icon-swap-dur: 250ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+
+  /* Confirmação de sucesso (10) */
+  --check-opacity-dur: 500ms;
+  --check-rotate-dur: 500ms;
+  --check-rotate-from: 80deg;
+  --check-bob-dur: 500ms;
+  --check-y-amount: 40px;
+  --check-blur-dur: 500ms;
+  --check-blur-from: 10px;
+  --check-path-dur: 500ms;
+  --check-path-delay: 80ms;
+  --check-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --check-ease-opacity: cubic-bezier(0.22, 1, 0.36, 1);
+  --check-ease-rotate: cubic-bezier(0.22, 1, 0.36, 1);
+  --check-ease-bob: cubic-bezier(0.34, 1.35, 0.64, 1);
+  --check-ease-path: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Revelação dos textos (18) — bloco de obrigado */
+  --stagger-dur: 500ms;
+  --stagger-distance: 12px;
+  --stagger-stagger: 40ms;
+  --stagger-blur: 3px;
+  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Expansão do acordeão (21) ─────────────────────────────────────
+   Apenas regras dos painéis — o hook de chevron do snippet foi omitido
+   porque nenhum dos dois painéis recolhíveis tem chevron. */
+
+/* grid-template-rows 0fr → 1fr oferece uma animação limpa de altura sem
+   medição em JS; o elemento interno recorta o overflow. */
+.t-acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel {
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--acc-expand) var(--acc-ease);
+}
+.t-acc-panel-inner {
+  overflow: hidden;
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity var(--acc-collapse) var(--acc-ease),
+    filter var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel-inner {
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity var(--acc-expand) var(--acc-ease),
+    filter var(--acc-expand) var(--acc-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-acc-panel, .t-acc-panel-inner {
+    transition: none !important;
+  }
+}
+
+/* ── Troca de ícone (09) ───────────────────────────────────────── */
+
+.t-icon-swap {
+  position: relative;
+  display: inline-grid;
+}
+.t-icon-swap .t-icon {
+  grid-area: 1 / 1;
+  transition:
+    opacity   var(--icon-swap-dur) var(--icon-swap-ease),
+    filter    var(--icon-swap-dur) var(--icon-swap-ease),
+    transform var(--icon-swap-dur) var(--icon-swap-ease);
+  will-change: opacity, filter, transform;
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+.t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+.t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+  opacity: 0;
+  filter: blur(var(--icon-swap-blur));
+  transform: scale(var(--icon-swap-start-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-icon-swap .t-icon { transition: none !important; }
+}
+
+/* ── Confirmação de sucesso (10) ───────────────────────────────── */
+
+/* O wrapper controla a animação de entrada; não define tamanho ou cor, então
+   qualquer ícone pode ser inserido. */
+.t-success-check {
+  display: inline-block;
+  transform-origin: center;
+  opacity: 0;
+  will-change: transform, opacity, filter;
+}
+/* overflow: visible evita que o traço seja recortado enquanto é desenhado;
+   display: block elimina o espaço inline abaixo dos SVGs. */
+.t-success-check svg { display: block; overflow: visible; }
+/* Configuração do desenho do traço. stroke-dasharray/offset são escritos
+   inline a partir de path.getTotalLength() na montagem — veja useSuccessMorph. */
+.t-success-check svg path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+}
+
+.t-success-check[data-state="in"] {
+  animation:
+    t-check-fade   var(--check-opacity-dur) var(--check-ease-opacity) forwards,
+    t-check-rotate var(--check-rotate-dur)  var(--check-ease-rotate)  forwards,
+    t-check-blur   var(--check-blur-dur)    var(--check-ease-out)     forwards,
+    t-check-bob    var(--check-bob-dur)     var(--check-ease-bob)     forwards;
+}
+.t-success-check[data-state="in"] svg path {
+  animation: t-check-draw var(--check-path-dur) var(--check-ease-path) var(--check-path-delay, 0ms) forwards;
+}
+
+@keyframes t-check-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes t-check-rotate {
+  from { transform: rotate(var(--check-rotate-from)); }
+  to   { transform: rotate(0deg); }
+}
+@keyframes t-check-blur {
+  from { filter: blur(var(--check-blur-from)); }
+  to   { filter: blur(0); }
+}
+@keyframes t-check-bob {
+  from { translate: 0 var(--check-y-amount); }
+  to   { translate: 0 0; }
+}
+@keyframes t-check-draw { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .t-success-check { animation: none !important; opacity: 1; }
+  .t-success-check svg path { animation: none !important; stroke-dashoffset: 0 !important; }
+}
+
+/* ── Revelação dos textos (18) ─────────────────────────────────── */
+
+/* As linhas começam deslocadas para baixo, desfocadas e invisíveis; .is-shown
+   no pai as leva ao estado de repouso. O transition-delay de cada linha
+   seguinte a segura por --stagger-stagger, fazendo o olhar chegar primeiro
+   ao título. */
+.t-stagger-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(var(--stagger-distance));
+  filter: blur(var(--stagger-blur));
+  transition:
+    opacity   var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease),
+    filter    var(--stagger-dur) var(--stagger-ease);
+  will-change: transform, opacity, filter;
+}
+.t-stagger-line--2 { transition-delay: var(--stagger-stagger); }
+/* Terceira linha, conforme a extensão documentada pelo snippet:
+   transition-delay: calc(var(--stagger-stagger) * (N - 1)) */
+.t-stagger-line--3 { transition-delay: calc(var(--stagger-stagger) * 2); }
+.t-stagger-line--4 { transition-delay: calc(var(--stagger-stagger) * 3); }
+
+.t-stagger.is-shown .t-stagger-line {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+/* A saída é independente do stagger: o mesmo fade para todas as linhas, sem
+   retorno no eixo Y e sem desfoque — o desaparecimento parece um único fade
+   discreto, em vez de uma revelação reversa. */
+.t-stagger.is-hiding .t-stagger-line {
+  opacity: 0;
+  transform: translateY(0);
+  filter: blur(0);
+  transition:
+    opacity 200ms ease,
+    transform 0s linear,
+    filter 0s linear;
+  transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-stagger-line { transition: none !important; }
+}
+
+/* ── Integração do projeto: formulário → transformação em sucesso ─────────
+   O card, o movimento de pílula→badge do CTA e os ajustes específicos
+   desta instância para os snippets acima. Aqui as quatro transições são
+   compostas, não modificadas. */
+
+/* O card é a constante. Sua altura nunca é definida — ela acompanha quadro a
+   quadro os dois painéis .t-acc que recolhem, então a transformação não
+   precisa medir altura. Aqui apenas a superfície (fundo, padding e raio) usa
+   tween: o formulário fica sobre o fundo da seção e o aviso de sucesso fica
+   sobre um card. */
+.t-morph-card {
+  --field-bleed: 6px; /* ring-2 + shadow-sm, com uma folga adicional */
+  width: 100%;
+  padding: 0;
+  border-radius: 1rem;
+  background-color: transparent;
+  transition:
+    padding var(--duration-slow) var(--ease-smooth-out),
+    background-color var(--duration-slow) var(--ease-smooth-out);
+}
+.t-morph-card[data-phase="success"] {
+  padding: 2.5rem;
+  background-color: #262626; /* neutral-800 */
+}
+
+/* CTA: pílula de largura total → badge circular de 4rem. Os campos que
+   recolhem acima dele o levam do fim do formulário ao topo do aviso — sem
+   FLIP, ele simplesmente sobe com a faixa que fecha. */
+.t-cta-morph {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 2.75rem;
+  margin-inline: auto;
+  border-radius: 0.5rem;
+  background-color: #0a0a0a; /* neutral-950 */
+  color: #fff;
+  font-size: 0.875rem;
+  transition:
+    width var(--duration-slow) var(--ease-smooth-out),
+    height var(--duration-slow) var(--ease-smooth-out),
+    border-radius var(--duration-slow) var(--ease-smooth-out),
+    background-color var(--duration-fast) var(--ease-in-out);
+  will-change: width, height, border-radius;
+}
+.t-cta-morph:hover { background-color: #262626; }
+.t-cta-morph[data-phase="success"] {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+.t-cta-morph[data-phase="success"]:hover { background-color: #0a0a0a; }
+
+/* Rótulo/spinner e confirmação compartilham um slot centralizado. O bloco
+   icon-swap controla rótulo ↔ spinner; a confirmação é uma camada separada
+   para que success-check mantenha sua transformação (rotação + salto) sem
+   competir com a escala de icon-swap. */
+.t-cta-slot {
+  display: grid;
+  place-items: center;
+}
+.t-cta-slot > * { grid-area: 1 / 1; }
+.t-cta-swap {
+  transition: opacity var(--duration-quick) var(--ease-in-out);
+}
+.t-cta-morph[data-phase="success"] .t-cta-swap { opacity: 0; }
+
+/* Ajuste desta instância: o badge tem 4rem, então o salto padrão de 40px e o
+   desfoque de 10px do snippet fariam a confirmação começar fora do botão. A
+   rotação de 80deg — assinatura do movimento — é mantida. */
+.t-cta-check {
+  --check-y-amount: 10px;
+  --check-blur-from: 4px;
+  color: #fff;
+}
+
+/* O bloco de mensagem usa .t-acc apenas para a altura; .t-stagger controla o
+   visual, então o fade do próprio painel é neutralizado para evitar duas
+   curvas de opacidade se multiplicando no mesmo texto. */
+.t-morph-message .t-acc-panel-inner {
+  opacity: 1;
+  filter: none;
+}
+
+/* Revelação caractere a caractere de "Obrigado!", seguindo o padrão splitText
+   já usado no título da seção (apenas opacidade, linear). Mesmo padrão de
+   extensão de .t-stagger-line--N, generalizado para um --i inline para
+   funcionar com qualquer tamanho de string. O ritmo é mais rápido que os
+   40ms do título porque precisa terminar dentro do compasso de sucesso. */
+.t-morph-message {
+  --char-stagger: 25ms;
+  /* O corpo e a ação seguem o título, começando na metade da sequência de
+     caracteres — suficiente para o olhar chegar primeiro ao título, sem
+     esperar a última letra. --title-steps é a contagem de caracteres definida
+     inline. */
+  --body-delay: calc(var(--char-stagger) * var(--title-steps, 8) / 2);
+}
+.t-morph-char {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  transition: opacity var(--duration-quick) var(--ease-linear);
+  transition-delay: calc(var(--char-stagger) * var(--i));
+}
+.t-morph-message .t-stagger-line--2 {
+  transition-delay: var(--body-delay);
+}
+.t-morph-message .t-stagger-line--3 {
+  transition-delay: calc(var(--body-delay) + var(--stagger-stagger));
+}
+.t-stagger.is-shown .t-morph-char { opacity: 1; }
+.t-stagger.is-hiding .t-morph-char {
+  opacity: 0;
+  transition: opacity 200ms ease;
+  transition-delay: 0s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-morph-card,
+  .t-cta-morph,
+  .t-cta-swap,
+  .t-morph-char {
+    transition: none !important;
+  }
+}
+
+/* Os campos recolhem nos mesmos 400ms da superfície do card e do movimento do
+   CTA, para que os três pareçam um gesto único, não três. */
+.t-morph-fields {
+  --acc-collapse: var(--duration-slow);
+  --acc-expand: var(--duration-slow);
+  --acc-ease: var(--ease-smooth-out);
+}
+
+/* overflow:hidden do painel permite que a faixa 0fr recolha, mas também
+   recorta horizontalmente; como os inputs ficam alinhados à borda, o anel de
+   foco e a sombra eram cortados nas laterais. overflow-x:visible não é opção
+   junto de overflow-y:hidden (vira auto), então a caixa transborda para fora
+   e recebe padding de volta: o conteúdo permanece no mesmo lugar, com espaço
+   para ser desenhado. */
+.t-morph-fields .t-acc-panel-inner {
+  margin-inline: calc(var(--field-bleed) * -1);
+  padding-inline: var(--field-bleed);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Seção de soluções — stagger dos cards guiado pela rolagem (Figma 1058:35764)
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Revelação do painel (07) — troca da demonstração do produto */
+  --panel-open-dur: 400ms;
+  --panel-close-dur: 350ms;
+  --panel-translate-y: 100px;
+  --panel-blur: 2px;
+  --panel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Revelação do painel (07) ──────────────────────────────────── */
+
+.t-panel-slide {
+  transform: translateY(var(--panel-translate-y));
+  opacity: 0;
+  filter: blur(var(--panel-blur));
+  pointer-events: none;
+  transition:
+    transform var(--panel-close-dur) var(--panel-ease),
+    opacity   var(--panel-close-dur) var(--panel-ease),
+    filter    var(--panel-close-dur) var(--panel-ease);
+  will-change: transform, opacity, filter;
+}
+.t-panel-slide[data-open="true"] {
+  transform: translateY(0);
+  opacity: 1;
+  filter: blur(0);
+  pointer-events: auto;
+  transition:
+    transform var(--panel-open-dur) var(--panel-ease),
+    opacity   var(--panel-open-dur) var(--panel-ease),
+    filter    var(--panel-open-dur) var(--panel-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-panel-slide { transition: none !important; }
+}
+
+/* ── Integração do projeto: cards de solução ──────────────────────
+   Cada card é um .t-acc — o badge e o título sempre aparecem, e o corpo
+   percorre a faixa 0fr↔1fr. O card ativo recebe uma superfície mais clara e
+   padding extra; os demais ficam compactos. */
+
+.t-solution-card {
+  --acc-expand: var(--duration-slow);
+  --acc-collapse: var(--duration-slow);
+  --acc-ease: var(--ease-smooth-out);
+  background-color: #f1f1ec;
+  border-radius: 24px;
+  padding: 32px;
+  overflow: clip;
+  position: relative;
+  transition:
+    background-color var(--duration-slow) var(--ease-smooth-out),
+    opacity var(--duration-slow) var(--ease-smooth-out);
+}
+/* Cards inativos recuam em vez de desaparecer — o olhar ainda deve lê-los
+   como os próximos passos da lista. */
+.t-solution-card[data-active="false"] {
+  opacity: 0.62;
+}
+.t-solution-card[data-active="false"]:hover {
+  opacity: 0.85;
+}
+
+/* O badge e o título nunca recolhem, então o card mantém sua identidade em
+   qualquer tamanho; apenas o bloco de detalhes fica na faixa. */
+.t-solution-card .t-acc-panel-inner {
+  opacity: 1;
+  filter: none;
+
+  /* O `overflow: hidden` do painel permite o recolhimento 0fr↔1fr, então deve
+     permanecer — mas sua borda coincide exatamente com o CTA abaixo e cortava
+     a sombra e os cantos inferiores do botão. O padding dá espaço à sombra
+     dentro do recorte; a margem negativa correspondente recupera a área, sem
+     alterar a altura da faixa. */
+  --shadow-bleed: 10px;
+  padding: 0 var(--shadow-bleed) var(--shadow-bleed);
+  margin: 0 calc(-1 * var(--shadow-bleed)) calc(-1 * var(--shadow-bleed));
+}
+
+/* A mancha decorativa fica atrás do conteúdo, recortada pelo card. */
+.t-solution-blob {
+  position: absolute;
+  left: -78px;
+  top: 60%;
+  width: 193px;
+  height: 193px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(212, 212, 212, 0.55), transparent 70%);
+  filter: blur(24px);
+  pointer-events: none;
+  transition: opacity var(--duration-slow) var(--ease-smooth-out);
+}
+.t-solution-card[data-active="false"] .t-solution-blob { opacity: 0; }
+
+/* Durante o scrub, o GSAP escreve a faixa do painel e a opacidade da
+   demonstração a cada quadro a partir da posição de rolagem. Transições CSS
+   nesses valores competiriam com o scrub e devolveriam o atraso que ele remove. */
+.t-solution-grid[data-scrub="true"] .t-acc-panel,
+.t-solution-grid[data-scrub="true"] .t-acc-panel-inner,
+.t-solution-grid[data-scrub="true"] .t-panel-slide {
+  transition: none !important;
+}
+.t-solution-grid[data-scrub="true"] .t-stagger-line {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+/* Régua de progresso — mostra quanto da lista já foi percorrido e também serve
+   como alvo de clique para saltar até um card. */
+.t-solution-rail {
+  position: relative;
+  width: 2px;
+  border-radius: 9999px;
+  background-color: #e2e2df;
+  overflow: hidden;
+}
+.t-solution-rail-fill {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  background-color: #171717;
+  border-radius: 9999px;
+  /* Controlado por --progress, escrito na régua a cada quadro. Sem transition:
+     ele já acompanha a rolagem continuamente, e aplicar easing a um valor que
+     muda a cada quadro apenas o faria ficar atrás da rolagem. */
+  height: max(4%, calc(var(--progress, 0) * 100%));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-solution-card,
+  .t-solution-blob,
+  .t-solution-rail-fill { transition: none !important; }
+}
+
+/* O cabeçalho do site é `fixed` (top-7, 68px de altura), então flutua sobre a
+   viewport fixada — a seção precisa reservar essa faixa ou seu eyebrow ficará
+   por baixo. */
+@media (min-width: 1024px) {
+  .t-solution-pin,
+  .t-benefits-pin { padding-top: 112px; padding-bottom: 32px; }
+  .t-solution-grid { margin-top: 0; row-gap: 0; }
+  .t-solution-pin > * + *,
+  .t-benefits-pin > * + * { margin-top: 47px; }
+}
+
+/* O frame do Figma tem 944px de altura e não considera um cabeçalho flutuante,
+   então a pilha em tamanho completo não cabe em uma viewport de laptop de
+   900px depois de reservar a faixa do cabeçalho. Reduz os paddings e espaços,
+   em vez de deixar o conteúdo transbordar da fixação ou cair no fallback estático. */
+@media (min-width: 1024px) and (max-height: 980px) {
+  .t-solution-pin > * + *,
+  .t-benefits-pin > * + * { margin-top: 28px; }
+  .t-solution-card { padding: 24px; border-radius: 20px; }
+  .t-solution-card h3 { font-size: 28px; margin-top: 16px; }
+  .t-solution-cards { gap: 14px; }
+}
+
+/* ── Card de solução: alvo de toque, linha de CTA e entrada ───────
+   O card pode ser tocado para expandir e também contém um link real. Um <a>
+   dentro de um <button> é HTML inválido e se comporta de forma inconsistente,
+   então o alternador é um botão sobreposto sob o conteúdo; o conteúdo ignora
+   eventos do ponteiro e apenas o link os recebe. */
+
+.t-solution-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  cursor: pointer;
+  border-radius: inherit;
+}
+.t-solution-body {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+.t-solution-body a,
+.t-solution-body button {
+  pointer-events: auto;
+}
+
+/* Entrada: os cards sobem uma vez quando entram na tela. Este hook é separado
+   de .t-stagger de propósito — .t-stagger.is-shown usa um seletor descendente,
+   então aninhar um no outro faria a linha do corpo de todo card recolhido ficar
+   visível também. */
+.t-card-enter {
+  opacity: 0;
+  transform: translateY(var(--distance-medium));
+  filter: blur(var(--blur-medium));
+  transition:
+    opacity var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease),
+    filter var(--stagger-dur) var(--stagger-ease);
+  transition-delay: calc(var(--duration-stagger) * var(--i, 0));
+  will-change: transform, opacity, filter;
+}
+.t-card-enter.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-card-enter { transition: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Seção de benefícios — acordeão horizontal de abas (Figma 1058:37302)
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Redimensionamento do card (01) — controla o alargamento e estreitamento */
+  --resize-dur: 300ms;
+  --resize-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Redimensionamento do card (01) ────────────────────────────── */
+
+.t-resize {
+  transition:
+    width  var(--resize-dur) var(--resize-ease),
+    height var(--resize-dur) var(--resize-ease);
+  will-change: width, height;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-resize { transition: none !important; }
+}
+
+/* ── Integração do projeto: painéis das abas ───────────────────────
+   Um painel fica aberto por vez. O aberto ocupa o espaço deixado pelas
+   réguas recolhidas, então a linha sempre preenche exatamente o container —
+   sem sobra ou overflow, em qualquer largura. */
+
+.t-tabs {
+  --tab-rail: 90px;
+  --tab-count: 4;
+  /* Faz com que o cqw abaixo use esta linha como referência, e não o painel
+     que está no meio da animação. */
+  container-type: inline-size;
+}
+.t-tab-pane {
+  /* Usado apenas quando o scrub está desligado (clique / movimento reduzido).
+     Uma cúbica simétrica in-out em vez do token expo-out: em um deslocamento
+     desse tamanho, expo-out percorre ~70% da distância nos primeiros 20% do
+     tempo, o que parece um estalo seguido de uma cauda parada. */
+  --resize-dur: 420ms;
+  --resize-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: flex-grow var(--resize-dur) var(--resize-ease);
+}
+/* A largura vem de flex-grow, não de uma largura explícita: enquanto dois
+   painéis compartilham o espaço livre, seus crescimentos somam 1, então a
+   largura de cada um se move linearmente e a linha sempre fecha exatamente —
+   sem aritmética ligada ao container e sem recalcular no resize. */
+.t-tab-pane {
+  flex-basis: var(--tab-rail);
+  flex-grow: 0;
+}
+.t-tab-pane[data-open="false"] {
+  background-color: #262626;
+}
+.t-tab-pane[data-open="true"] {
+  flex-grow: 1;
+  background-color: #ffffff;
+}
+
+/* Durante o scrub, o GSAP escreve flex-grow a cada quadro a partir da posição
+   de rolagem. Uma transição CSS por cima competiria com ele e reintroduziria o
+   atraso que o scrub existe para remover. */
+.t-tabs[data-scrub="true"] .t-tab-pane {
+  transition: background-color var(--duration-fast) var(--ease-in-out);
+}
+.t-tabs[data-scrub="true"] .t-stagger-line {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+/* Divisor entre painéis. Uma sombra interna em vez de border-right: com
+   box-sizing border-box, uma borda real tira um pixel da caixa de conteúdo,
+   altera a aritmética exata da régua + corpo e recorta a régua em 1px. A
+   sombra pinta no mesmo lugar sem custo de layout. */
+.t-tab-pane:not(:last-child) {
+  box-shadow: inset -1px 0 0 #525252;
+}
+.t-tab-pane[data-open="true"]:not(:last-child) {
+  box-shadow: inset -1px 0 0 #e5e5e5;
+}
+
+/* A régua mantém sua própria largura enquanto o painel anima, então o número
+   e o rótulo vertical nunca se espremem no meio da transição. */
+.t-tab-rail {
+  width: var(--tab-rail);
+  flex-shrink: 0;
+}
+
+/* O corpo usa a largura final do painel aberto, não a do painel em animação,
+   para que o texto não seja reorganizado a cada quadro do alargamento —
+   parágrafos reorganizando são o que dá aparência barata. Precisa ser cqw, não
+   %: uma porcentagem usa o painel como referência, justamente a largura que
+   está mudando. */
+.t-tab-body {
+  width: calc(
+    100cqw - (var(--tab-count) - 1) * var(--tab-rail) - var(--tab-rail)
+  );
+  flex-shrink: 0;
+}
+
+/* A demonstração agora acompanha exatamente a coluna de cards: nada aqui
+   define altura, então a linha do grid usa a altura dos próprios cards e o
+   item esticado a acompanha. Antes, usava a altura livre da viewport fixada,
+   deixando a janela passar ~60px do último card em uma tela de 900px. Limitada
+   apenas para que uma janela muito alta não empurre o conteúdo fixado além da viewport. */
+.t-solution-demo {
+  /* 220px é a própria moldura da fixação: 112 de topo + 32 de padding inferior,
+     o título de 48px e o espaço de 28px abaixo dele. */
+  max-height: calc(100vh - 220px);
+}
+
+/* A linha de abas absorve o que a viewport fixada deixa após a faixa do
+   cabeçalho, limitada à altura do Figma. */
+.t-tab-row {
+  /* 112 do topo da fixação + 32 da base + ~96 do cabeçalho + 28 de espaço.
+     Era 332 quando o cabeçalho ainda tinha um eyebrow acima do título. */
+  height: clamp(420px, calc(100vh - 280px), 720px);
+}
+
+/* Um painel que fecha remove ~870px de corpo em 500ms. Os atrasos de entrada
+   do stagger não podem valer na saída, ou o painel guilhotina conteúdo ainda
+   totalmente opaco — medido com um corte de 560px e a imagem ainda em
+   opacidade 1. A saída é plana e sem atraso, conforme a regra do snippet de
+   que a saída não deve repetir a entrada. Transform e blur permanecem nos
+   valores-base para que a próxima abertura ainda suba. */
+.t-tab-pane[data-open="false"] .t-stagger-line {
+  opacity: 0;
+  transition: opacity var(--duration-quick) var(--ease-in-out);
+  transition-delay: 0s;
+}
+
+/* Rótulo vertical. writing-mode em vez de `transform: rotate(-90deg)` — uma
+   transformação deixa a caixa de layout sem rotação, então um rótulo de 225px
+   ainda reivindica 225px de largura dentro de uma régua de 90px e é recortado.
+   writing-mode gira a própria caixa. */
+.t-tab-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-tab-pane { transition: none !important; }
+}
+
+/* Sem a barra de rolagem interna, a imagem absorve todo o espaço livre, o que
+   em uma viewport curta a deixava como uma faixa de 33px. Dê a ela um mínimo,
+   recupere espaço do padding e, abaixo da altura em que nem esse mínimo cabe,
+   remova a imagem em vez de mostrar uma tira — o texto é o que precisa sobreviver. */
+.t-tab-pane .t-stagger-line--4 {
+  min-height: 140px;
+}
+@media (min-width: 1024px) and (max-height: 790px) {
+  .t-tab-pane .t-stagger-line--4 {
+    display: none;
+  }
+}
+
+/* ── Pilha mobile ──────────────────────────────────────────────────
+   Os painéis ficam unidos como um bloco, em vez de cards separados, então o
+   arredondamento pertence à pilha e os itens internos ficam quadrados. */
+
+.t-tab-stack {
+  border-radius: 16px;
+  overflow: hidden;
+}
+.t-tab-item {
+  /* Pelo mesmo motivo dos painéis desktop: o expo-out padrão de 250ms abre em
+     um piscar e depois se arrasta. Mais longo e suavizado nas duas pontas. */
+  --acc-expand: 500ms;
+  --acc-collapse: 500ms;
+  --acc-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+.t-tab-item[data-open="true"] {
+  background-color: #ffffff;
+}
+.t-tab-item[data-open="false"] {
+  background-color: #262626;
+}
+.t-tab-item + .t-tab-item {
+  border-top: 1px solid #404040;
+}
+.t-tab-item[data-open="true"] + .t-tab-item,
+.t-tab-item:has(+ .t-tab-item[data-open="true"]) + .t-tab-item {
+  border-top-color: #e5e5e5;
+}
+
+/* Saída plana e sem atraso aqui também — um item que recolhe poderia recortar
+   conteúdo que ainda está totalmente opaco. */
+.t-tab-item[data-open="false"] .t-stagger-line {
+  opacity: 0;
+  transition: opacity var(--duration-quick) var(--ease-in-out);
+  transition-delay: 0s;
+}
+
+/* Cópia da prévia dentro do card. A rolagem fixada também é desativada em
+   larguras desktop com prefers-reduced-motion, e a coluna de demonstração
+   (`hidden lg:block`) fica visível — sem isto, a prévia apareceria duas vezes,
+   uma dentro do card e outra na coluna.
+
+   Uma regra aqui em vez do utilitário `lg:hidden`: o mesmo span é uma
+   .t-stagger-line, e essa regra define `display: block` neste arquivo, que
+   carrega depois dos utilitários do Tailwind e vence pela ordem da fonte com
+   a mesma especificidade. */
+@media (min-width: 1024px) {
+  .t-demo-inline { display: none; }
+}
+
+/* ── Integração do projeto: captura do produto ────────────────────
+   Uma janela de navegador ao redor da captura. A moldura é marcação, não
+   parte da imagem, então permanece nítida e segue os raios da própria página.
+
+   Compartilhada com a versão de vídeo arquivada em scripts/portal-tour/ — não
+   renomeie estas classes sem atualizar aquele README. */
+
+.t-screen-slot {
+  display: flex;
+  align-items: center;
+}
+
+/* Na coluna de demonstração fixada, a janela ocupa toda a altura dos cards ao
+   lado e ultrapassa a borda direita, o que aproxima a gravação — o slot recorta
+   o overflow. */
+.t-screen-slot[data-variant="column"] {
+  --screen-bleed: 100%;
+  height: 100%;
+  align-items: stretch;
+
+  /* Sem `overflow: hidden` aqui. Ele era necessário quando a moldura era mais
+     larga que o slot, mas agora o slot se estende até a borda da viewport e a
+     moldura o preenche exatamente — então o único elemento recortado era a
+     própria sombra, cortada nas bordas inferior e esquerda. O que ultrapassar
+     a viewport é recortado por `overflow-x: clip` em html/body. */
+
+  /* Ultrapassa o container até a borda direita da viewport, então a janela é
+     cortada pela tela em vez de terminar em uma margem.
+
+     A margem é a própria margem do shell da página: o shell limita-se a
+     1232px e centraliza, com recuo mínimo de 16px. Medida em
+     1024/1180/1280/1440/1600/1920/2560, esta expressão corresponde a todos.
+     Alguns pixels de avanço são inofensivos — html/body usam `overflow-x:
+     clip`, então o que passa da borda é cortado e nunca rolável —, enquanto
+     ficar aquém deixaria exatamente a margem removida por isto. */
+  margin-right: calc(-1 * max(16px, (100vw - 1232px) / 2));
+}
+
+
+.t-screen-frame {
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #e9e9e4;
+  box-shadow:
+    0 18px 40px -18px rgba(23, 23, 23, 0.35),
+    0 2px 8px -3px rgba(23, 23, 23, 0.12);
+  /* Resolve os clamps em cqw da barra de título abaixo. */
+  container-type: inline-size;
+}
+.t-screen-slot[data-variant="column"] .t-screen-frame {
+  flex: 0 0 auto;
+  height: 100%;
+  width: var(--screen-bleed);
+  /* Recortado pela viewport, então arredondar este lado só teria efeito fora
+     da tela. */
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+.t-screen-slot[data-variant="inline"] .t-screen-frame {
+  width: 100%;
+}
+
+.t-screen-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* Escala com a moldura: a janela tem ~900px de largura na coluna de
+     demonstração e apenas ~290px dentro de um card no celular; uma altura fixa
+     pareceria uma barra de ferramentas em um tamanho e uma faixa no outro. */
+  padding: clamp(7px, 1.5cqw, 13px) clamp(10px, 2.2cqw, 18px);
+  background-color: #d9d9d3;
+  flex: 0 0 auto;
+}
+.t-screen-bar > span {
+  width: clamp(6px, 1.1cqw, 10px);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background-color: #b4b4ad;
+}
+
+.t-screen-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  background-color: #ffffff;
+}
+/* Dentro de um card não há altura para preencher, então a janela mantém o
+   formato da própria captura e nada é recortado. */
+.t-screen-slot[data-variant="inline"] .t-screen-stage {
+  aspect-ratio: 1280 / 980;
+}
+
+.t-screen-shot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ancorado no canto superior esquerdo. À esquerda, para que o que precisar
+     sair horizontalmente ultrapasse a direita, o mesmo lado sacrificado pela
+     captura cortada do design. No topo, porque em uma viewport alta a janela é
+     mais alta que a proporção da captura — centralizar cortaria a barra do
+     cabeçalho do portal pela metade. */
+  object-position: left top;
+}
+
+/* A partir de xl há espaço para mostrar a captura inteira, então ela para de
+   transbordar e a janela mantém o formato original. As duas condições não
+   podem coexistir: é a largura da janela que muda o bleed, e qualquer valor
+   maior que altura × 1,306 precisa sacrificar o topo e a base da moldura com
+   `cover`. Abaixo de xl, a margem é de apenas 16–24px, então o bleed não traz
+   ganho e a coluna é estreita demais para caber a captura inteira — nesse caso,
+   é melhor cortar e ultrapassar a borda do que parar antes dela. */
+@media (min-width: 1280px) {
+  .t-screen-slot[data-variant="column"] {
+    margin-right: 0;
+    align-items: center;
+  }
+  .t-screen-slot[data-variant="column"] .t-screen-frame {
+    height: auto;
+    border-start-end-radius: 14px;
+    border-end-end-radius: 14px;
+  }
+  .t-screen-slot[data-variant="column"] .t-screen-stage {
+    flex: 0 0 auto;
+    aspect-ratio: 1280 / 980;
+  }
+}
+.t-screen-slot[data-variant="inline"] {
+  width: 100%;
 }

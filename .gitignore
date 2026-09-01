@@ -22,3 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# diretório temporário do scripts/record-portal-tour.mjs
+scripts/.rec/

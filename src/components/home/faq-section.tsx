@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 function CustomAccordionItem(props: {
   value: string;
@@ -29,16 +29,33 @@ function CustomAccordionTrigger({ text }: { text: string }) {
 }
 
 function CustomAccordionContent({
-  text,
-  children,
+  i18nKey,
+  linkHref,
 }: {
-  text?: string;
-  children?: React.ReactNode;
+  i18nKey: string;
+  linkHref?: string;
 }) {
+  const isExternalLink = linkHref?.startsWith("http");
+
   return (
-    <AccordionContent className="text-neutral-900 p-0 text-base font-[400] leading-5 px-4 pb-4 font-geist">
-      {text}
-      {children}
+    <AccordionContent className="text-neutral-900 p-0 text-base font-[400] leading-5 px-4 pb-4 font-geist [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800">
+      <Trans
+        i18nKey={i18nKey}
+        components={
+          linkHref
+            ? {
+                a: (
+                  <a
+                    href={linkHref}
+                    {...(isExternalLink
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  />
+                ),
+              }
+            : undefined
+        }
+      />
     </AccordionContent>
   );
 }
@@ -57,32 +74,41 @@ export function FAQSection() {
           <Accordion type="single" collapsible defaultValue="item-1">
             <CustomAccordionItem value="item-1">
               <CustomAccordionTrigger text={t("faq.q1")} />
-              <CustomAccordionContent text={t("faq.a1")} />
+              <CustomAccordionContent
+                i18nKey="faq.a1"
+                linkHref="https://servicos.baita.testbeds.rnp.br/"
+              />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-2">
               <CustomAccordionTrigger text={t("faq.q2")} />
-              <CustomAccordionContent text={t("faq.a2")} />
+              <CustomAccordionContent i18nKey="faq.a2" />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-3">
               <CustomAccordionTrigger text={t("faq.q3")} />
-              <CustomAccordionContent text={t("faq.a3")} />
+              <CustomAccordionContent i18nKey="faq.a3" />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-4">
               <CustomAccordionTrigger text={t("faq.q4")} />
-              <CustomAccordionContent text={t("faq.a4")} />
+              <CustomAccordionContent
+                i18nKey="faq.a4"
+                linkHref="https://servicos.baita.testbeds.rnp.br/"
+              />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-5">
               <CustomAccordionTrigger text={t("faq.q5")} />
-              <CustomAccordionContent text={t("faq.a5")} />
+              <CustomAccordionContent
+                i18nKey="faq.a5"
+                linkHref="mailto:contato.gtbaita@gmail.com"
+              />
             </CustomAccordionItem>
 
             <CustomAccordionItem value="item-6">
               <CustomAccordionTrigger text={t("faq.q6")} />
-              <CustomAccordionContent text={t("faq.a6")} />
+              <CustomAccordionContent i18nKey="faq.a6" />
             </CustomAccordionItem>
           </Accordion>
         </div>
