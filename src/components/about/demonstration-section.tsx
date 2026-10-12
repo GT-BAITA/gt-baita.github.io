@@ -9,6 +9,7 @@ import type { CarouselApi } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EYEBROW } from "@/lib/typography";
 
 export function DemonstrationSection() {
   const { t } = useTranslation();
@@ -68,7 +69,7 @@ export function DemonstrationSection() {
     <section id="demonstration" className="py-11 lg:py-22">
       <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-8">
         <div className="flex flex-col gap-8">
-          <p className="font-geist text-base uppercase tracking-[0.02em] text-neutral-500">
+          <p className={EYEBROW}>
             {t("aboutDemonstration.eyebrow")}
           </p>
 

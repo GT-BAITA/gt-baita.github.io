@@ -35,7 +35,7 @@ export function LanguageToggle() {
       <Button
         variant="ghost"
         aria-label={t("language-pt") + " / " + t("language-en")}
-        className="flex h-auto shrink-0 cursor-pointer gap-1.5 whitespace-nowrap px-1.5 py-1 text-neutral-700 transition-colors duration-300 hover:bg-transparent hover:text-neutral-900 focus-visible:ring-white/50 md:gap-3 md:px-3"
+        className="flex h-auto min-h-0 shrink-0 cursor-pointer gap-1.5 whitespace-nowrap px-1.5 py-1 text-ink-2 transition-colors duration-300 hover:bg-transparent hover:text-ink md:gap-3 md:px-3"
       >
         {/* Dropped below sm: on a 320px bar every icon costs a link its room. */}
         <GlobeIcon className="hidden h-4 w-4 sm:block md:h-5 md:w-5" />

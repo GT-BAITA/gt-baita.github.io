@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { twMerge } from "tailwind-merge";
+import { buttonVariants } from "@/components/ui/button";
 
 function RoadmapCard({
   title,
@@ -33,7 +34,7 @@ function RoadmapCard({
             href={buttonHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 px-4 h-9 rounded-lg bg-neutral-950 text-white font-geist text-sm font-medium hover:bg-neutral-900 transition-colors"
+            className={buttonVariants()}
           >
             {buttonLabel}
           </a>

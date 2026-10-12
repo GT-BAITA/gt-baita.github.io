@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getConsent, storeConsent, type ConsentChoice } from "@/components/layout/components/consent";
+import { Button } from "@/components/ui/button";
 
 function Section({
   title,
@@ -71,20 +72,23 @@ function ConsentControls() {
       </p>
 
       <div className="mt-5 flex flex-wrap gap-3">
-        <button
+        <Button
+          variant="secondary"
+          size="md"
           onClick={() => update(false)}
           aria-pressed={choice === "rejected"}
-          className="h-10 rounded-lg border border-neutral-300 px-4 font-geist text-sm font-medium text-neutral-800 transition-colors hover:bg-neutral-200"
+          className="px-4"
         >
           {t("privacy.consent.reject")}
-        </button>
-        <button
+        </Button>
+        <Button
+          size="md"
           onClick={() => update(true)}
           aria-pressed={choice === "accepted"}
-          className="h-10 rounded-lg bg-neutral-900 px-4 font-geist text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+          className="px-4"
         >
           {t("privacy.consent.accept")}
-        </button>
+        </Button>
       </div>
     </section>
   );

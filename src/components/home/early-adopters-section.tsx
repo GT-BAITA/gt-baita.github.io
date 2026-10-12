@@ -87,7 +87,8 @@ export function EarlyAdoptersSection() {
         <div>
           <Button
             onClick={handleScrollToNewsletter}
-            className="bg-neutral-950 text-white hover:bg-neutral-900 rounded-lg font-geist text-sm font-medium h-10 px-8 gap-2 transition-all duration-300 cursor-pointer"
+            size="md"
+            className="px-8"
           >
             {t("earlyAdopters.cta")}
             <ChevronRight className="w-4 h-4" />

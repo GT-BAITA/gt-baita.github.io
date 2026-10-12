@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useEnterOnce } from "@/hooks/useEnterOnce";
 import { requestContact } from "@/lib/contact-request";
+import { Button } from "@/components/ui/button";
+import { EYEBROW } from "@/lib/typography";
 
 /**
  * "Participe como Early Adopter" — nó 1058:37336 do Figma.
@@ -64,7 +66,7 @@ export function UseCasesSection() {
       <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-12">
         <div className="flex flex-col gap-6 lg:w-[520px] lg:shrink-0">
           <div className="flex flex-col gap-10">
-            <p className="font-geist text-base uppercase leading-6 tracking-[-0.32px] text-neutral-500">
+            <p className={EYEBROW}>
               {t("earlyAdopters.eyebrow")}
             </p>
 
@@ -77,13 +79,9 @@ export function UseCasesSection() {
             {t("earlyAdopters.description")}
           </p>
 
-          <button
-            type="button"
-            onClick={() => requestContact()}
-            className="inline-flex min-h-9 w-fit items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-[7.5px] font-geist text-sm font-medium tracking-[0.07px] text-neutral-50 transition-colors hover:bg-neutral-800"
-          >
+          <Button onClick={() => requestContact()} className="w-fit">
             {t("earlyAdopters.cta")}
-          </button>
+          </Button>
         </div>
 
         <ul className="flex min-w-0 flex-1 flex-col gap-6">

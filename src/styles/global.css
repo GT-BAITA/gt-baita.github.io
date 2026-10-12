@@ -14,7 +14,8 @@ html {
 body {
   height: 100%;
   width: 100%;
-  background-color: #fafaf7;
+  background-color: var(--canvas);
+  color: var(--ink);
   overflow-x: clip;
   margin: 0;
   padding: 0;
@@ -142,9 +143,100 @@ body {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ══════════════════════════════════════════════════════════════════
+   Tokens da marca — um conjunto, duas versões.
+   O site principal usa a versão clara; o microsite do IdP vira a chave para
+   a escura (classe `dark` no <html>, ver src/lib/route-theme.ts). Também dá
+   para inverter só um trecho — uma "ilha" escura como o rodapé — pondo a
+   classe `dark` nele. Componentes compartilhados (Button, Faq, cabeçalho,
+   rodapé) usam só estes tokens, então funcionam nos dois modos.
+   ══════════════════════════════════════════════════════════════════ */
+:root {
+  --canvas: #fafaf7;    /* fundo da página */
+  --canvas-2: #f4f4f0;  /* fundo rebaixado: grades, campos */
+  --surface: #f1f1ec;   /* cards e painéis */
+  --surface-2: #e9e9e4; /* hover de card, moldura de janela */
+  --raised: #ffffff;    /* elementos elevados: botão secundário */
+  --bar: #d9d9d3;       /* barra de título das janelas */
+  --line: #e4e4df;
+  --line-2: #d6d6d0;
+  --ink: #171717;       /* texto principal e botão primário */
+  --ink-hover: #262626;
+  --ink-2: #525252;     /* texto de apoio */
+  --ink-3: #737373;     /* rótulos, metadados */
+  --nav-bg: rgb(255 255 255 / 0.5);
+  --nav-bg-hover: rgb(255 255 255 / 0.7);
+  --nav-border: transparent;
+  /* Pontilhado: pixels escuros pesam mais no claro, então ficam mais leves. */
+  --dither-alpha: 0.6;
+}
+
+.dark {
+  --canvas: #121210;
+  --canvas-2: #171714;
+  --surface: #1c1c19;
+  --surface-2: #24241f;
+  --raised: #1c1c19;
+  --bar: #2a2a25;
+  --line: #2c2c27;
+  --line-2: #3b3b35;
+  --ink: #f4f3ee;
+  --ink-hover: #ffffff;
+  --ink-2: #c4c2b9;
+  --ink-3: #97958c;
+  --nav-bg: rgb(28 28 25 / 0.72);
+  --nav-bg-hover: rgb(36 36 31 / 0.85);
+  --nav-border: rgb(255 255 255 / 0.07);
+  --dither-alpha: 0.91;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-2: var(--canvas-2);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-raised: var(--raised);
+  --color-bar: var(--bar);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-ink: var(--ink);
+  --color-ink-hover: var(--ink-hover);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+}
+
+/* A troca de modo é um "interruptor": durante a virada, cores de fundo,
+   texto e borda fazem uma transição curta em vez de piscar. A classe só
+   existe por ~600ms (route-theme.ts).
+
+   Só o que sobrevive à troca de página anima: o fundo, a barra e o
+   rodapé. O conteúdo novo já nasce no tema certo, e animar a cor de todos
+   os elementos fazia o navegador repintar a página inteira a cada quadro
+   (quadros de 60–120ms na virada). */
+html.theme-switching body,
+html.theme-switching header,
+html.theme-switching header *,
+html.theme-switching footer,
+html.theme-switching footer * {
+  transition:
+    background-color 500ms var(--ease-smooth-out),
+    color 500ms var(--ease-smooth-out),
+    border-color 500ms var(--ease-smooth-out),
+    fill 500ms var(--ease-smooth-out) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching body,
+  html.theme-switching header,
+  html.theme-switching header *,
+  html.theme-switching footer,
+  html.theme-switching footer * { transition: none !important; }
+}
+
 @theme {
   --font-geist: "Geist", sans-serif;
   --font-domine: "Domine", serif;
+  --font-mono: "Geist Mono", ui-monospace, Menlo, monospace;
 }
 
 @layer base {
@@ -157,9 +249,12 @@ body {
   }
 }
 
-button {
-  font-family: var(--font-geist);
-  cursor: pointer;
+/* Na camada base para que utilitários (ex.: font-domine) possam sobrescrever. */
+@layer base {
+  button {
+    font-family: var(--font-geist);
+    cursor: pointer;
+  }
 }
 
 .grecaptcha-badge {

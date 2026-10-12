@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
 import { ManagementDecorations } from "./components/management-decorations";
 import { PortalDecorations } from "./components/portal-decorations";
+import { EYEBROW } from "@/lib/typography";
 
 const viewportOnce = { once: true, amount: 0.2 };
 
@@ -58,7 +59,7 @@ export function PillarsSection() {
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={viewportOnce}
         >
-          <p className="font-geist text-base uppercase tracking-[0.02em] text-neutral-500">
+          <p className={EYEBROW}>
             {t("aboutPillars.eyebrow")}
           </p>
 
