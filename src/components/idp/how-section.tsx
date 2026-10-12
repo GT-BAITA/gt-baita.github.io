@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useIdpContent, type IdpContent } from "./content";
 import { ArrowRight, Check } from "./icons";
+import { buttonVariants } from "@/components/ui/button";
 import { Kicker, rv, useReducedMotion } from "./primitives";
 
 type How = IdpContent["how"];
@@ -54,14 +55,12 @@ function Pane({ step, c }: { step: number; c: How }) {
             <span>{c.mapping.head[0]}</span>
             <span />
             <span>{c.mapping.head[1]}</span>
-            <span>{c.mapping.head[2]}</span>
           </div>
           {c.mapping.rows.map((r) => (
             <div key={r.from} className="map">
               <span>{r.from}</span>
               <ArrowRight />
               <span>{r.to}</span>
-              <span className={r.done ? "pill" : "pill dim"}>{r.status}</span>
             </div>
           ))}
         </div>
@@ -72,12 +71,13 @@ function Pane({ step, c }: { step: number; c: How }) {
     return (
       <div className="pane" key={2}>
         <PaneHead title={c.config.title} i={2} />
+        {/* O que a etapa entrega, sem status: é informação para a
+            instituição, não um quadro de tarefas. */}
         <div className="list log">
-          {c.config.rows.map((r) => (
-            <div key={r.label} className="li">
-              <CheckMark state={r.state} />
-              <span>{r.label}</span>
-              <span className={r.state === "ok" ? "pill" : "pill dim"}>{r.status}</span>
+          {c.config.items.map((item) => (
+            <div key={item} className="li">
+              <span className="bullet" aria-hidden="true" />
+              <span>{item}</span>
             </div>
           ))}
         </div>
@@ -87,23 +87,30 @@ function Pane({ step, c }: { step: number; c: How }) {
   return (
     <div className="pane" key={3} style={{ alignItems: "center" }}>
       <PaneHead title={c.access.title} i={3} />
-      <div className="login" style={{ maxWidth: 340 }}>
+      {/* A tela de login única: usuário e senha da instituição para entrar
+          em um serviço. Ilustração, não um formulário de verdade. */}
+      <div className="login" style={{ maxWidth: 340 }} aria-hidden="true">
         <div className="login-top">
           <div className="mark">LOGO</div>
           <div>
             <div className="login-inst">{c.access.institution}</div>
-            <div className="mono-s">{c.access.session}</div>
+            <div className="mono-s">{c.access.prompt}</div>
           </div>
         </div>
-        {c.access.services.map((s) => (
-          <div key={s} className="row">
-            <span>{s}</span>
-            <span className="pill">
-              <span className="dot" />
-              ok
-            </span>
-          </div>
-        ))}
+        <div className="fld">
+          {c.access.user}
+          <input tabIndex={-1} readOnly placeholder={c.access.userHint} />
+        </div>
+        <div className="fld">
+          {c.access.password}
+          <input tabIndex={-1} readOnly type="password" value="••••••••••" />
+        </div>
+        <span className={buttonVariants({ size: "md" })}>{c.access.submit}</span>
+        <div className="login-foot">
+          <span className="mono-s" style={{ marginLeft: 0 }}>
+            {c.access.foot}
+          </span>
+        </div>
       </div>
     </div>
   );
@@ -119,6 +126,25 @@ export function HowSection() {
   // Depois de um clique, a rolagem suave passa pelas outras etapas; a trava
   // impede que a sincronização marque essas etapas no caminho.
   const lockUntil = useRef(0);
+  const viewRef = useRef<HTMLDivElement>(null);
+  const fitRef = useRef<HTMLDivElement>(null);
+
+  // A janela acompanha a altura da etapa: mede o conteúdo e fixa a altura
+  // em px, que o CSS anima (height: auto não tem transição).
+  useLayoutEffect(() => {
+    const view = viewRef.current;
+    const fit = fitRef.current;
+    if (!view || !fit) return;
+    const resize = () => {
+      const cs = getComputedStyle(view);
+      const pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+      view.style.height = `${fit.offsetHeight + pad}px`;
+    };
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(fit);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     let raf = 0;
@@ -193,13 +219,15 @@ export function HowSection() {
                   <span className="step-t">{st.t}</span>
                 </button>
                 <p className="step-d">{st.d}</p>
+                {/* Rótulos de cada fase: fora da V1 (sozinhos, explicavam
+                    pouco). Os textos continuam em content.ts.
                 <div className="tags">
                   {st.tags.map((tg) => (
                     <span key={tg} className="pill">
                       {tg}
                     </span>
                   ))}
-                </div>
+                </div> */}
               </div>
             ))}
           </div>
@@ -213,8 +241,10 @@ export function HowSection() {
                 </span>
                 <span className="url">{c.url}</span>
               </div>
-              <div className="bview gridbg">
-                <Pane step={step} c={c} />
+              <div className="bview gridbg" ref={viewRef}>
+                <div className="pane-fit" ref={fitRef}>
+                  <Pane step={step} c={c} />
+                </div>
               </div>
             </div>
           </div>

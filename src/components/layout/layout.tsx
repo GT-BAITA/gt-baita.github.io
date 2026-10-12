@@ -3,6 +3,7 @@ import { Header } from "./components/header";
 import { ClarityNotice } from "./components/clarity-notice";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 import { useApplyTheme, useRouteChrome } from "@/lib/route-theme";
+import { useThemeTransitionLinks } from "@/lib/theme-transition";
 import { HeroBackdrop } from "@/components/shared/hero-dither";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -10,6 +11,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   // suave, largura) vem de route-theme.ts.
   const chrome = useRouteChrome();
   useApplyTheme(chrome.theme);
+  useThemeTransitionLinks();
   useSmoothScroll(chrome.smoothScroll);
 
   return (

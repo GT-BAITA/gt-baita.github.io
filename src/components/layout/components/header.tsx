@@ -156,7 +156,8 @@ export function Header() {
   ];
 
   // Todas as páginas têm o formulário de contato no rodapé, então o CTA só
-  // rola até ele — com a mensagem da rota já preenchida (no IdP, a demo).
+  // rola até ele — com a mensagem da rota já preenchida. O texto é o mesmo
+  // em todas as rotas, para o cabeçalho não mudar na virada de tema.
   const CTAButton = (
     <Button
       onClick={() =>
@@ -164,7 +165,7 @@ export function Header() {
       }
       className="shrink-0 px-3 md:px-4"
     >
-      {t(chrome.ctaKey)}
+      {t("header.cta")}
     </Button>
   );
 
@@ -180,11 +181,6 @@ export function Header() {
       >
         {t("header.brand")}
       </Link>
-      {chrome.brandTag && (
-        <span className="-translate-y-0.5 rounded-md border border-line-2 px-1.5 py-0.5 font-mono text-[11px] font-medium tracking-wide text-ink-3">
-          {chrome.brandTag}
-        </span>
-      )}
     </h1>
   );
 

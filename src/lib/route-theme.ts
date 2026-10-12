@@ -1,5 +1,6 @@
 import { useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { themeTransitionActive } from "./theme-transition";
 
 /**
  * O que muda de uma rota para outra no "chassi" do site (Layout, cabeçalho,
@@ -12,10 +13,6 @@ export type RouteChrome = {
   smoothScroll: boolean;
   /** Sem o container de 1264px: a página cuida das próprias margens. */
   fullBleed: boolean;
-  /** Sufixo da marca no cabeçalho (ex.: "GT-Baita [IdP]"). */
-  brandTag?: string;
-  /** Mensagem pré-preenchida pelo CTA do cabeçalho. */
-  ctaKey: "header.cta" | "header.ctaIdp";
   ctaMessageKey?: string;
 };
 
@@ -25,15 +22,12 @@ const MAIN: RouteChrome = {
   theme: "light",
   smoothScroll: true,
   fullBleed: false,
-  ctaKey: "header.cta",
 };
 
 const IDP: RouteChrome = {
   theme: "dark",
   smoothScroll: false,
   fullBleed: true,
-  brandTag: "IdP",
-  ctaKey: "header.ctaIdp",
   ctaMessageKey: "solutions.card3.message",
 };
 
@@ -59,7 +53,9 @@ export function useApplyTheme(theme: RouteChrome["theme"]) {
   useLayoutEffect(() => {
     const root = document.documentElement;
     const isDark = theme === "dark";
-    const animate = !firstApply;
+    // Numa virada por View Transition (theme-transition.ts) o círculo já é
+    // a animação: as cores trocam de uma vez, por baixo dele.
+    const animate = !firstApply && !themeTransitionActive();
     firstApply = false;
     if (root.classList.contains("dark") === isDark) return;
     if (!animate) {

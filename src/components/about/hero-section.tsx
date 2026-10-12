@@ -11,7 +11,9 @@ export function HeroSection() {
 
   return (
     <>
-      <section id="init" className="pt-32 pb-11 md:pt-49.5 md:pb-40">
+      {/* Mesmo respiro do topo da página inicial em todos os tamanhos: abaixo
+          de lg o cabeçalho tem duas linhas e cobriria o eyebrow. */}
+      <section id="init" className="pt-49.5 pb-11 md:pb-40">
         <div className="flex items-start flex-col gap-10 max-w-200">
           <p className={EYEBROW}>
             {t("aboutHero.eyebrow")}

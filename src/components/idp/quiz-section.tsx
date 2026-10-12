@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useIdpContent, type IdpContent } from "./content";
 import { ChevronLeft } from "./icons";
-import { Dither, Kicker, rv, useRequestDemo } from "./primitives";
+import { Dither, Kicker, rv, useRequestContact } from "./primitives";
 
 type Answers = (number | null)[];
 type Quiz = IdpContent["quiz"];
@@ -26,7 +26,7 @@ function result(a: Answers, c: Quiz) {
 
 export function QuizSection() {
   const c = useIdpContent().quiz;
-  const requestDemo = useRequestDemo();
+  const requestContact = useRequestContact();
   const [q, setQ] = useState(0);
   const [ans, setAns] = useState<Answers>(EMPTY);
 
@@ -129,7 +129,7 @@ export function QuizSection() {
                   ))}
                 </ul>
                 <div className="ctas" style={{ justifyContent: "flex-start" }}>
-                  <Button size="lg" onClick={requestDemo}>
+                  <Button size="lg" onClick={requestContact}>
                     {c.cta}
                   </Button>
                   <button

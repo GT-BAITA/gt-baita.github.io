@@ -1,6 +1,6 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useIdpContent } from "./content";
-import { Dither, Jump, Kicker, rv, useRequestDemo } from "./primitives";
+import { Dither, Jump, Kicker, rv, useRequestContact } from "./primitives";
 
 export function ProofSection() {
   const c = useIdpContent().proof;
@@ -46,7 +46,7 @@ export function ProofSection() {
 
 export function CtaSection() {
   const c = useIdpContent().cta;
-  const requestDemo = useRequestDemo();
+  const requestContact = useRequestContact();
 
   return (
     <section id="contato" className="sec" style={{ paddingTop: 40 }}>
@@ -63,16 +63,13 @@ export function CtaSection() {
             {c.lead}
           </p>
           <div className="ctas">
-            {/* Enquanto não há link de agendamento, leva ao formulário do
-                rodapé com a mensagem de demo preenchida. */}
-            <Button size="lg" onClick={requestDemo}>
+            <Button size="lg" onClick={requestContact}>
               {c.primary}
             </Button>
             <Jump to="diagnostico" className={buttonVariants({ variant: "secondary", size: "lg" })}>
               {c.secondary}
             </Jump>
           </div>
-          <span className="ph">{c.placeholder}</span>
         </div>
       </div>
     </section>

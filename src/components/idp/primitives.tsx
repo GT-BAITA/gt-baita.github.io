@@ -56,10 +56,10 @@ export function scrollToId(id: string) {
 }
 
 /**
- * CTAs de demo: levam ao formulário de contato do rodapé com a mensagem do
+ * CTAs da página: levam ao formulário de contato do rodapé com a mensagem do
  * IdP já preenchida — a mesma do CTA do cabeçalho nesta rota.
  */
-export function useRequestDemo() {
+export function useRequestContact() {
   const { t } = useTranslation();
   return () => requestContact(t("solutions.card3.message"));
 }

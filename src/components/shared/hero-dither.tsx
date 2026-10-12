@@ -36,6 +36,13 @@ type Scene = {
   /** Raios estrela→centro (com pulsos): só na forma "star". */
   spokeW: number;
   dust: Pt[];
+  /**
+   * Peso da poeira extra (índices a partir de STAR_DUST): a moldura da
+   * página inicial usa todos os pontos; a estrela do IdP, só os primeiros.
+   */
+  extraW: number;
+  /** Tom da poeira (1 = cor cheia; menor = mais clarinha). */
+  dustTone: number;
   hub: Pt;
   hubW: number;
   /** Quanto os pontos derivam e reagem ao mouse (1 solto, baixo na estrela). */
@@ -56,7 +63,11 @@ export const STAR_NODES: Pt[] = [
   { x: 0.79, y: 0.48 }, { x: 0.42, y: 0.76 },
 ];
 const MAJOR = 9;
-const DUST_N = 110;
+/** Poeira da moldura da página inicial; a estrela do IdP usa só STAR_DUST. */
+const DUST_N = 220;
+const STAR_DUST = 110;
+/** Tom da poeira na moldura: mais pontos, porém mais clarinhos. */
+const SCATTER_TONE = 0.45;
 
 /** Sorteio fixo de cada ponto: posição, brilho, cintilação e deriva. */
 const SEEDS = (() => {
@@ -139,6 +150,8 @@ function lerpScene(a: Scene, b: Scene, t: number): Scene {
     spokes: a.spokes.map((p, i) => lerpPt(p, b.spokes[i], t)),
     spokeW: fade(a.spokeW, b.spokeW, t),
     dust: a.dust.map((p, i) => lerpPt(p, b.dust[i], t)),
+    extraW: fade(a.extraW, b.extraW, t),
+    dustTone: lerp(a.dustTone, b.dustTone, t),
     hub: lerpPt(a.hub, b.hub, t),
     hubW: fade(a.hubW, b.hubW, t),
     life: lerp(a.life, b.life, t),
@@ -152,11 +165,13 @@ function starScene(box: DOMRect): Scene {
     nodes: STAR_NODES.map((p) => ({ x: box.x + p.x * box.width, y: box.y + p.y * box.height })),
     spokes: STAR_NODES.map(() => hub),
     spokeW: 1,
-    // A poeira vira o brilho difuso em volta do centro.
+    // A poeira vira o brilho difuso em volta do centro (a extra se apaga).
     dust: DUST.map((d) => ({
       x: hub.x + d.gx * box.width * 0.16,
       y: hub.y + d.gy * box.height * 0.2,
     })),
+    extraW: 0,
+    dustTone: 1,
     hub,
     hubW: 1,
     // Os rótulos estão presos às estrelas: aqui elas quase não se mexem.
@@ -165,41 +180,100 @@ function starScene(box: DOMRect): Scene {
   };
 }
 
+/** Folga entre os pontos e o conteúdo do hero (px). */
+const BOWL_GAP = 40;
 /**
- * Mesmos pontos, emoldurando o hero: duas faixas nas laterais, densas
- * junto às bordas da tela e rareando em direção ao centro, para não
- * disputar com o texto e a captura. Quem fica à esquerda do centro na
- * estrela do IdP fica na faixa esquerda (e vice-versa), então na ida para
- * o IdP tudo converge das laterais para o centro.
+ * Até onde a tigela vai além do conteúdo, de cada lado (px). Em telas mais
+ * largas que isso, ela não estica: fica do tamanho do conteúdo + margem e
+ * rareia suavemente para fora, em vez de se espalhar até as bordas.
  */
-function scatterScene(width: number, top: number, bottom: number): Scene {
-  const span = bottom - top;
-  // Largura de cada faixa: ~22% da tela, entre 140 e 340px.
-  const band = Math.min(340, Math.max(140, width * 0.22));
-  /** Distância da borda (0 = encostado na tela, 1 = limite interno da faixa). */
-  const fromEdge = (left: boolean, t: number) => (left ? t * band : width - t * band);
+const BOWL_REACH = 560;
+/** Onde a curva toca as laterais da tigela (fração da altura da cena). */
+const BOWL_RIM = 0.3;
 
-  const nodes = STAR_NODES.map((p, k) => {
-    const left = p.x < 0.5;
-    // Quanto mais perto do centro na estrela, mais para dentro da faixa.
-    const inward = left ? p.x / 0.5 : (1 - p.x) / 0.5;
-    return {
-      x: fromEdge(left, 0.25 + 0.7 * inward),
-      y: top + ((k * 0.618 + 0.21) % 1) * span,
-    };
-  });
-  // Poeira: meia-normal a partir da borda — densa na beirada, rala por dentro.
-  const dust = DUST.map((d) => ({
-    x: fromEdge(d.u < 0.5, Math.min(1, Math.abs(d.gx) * 0.42)),
-    y: top + d.v * span,
-  }));
+type Box = { left: number; top: number; right: number; bottom: number };
+
+/** Sorteio determinístico por ponto (o mesmo a cada medida). */
+function prng(seed: number) {
+  let t = seed >>> 0;
+  return () => {
+    t += 0x6d2b79f5;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Mesmos pontos, emoldurando o hero numa "tigela": um círculo grande e
+ * vazio em volta do conteúdo, e os pontos do lado de fora dele — subindo
+ * pelas laterais a partir do fundo da tela, mais densos junto à curva.
+ *
+ * O círculo é medido pelo conteúdo (`content`), não pela tela: a tigela
+ * tem no máximo a largura do conteúdo + BOWL_REACH de cada lado, e além
+ * disso os pontos rareiam. Assim, numa tela enorme, a forma continua
+ * abraçando o texto e a captura em vez de fugir para as beiradas.
+ * Nenhum ponto cai sobre os blocos de conteúdo (`blocks`).
+ *
+ * Quem fica à esquerda do centro na estrela do IdP fica no lado esquerdo
+ * da tigela (e vice-versa), então na ida para o IdP tudo converge das
+ * laterais para o centro.
+ */
+function scatterScene(width: number, top: number, bottom: number, content: Box, blocks: Box[]): Scene {
+  const span = bottom - top;
+  const cx = (content.left + content.right) / 2;
+  const halfW = Math.min(Math.max(cx, width - cx), (content.right - content.left) / 2 + BOWL_REACH);
+  // Círculo com centro no topo da cena, passando pelas laterais da tigela
+  // à altura BOWL_RIM.
+  const cy = top;
+  const R = Math.hypot(halfW, span * BOWL_RIM);
+  /** Ângulo em que a curva sai pela lateral da tigela (0 = horizontal). */
+  const rim = Math.asin(Math.min(1, (span * BOWL_RIM) / R));
+
+  const free = (x: number, y: number) =>
+    x > 0 && x < width && y > top && y < bottom &&
+    !blocks.some((b) => x > b.left - BOWL_GAP && x < b.right + BOWL_GAP && y > b.top - BOWL_GAP && y < b.bottom + BOWL_GAP);
+  /** Fora da largura da tigela, os pontos rareiam em ~150px. */
+  const keep = (x: number, rnd: number) => {
+    const out = Math.abs(x - cx) - halfW;
+    return out <= 0 || rnd < Math.exp(-(out * out) / (150 * 150));
+  };
+
+  /**
+   * Um ponto do lado de fora do círculo, no lado pedido: ângulo sorteado
+   * ao longo da metade de baixo e distância da curva meia-normal com
+   * desvio `spread` (fração de R). Tenta até achar um lugar livre.
+   */
+  const place = (i: number, left: boolean, spread: number) => {
+    const rnd = prng(0x51ed27 + i * 7919);
+    // Em telas estreitas o círculo é pequeno: a faixa acompanha a altura.
+    const band = spread * Math.max(R, span);
+    for (let k = 0; k < 32; k++) {
+      // De `rim` (um pouco acima da lateral) até o fundo, no meio.
+      const a = rim - 0.12 + rnd() * (Math.PI / 2 - rim + 0.12);
+      const g = Math.sqrt(-2 * Math.log(rnd() + 1e-9)) * Math.cos(6.2832 * rnd());
+      const r = R + Math.abs(g) * band;
+      const dx = Math.cos(a) * r;
+      const p = { x: left ? cx - dx : cx + dx, y: cy + Math.sin(a) * r };
+      if (free(p.x, p.y) && keep(p.x, rnd())) return p;
+    }
+    // Sem lugar livre (tela estreita): fica abaixo da cena, apagado pelo
+    // esmaecimento da base, em vez de cair sobre o texto.
+    return { x: left ? width * 0.15 : width * 0.85, y: bottom + 100 };
+  };
+
+  const nodes = STAR_NODES.map((s, k) => place(DUST_N + k, s.x < 0.5, 0.1));
+  const dust = DUST.map((d, i) => place(i, d.u < 0.5, 0.2));
+  const mid = top + span / 2;
 
   return {
     nodes,
     spokes: nodes,
     spokeW: 0,
     dust,
-    hub: { x: width / 2, y: top + span / 2 },
+    extraW: 1,
+    dustTone: SCATTER_TONE,
+    hub: { x: width / 2, y: mid },
     hubW: 0,
     life: 1,
     opacity: 1,
@@ -233,6 +307,7 @@ uniform vec4 u_quiet[2];
 uniform float u_quietN;
 uniform float u_quietIn;
 uniform float u_opacity;
+uniform float u_dustTone;
 
 out vec4 fragColor;
 
@@ -286,7 +361,6 @@ void main() {
     vec2 d = P - p.xy / ${CELL};
     dust = max(dust, p.z * exp(-dot(d, d) / 2.42));
   }
-  v += dust;
 
   // Raios até o centro, com pulsos correndo para dentro.
   if (u_spokeW > 0.01) {
@@ -309,7 +383,10 @@ void main() {
     }
   }
 
-  fragColor = v * m > bayer8(cell) ? vec4(u_ink.rgb * u_ink.a, u_ink.a) : vec4(0.0);
+  // A célula acesa só pela poeira sai no tom da poeira (mais clara).
+  float b = bayer8(cell);
+  float a = v * m > b ? 1.0 : (v + dust) * m > b ? u_dustTone : 0.0;
+  fragColor = vec4(u_ink.rgb, 1.0) * u_ink.a * a;
 }
 `;
 
@@ -379,14 +456,25 @@ export function HeroBackdrop() {
     const measure = (r: Registration, keepTaller = false): Scene | null => {
       const hostRect = host.getBoundingClientRect();
       width = host.clientWidth;
-      const rel = (b: DOMRect) => new DOMRect(b.x - hostRect.x, b.y - hostRect.y, b.width, b.height);
+      /**
+       * Caixa do elemento relativa ao host, sem o deslocamento do próprio
+       * transform: os blocos entram na página deslizando (ex.: `.rv` do IdP,
+       * translateY(18px)), e a medida chega no meio disso. Sem descontar, a
+       * estrela ficaria 18px abaixo dos rótulos até a próxima medida.
+       */
+      const rel = (el: HTMLElement) => {
+        const b = el.getBoundingClientRect();
+        const t = getComputedStyle(el).transform;
+        const m = t && t !== "none" ? new DOMMatrixReadOnly(t) : null;
+        return new DOMRect(b.x - hostRect.x - (m?.m41 ?? 0), b.y - hostRect.y - (m?.m42 ?? 0), b.width, b.height);
+      };
       const rects = r.quietRefs
         .map((q) => q.current)
         .filter((el): el is HTMLElement => !!el && el.offsetParent !== null)
         .slice(0, 2)
-        .map((el) => rel(el.getBoundingClientRect()));
+        .map(rel);
       const anchor = r.anchorRef.current;
-      const anchorRect = anchor && anchor.offsetParent !== null ? rel(anchor.getBoundingClientRect()) : null;
+      const anchorRect = anchor && anchor.offsetParent !== null ? rel(anchor) : null;
       if (!rects.length && !anchorRect) return null;
 
       quietN = rects.length;
@@ -401,9 +489,18 @@ export function HeroBackdrop() {
         h = anchorRect.bottom + 60;
       } else {
         const textBottom = rects.reduce((b, q) => Math.max(b, q.bottom), 0);
-        // A moldura desce ao lado dos textos e de boa parte da captura.
-        const bottom = anchorRect ? anchorRect.top + 420 : textBottom + 220;
-        next = scatterScene(width, 130, bottom);
+        // A tigela sobe do fundo da primeira tela (nunca acima do fim dos textos).
+        const bottom = Math.max(textBottom + 220, window.innerHeight);
+        // O conteúdo é a união dos textos e da captura: a tigela é medida
+        // por ele.
+        const boxes = anchorRect ? [...rects, anchorRect] : rects;
+        const content = {
+          left: Math.min(...boxes.map((b) => b.left)),
+          top: Math.min(...boxes.map((b) => b.top)),
+          right: Math.max(...boxes.map((b) => b.right)),
+          bottom: Math.max(...boxes.map((b) => b.bottom)),
+        };
+        next = scatterScene(width, 130, bottom, content, boxes);
         h = bottom + 120;
       }
       // Durante uma transformação, o canvas fica com a maior das duas
@@ -415,7 +512,7 @@ export function HeroBackdrop() {
 
     const hidden = (from: Scene): Scene => ({ ...from, opacity: 0, spokeW: 0, hubW: 0 });
 
-    let target: Scene = hidden(scatterScene(width, 130, 600));
+    let target: Scene = hidden(scatterScene(width, 130, 600, { left: width * 0.3, top: 130, right: width * 0.7, bottom: 600 }, []));
     let scene: Scene = target;
 
     /** Troca de forma: parte do que está na tela agora. */
@@ -526,7 +623,8 @@ export function HeroBackdrop() {
       const dust = scene.dust.map((p, i) => {
         const sd = DUST[i];
         const [x, y, g] = live(p, sd, i, DRIFT_DUST, MOUSE_PUSH);
-        return [x, y, sd.amp * (0.5 + 0.5 * Math.sin(T * sd.speed + sd.phase)) + g * MOUSE_GLOW];
+        const w = i < STAR_DUST ? 1 : scene.extraW;
+        return [x, y, (sd.amp * (0.5 + 0.5 * Math.sin(T * sd.speed + sd.phase)) + g * MOUSE_GLOW) * w];
       });
       const nodes = scene.nodes.map((p, i) => {
         const [x, y, g] = live(p, NODE_SEEDS[i], DUST_N + i, DRIFT_NODE, MOUSE_PUSH * NODE_PUSH);
@@ -547,6 +645,7 @@ export function HeroBackdrop() {
         u_quietN: quietN,
         u_quietIn: quietIn,
         u_opacity: scene.opacity,
+        u_dustTone: scene.dustTone,
       };
     };
 

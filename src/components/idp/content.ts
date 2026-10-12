@@ -15,31 +15,24 @@ const pt = {
   brand: "IdP BAITA",
   hero: {
     title: "Um login para tudo na instituição. E acesso à CAFe incluso.",
-    lead: "Login institucional gerenciado pelo BAITA, com apoio da RNP. Sem servidor, sem Shibboleth, sem especialista dedicado.",
-    primary: "Quero marcar uma demo",
+    lead: "Login unificado gerenciado pelo BAITA e integrado à CAFe. Sem hospedagem local, sem Shibboleth e sem complicação.",
+    primary: "Quero saber mais",
     secondary: "Conheça a solução",
     vizLabel:
       "Sistemas da instituição e serviços da CAFe convergindo em um único login institucional",
-    // Mesma ordem das posições em hero-section.tsx.
+    // Mesma ordem de LABEL_NODES em hero-section.tsx.
     nodes: [
       "Sistema acadêmico",
-      "AVA",
-      "E-mail",
-      "Biblioteca",
+      "Ambiente Virtual de Aprendizagem",
+      "Biblioteca universitária",
       "Portal do servidor",
-      "Serviços da CAFe",
-      "Outras instituições",
-      "Portal de Benefícios",
-      "Serviços da RNP",
+      "Serviços federados",
     ],
-    center: "IdP BAITA · login único",
+    center: "IdP BAITA",
   },
   problem: {
     kicker: "Problema",
-    statement: [
-      "Cada sistema com seu próprio login.",
-      "Nenhuma identidade única para a comunidade acadêmica.",
-    ],
+    statement: "Base de usuários desorganizada, sistemas de login desconexos e trabalho duplicado.",
     body: [
       "Sem identidade institucional, cada serviço guarda seus próprios usuários e senhas.",
       "Com um IdP gerenciado pelo BAITA, a instituição passa a ter uma identidade única: um login para todos os sistemas e acesso aberto à CAFe.",
@@ -95,7 +88,7 @@ const pt = {
   },
   how: {
     kicker: "Como funciona",
-    title: "Quatro etapas, do diagnóstico ao acesso unificado.",
+    title: "Fases da implantação",
     url: "baita · implantação",
     steps: [
       {
@@ -105,7 +98,7 @@ const pt = {
       },
       {
         t: "Preparação",
-        d: "A base é organizada e os campos são mapeados para os atributos usados na CAFe. Duplicidades e lacunas aparecem aqui, não em produção.",
+        d: "A base é organizada e os campos são mapeados para os atributos usados na CAFe.",
         tags: ["Limpeza da base", "Mapeamento de atributos"],
       },
       {
@@ -115,7 +108,7 @@ const pt = {
       },
       {
         t: "Acesso unificado",
-        d: "A comunidade acadêmica entra nos sistemas da instituição e nos serviços da CAFe com uma só conta.",
+        d: "A comunidade acadêmica entra nos sistemas da instituição e nos serviços da CAFe com uma só conta. O usuário interage com uma única interface de autenticação.",
         tags: ["Login único", "Serviços federados"],
       },
     ],
@@ -131,29 +124,30 @@ const pt = {
     },
     mapping: {
       title: "Mapeamento de atributos",
-      head: ["origem", "atributo", "status"],
+      head: ["origem", "atributo"],
       rows: [
-        { from: "nome", to: "displayName", status: "ok", done: true },
-        { from: "email", to: "mail", status: "ok", done: true },
-        { from: "vinculo", to: "eduPersonAffiliation", status: "ok", done: true },
-        { from: "cpf", to: "brPersonCPF", status: "revisar", done: false },
-        { from: "matricula", to: "[a definir]", status: "pendente", done: false },
+        { from: "nome", to: "displayName" },
+        { from: "email", to: "mail" },
+        { from: "vinculo", to: "eduPersonAffiliation" },
       ],
     },
     config: {
       title: "Configuração",
-      rows: [
-        { state: "ok", label: "IdP provisionado na infraestrutura do BAITA", status: "feito" },
-        { state: "ok", label: "Chaves geradas e custodiadas", status: "feito" },
-        { state: "run", label: "Sistemas internos conectados via OIDC", status: "em andamento" },
-        { state: "todo", label: "Registro da instituição na federação CAFe", status: "na fila" },
-      ] as { state: "ok" | "run" | "todo"; label: string; status: string }[],
+      items: [
+        "IdP provisionado na infraestrutura do BAITA",
+        "Sistemas internos conectados via OIDC",
+        "Registro da instituição na federação CAFe",
+      ],
     },
     access: {
       title: "Acesso unificado",
       institution: "[Nome da instituição]",
-      session: "Sessão ativa",
-      services: ["Sistema acadêmico", "AVA", "Serviço federado da CAFe"],
+      prompt: "Entre para acessar o Ambiente Virtual de Aprendizagem",
+      user: "Usuário",
+      userHint: "nome.sobrenome",
+      password: "Senha",
+      submit: "Entrar",
+      foot: "O mesmo login vale para todos os sistemas e para a CAFe.",
     },
   },
   piece: {
@@ -161,7 +155,7 @@ const pt = {
     title:
       "Entre os sistemas da instituição e o ecossistema da CAFe, um único ponto de identidade.",
     left: "Sistemas da instituição",
-    leftNodes: ["Sistema acadêmico", "AVA", "E-mail", "Biblioteca", "Portal do servidor"],
+    leftNodes: ["Sistema acadêmico", "Ambiente Virtual de Aprendizagem", "E-mail", "Biblioteca", "Portal do servidor"],
     right: "Serviços da RNP e da CAFe",
     rightNodes: [
       "Serviços federados da CAFe",
@@ -242,7 +236,7 @@ const pt = {
     noSignup: "Sem cadastro",
     result: "Resultado",
     path: "caminho indicado",
-    cta: "Quero marcar uma demo",
+    cta: "Quero saber mais",
     restart: "Refazer",
     disclaimer: "Resultado indicativo. O diagnóstico confirma o caminho.",
     questions: [
@@ -348,11 +342,10 @@ const pt = {
   },
   cta: {
     kicker: "Próximo passo",
-    title: "Uma conversa de 30 minutos.",
-    lead: "Para mapear o ponto de partida da instituição e responder às dúvidas técnicas.",
-    primary: "Agendar uma conversa",
+    title: "Vamos conversar sobre a sua instituição.",
+    lead: "Deixe seu contato no formulário abaixo para mapearmos o ponto de partida da instituição e responder às dúvidas técnicas.",
+    primary: "Quero saber mais",
     secondary: "Fazer o diagnóstico",
-    placeholder: "[Link de agendamento]",
   },
 };
 
@@ -363,30 +356,23 @@ const en: IdpContent = {
   brand: "BAITA IdP",
   hero: {
     title: "One login for everything at your institution. CAFe access included.",
-    lead: "Institutional login managed by BAITA, with support from RNP. No server, no Shibboleth, no dedicated specialist.",
-    primary: "I want to book a demo",
+    lead: "Unified login managed by BAITA and integrated with CAFe. No local hosting, no Shibboleth, no hassle.",
+    primary: "I want to know more",
     secondary: "Explore the solution",
     vizLabel:
       "The institution's systems and CAFe services converging on a single institutional login",
     nodes: [
       "Academic system",
-      "LMS",
-      "Email",
-      "Library",
+      "Virtual Learning Environment",
+      "University library",
       "Staff portal",
-      "CAFe services",
-      "Other institutions",
-      "Benefits Portal",
-      "RNP services",
+      "Federated services",
     ],
-    center: "BAITA IdP · single sign-on",
+    center: "BAITA IdP",
   },
   problem: {
     kicker: "Problem",
-    statement: [
-      "Every system with its own login.",
-      "No single identity for the academic community.",
-    ],
+    statement: "Disorganized user base, disconnected login systems and duplicated work.",
     body: [
       "Without an institutional identity, every service keeps its own users and passwords.",
       "With an IdP managed by BAITA, the institution gets a single identity: one login for every system and open access to CAFe.",
@@ -442,7 +428,7 @@ const en: IdpContent = {
   },
   how: {
     kicker: "How it works",
-    title: "Four steps, from assessment to unified access.",
+    title: "Implementation phases",
     url: "baita · rollout",
     steps: [
       {
@@ -452,7 +438,7 @@ const en: IdpContent = {
       },
       {
         t: "Preparation",
-        d: "The user base is organised and fields are mapped to the attributes used in CAFe. Duplicates and gaps surface here, not in production.",
+        d: "The user base is organised and fields are mapped to the attributes used in CAFe.",
         tags: ["Data clean-up", "Attribute mapping"],
       },
       {
@@ -462,7 +448,7 @@ const en: IdpContent = {
       },
       {
         t: "Unified access",
-        d: "The academic community signs in to the institution's systems and to CAFe services with a single account.",
+        d: "The academic community signs in to the institution's systems and to CAFe services with a single account. Users interact with a single sign-in screen.",
         tags: ["Single sign-on", "Federated services"],
       },
     ],
@@ -478,29 +464,30 @@ const en: IdpContent = {
     },
     mapping: {
       title: "Attribute mapping",
-      head: ["source", "attribute", "status"],
+      head: ["source", "attribute"],
       rows: [
-        { from: "name", to: "displayName", status: "ok", done: true },
-        { from: "email", to: "mail", status: "ok", done: true },
-        { from: "affiliation", to: "eduPersonAffiliation", status: "ok", done: true },
-        { from: "cpf", to: "brPersonCPF", status: "review", done: false },
-        { from: "student_id", to: "[to be defined]", status: "pending", done: false },
+        { from: "name", to: "displayName" },
+        { from: "email", to: "mail" },
+        { from: "affiliation", to: "eduPersonAffiliation" },
       ],
     },
     config: {
       title: "Configuration",
-      rows: [
-        { state: "ok", label: "IdP provisioned on BAITA infrastructure", status: "done" },
-        { state: "ok", label: "Keys generated and held in custody", status: "done" },
-        { state: "run", label: "Internal systems connected via OIDC", status: "in progress" },
-        { state: "todo", label: "Institution registered in the CAFe federation", status: "queued" },
+      items: [
+        "IdP provisioned on BAITA infrastructure",
+        "Internal systems connected via OIDC",
+        "Institution registered in the CAFe federation",
       ],
     },
     access: {
       title: "Unified access",
       institution: "[Institution name]",
-      session: "Active session",
-      services: ["Academic system", "LMS", "CAFe federated service"],
+      prompt: "Sign in to access the Virtual Learning Environment",
+      user: "Username",
+      userHint: "first.last",
+      password: "Password",
+      submit: "Sign in",
+      foot: "The same login works for every system and for CAFe.",
     },
   },
   piece: {
@@ -508,7 +495,7 @@ const en: IdpContent = {
     title:
       "Between the institution's systems and the CAFe ecosystem, a single point of identity.",
     left: "Institution systems",
-    leftNodes: ["Academic system", "LMS", "Email", "Library", "Staff portal"],
+    leftNodes: ["Academic system", "Virtual Learning Environment", "Email", "Library", "Staff portal"],
     right: "RNP and CAFe services",
     rightNodes: [
       "CAFe federated services",
@@ -589,7 +576,7 @@ const en: IdpContent = {
     noSignup: "No sign-up",
     result: "Result",
     path: "suggested path",
-    cta: "I want to book a demo",
+    cta: "I want to know more",
     restart: "Start over",
     disclaimer: "Indicative result. The assessment confirms the path.",
     questions: [
@@ -694,11 +681,10 @@ const en: IdpContent = {
   },
   cta: {
     kicker: "Next step",
-    title: "A 30-minute conversation.",
-    lead: "To map your institution's starting point and answer technical questions.",
-    primary: "Schedule a call",
+    title: "Let's talk about your institution.",
+    lead: "Leave your contact in the form below so we can map your institution's starting point and answer your technical questions.",
+    primary: "I want to know more",
     secondary: "Take the assessment",
-    placeholder: "[Scheduling link]",
   },
 };
 

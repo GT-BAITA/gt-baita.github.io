@@ -3,11 +3,16 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { STAR_NODES, useHeroBackdrop } from "@/components/shared/hero-dither";
 import { useIdpContent } from "./content";
 import { ChevronRight } from "./icons";
-import { Jump, rv, useRequestDemo } from "./primitives";
+import { Jump, rv, useRequestContact } from "./primitives";
 
-// Rótulos sobre os nós principais da estrela (os 9 primeiros de
-// STAR_NODES, na mesma ordem). Os da borda inferior sobem para não cortar.
-const NODE_POS: CSSProperties[] = STAR_NODES.slice(0, 9).map((p) => ({
+/**
+ * Quais nós principais da estrela (índices de STAR_NODES) levam rótulo, na
+ * ordem de `hero.nodes`. São 5 dos 9, espalhados em volta do centro (alto à
+ * esquerda, alto à direita, direita, base e esquerda); os outros ficam sem
+ * rótulo. Os da borda inferior sobem para não cortar.
+ */
+const LABEL_NODES = [0, 5, 7, 4, 1];
+const NODE_POS: CSSProperties[] = LABEL_NODES.map((i) => STAR_NODES[i]).map((p) => ({
   left: `${p.x * 100}%`,
   top: `${p.y * 100}%`,
   ...(p.y > 0.8 ? { transform: "translate(-50%,-36px)" } : {}),
@@ -15,7 +20,7 @@ const NODE_POS: CSSProperties[] = STAR_NODES.slice(0, 9).map((p) => ({
 
 export function HeroSection() {
   const c = useIdpContent().hero;
-  const requestDemo = useRequestDemo();
+  const requestContact = useRequestContact();
   const headRef = useRef<HTMLDivElement>(null);
   const vizRef = useRef<HTMLDivElement>(null);
   // Fundo pontilhado (no Layout), compartilhado com a página inicial: aqui
@@ -33,7 +38,7 @@ export function HeroSection() {
             {c.lead}
           </p>
           <div className="ctas rv" style={rv(2)}>
-            <Button size="lg" onClick={requestDemo}>
+            <Button size="lg" onClick={requestContact}>
               {c.primary}
             </Button>
             <Jump to="como" className={buttonVariants({ variant: "secondary", size: "lg" })}>

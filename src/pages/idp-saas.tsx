@@ -5,14 +5,14 @@ import { HeroSection } from "@/components/idp/hero-section";
 import {
   PieceSection,
   ProblemSection,
-  StartingPointSection,
+  // StartingPointSection, — fora da V1 (ver o comentário no JSX).
   WhySection,
 } from "@/components/idp/story-sections";
 import { HowSection } from "@/components/idp/how-section";
 import { BenefitsSection } from "@/components/idp/benefits-section";
 import { QuizSection } from "@/components/idp/quiz-section";
 import { FaqSection } from "@/components/idp/faq-section";
-import { CtaSection, ProofSection } from "@/components/idp/closing-sections";
+import { CtaSection /* , ProofSection */ } from "@/components/idp/closing-sections";
 import { useReducedMotion, useReveal } from "@/components/idp/primitives";
 import { useDither } from "@/components/idp/use-dither";
 
@@ -42,14 +42,18 @@ export function IdpSaasPage() {
     <div className="idp" ref={rootRef}>
       <HeroSection />
       <ProblemSection />
-      <StartingPointSection />
+      {/* Fora da V1, por revisão do conteúdo: "Como funciona" já cobre os
+          pontos de partida. Volta descomentando aqui e no import.
+      <StartingPointSection /> */}
       <HowSection />
       <PieceSection />
       <WhySection />
       <BenefitsSection />
       <QuizSection />
       <FaqSection />
-      <ProofSection />
+      {/* Fora da V1: a prova do piloto volta quando houver resultados para
+          mostrar. Volta descomentando aqui e no import.
+      <ProofSection /> */}
       <CtaSection />
     </div>
   );

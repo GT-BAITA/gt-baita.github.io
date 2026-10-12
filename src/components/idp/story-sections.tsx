@@ -24,7 +24,6 @@ import { SilosDiagram } from "./silos-diagram";
 
 export function ProblemSection() {
   const c = useIdpContent().problem;
-  const [s0, s1] = c.statement;
 
   return (
     <section id="problema" className="sec">
@@ -32,7 +31,7 @@ export function ProblemSection() {
         <div>
           <Kicker>{c.kicker}</Kicker>
           <h2 className="statement rv" style={rv(1)}>
-            {s0} <span className="d1">{s1}</span>
+            {c.statement}
           </h2>
           <div className="problem-body rv" style={rv(2)}>
             {c.body.map((p) => (
