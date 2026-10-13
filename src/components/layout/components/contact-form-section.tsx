@@ -36,10 +36,13 @@ export function ContactFormSection() {
   // página possa abri-lo já preenchido.
   const [message, setMessage] = useState("");
   const injectedRef = useRef("");
+  // Campos ocultos que acompanham a mensagem (ex.: o diagnóstico do IdP).
+  const [extra, setExtra] = useState<Record<string, string>>({});
 
   useEffect(
     () =>
-      onContactRequest((requested) => {
+      onContactRequest((requested, fields) => {
+        setExtra(fields);
         // Lê a injeção anterior antes de sobrescrevê-la: o atualizador
         // funcional roda na próxima renderização, quando a ref já teria
         // recebido `requested` e a comparação nunca coincidiria — todo CTA
@@ -60,6 +63,7 @@ export function ContactFormSection() {
   useEffect(() => {
     if (!isSucceeded) return;
     setMessage("");
+    setExtra({});
     injectedRef.current = "";
   }, [isSucceeded]);
 
@@ -144,6 +148,9 @@ export function ContactFormSection() {
             className="t-morph-card"
             data-phase={phase}
           >
+            {Object.entries(extra).map(([name, value]) => (
+              <input key={name} type="hidden" name={name} value={value} />
+            ))}
             {/* Campos — recolhem via grid-template-rows, sem medição. A altura
                 do card os acompanha, e o CTA abaixo sobe pela faixa que fecha
                 até onde o badge do aviso pousa. */}

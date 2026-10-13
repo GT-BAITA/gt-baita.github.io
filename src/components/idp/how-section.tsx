@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useIdpContent, type IdpContent } from "./content";
 import { ArrowRight, Check } from "./icons";
-import { buttonVariants } from "@/components/ui/button";
+import { LoginMerge } from "./login-merge";
 import { Kicker, rv, useReducedMotion } from "./primitives";
 
 type How = IdpContent["how"];
@@ -27,7 +27,7 @@ export function CheckMark({ state }: { state: "ok" | "run" | "todo" }) {
 
 /* O conteúdo da "janela" muda com a etapa ativa; a key força a animação
    de entrada (idp-paneIn) a cada troca. */
-function Pane({ step, c }: { step: number; c: How }) {
+function Pane({ step, c, reduce }: { step: number; c: How; reduce: boolean }) {
   if (step === 0)
     return (
       <div className="pane" key={0}>
@@ -85,33 +85,9 @@ function Pane({ step, c }: { step: number; c: How }) {
     );
 
   return (
-    <div className="pane" key={3} style={{ alignItems: "center" }}>
+    <div className="pane" key={3}>
       <PaneHead title={c.access.title} i={3} />
-      {/* A tela de login única: usuário e senha da instituição para entrar
-          em um serviço. Ilustração, não um formulário de verdade. */}
-      <div className="login" style={{ maxWidth: 340 }} aria-hidden="true">
-        <div className="login-top">
-          <div className="mark">LOGO</div>
-          <div>
-            <div className="login-inst">{c.access.institution}</div>
-            <div className="mono-s">{c.access.prompt}</div>
-          </div>
-        </div>
-        <div className="fld">
-          {c.access.user}
-          <input tabIndex={-1} readOnly placeholder={c.access.userHint} />
-        </div>
-        <div className="fld">
-          {c.access.password}
-          <input tabIndex={-1} readOnly type="password" value="••••••••••" />
-        </div>
-        <span className={buttonVariants({ size: "md" })}>{c.access.submit}</span>
-        <div className="login-foot">
-          <span className="mono-s" style={{ marginLeft: 0 }}>
-            {c.access.foot}
-          </span>
-        </div>
-      </div>
+      <LoginMerge label={c.access.label} reduce={reduce} />
     </div>
   );
 }
@@ -128,6 +104,7 @@ export function HowSection() {
   const lockUntil = useRef(0);
   const viewRef = useRef<HTMLDivElement>(null);
   const fitRef = useRef<HTMLDivElement>(null);
+  const visRef = useRef<HTMLDivElement>(null);
 
   // A janela acompanha a altura da etapa: mede o conteúdo e fixa a altura
   // em px, que o CSS anima (height: auto não tem transição).
@@ -143,6 +120,19 @@ export function HowSection() {
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(fit);
+    return () => ro.disconnect();
+  }, []);
+
+  // A janela gruda centrada na tela: o CSS calcula o `top` a partir da
+  // altura dela (--vis-h), que muda a cada etapa.
+  useLayoutEffect(() => {
+    const vis = visRef.current;
+    const box = vis?.firstElementChild as HTMLElement | null;
+    if (!vis || !box) return;
+    const update = () => vis.style.setProperty("--vis-h", `${box.offsetHeight}px`);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(box);
     return () => ro.disconnect();
   }, []);
 
@@ -231,7 +221,7 @@ export function HowSection() {
               </div>
             ))}
           </div>
-          <div className="how-vis">
+          <div className="how-vis" ref={visRef}>
             <div className="browser">
               <div className="bar">
                 <span className="dots">
@@ -243,7 +233,7 @@ export function HowSection() {
               </div>
               <div className="bview gridbg" ref={viewRef}>
                 <div className="pane-fit" ref={fitRef}>
-                  <Pane step={step} c={c} />
+                  <Pane step={step} c={c} reduce={reduce} />
                 </div>
               </div>
             </div>

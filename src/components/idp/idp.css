@@ -93,7 +93,9 @@
 .idp .dest{margin-top:28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:18px 22px;border-radius:16px;border:1px solid var(--line-2);background:var(--surface-2)}
 .idp .dest-l{display:flex;align-items:center;gap:12px;font-size:16px}
 .idp .how{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:64px;align-items:start}
-.idp .how-list{position:relative;padding-left:32px}
+/* Espaço depois da última etapa: ela consegue chegar ao meio da tela
+   enquanto a janela ao lado ainda está presa. */
+.idp .how-list{position:relative;padding-left:32px;padding-bottom:max(0px,calc(60vh - 340px))}
 .idp .how-line{position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--line)}
 .idp .how-fill{position:absolute;left:0;top:0;width:1px;height:100%;background:var(--ink);transform-origin:top;transform:scaleY(0);transition:transform .2s linear}
 .idp .step{min-height:340px;padding:4px 0 48px;opacity:.38;transition:opacity .5s cubic-bezier(.22,1,.36,1)}
@@ -104,15 +106,32 @@
 .idp .step-t{font-family:'Domine',Georgia,serif;font-size:32px;font-weight:500;letter-spacing:-.02em;line-height:1.1}
 .idp .step-d{color:var(--ink-2);margin:16px 0 18px;max-width:440px;font-size:17px}
 .idp .tags{display:flex;gap:6px;flex-wrap:wrap}
-.idp .how-vis{position:sticky;top:120px}
+/* A janela fica presa centrada na área visível abaixo do menu (que tem
+   duas linhas abaixo de 1024px), enquanto o texto rola ao lado. --vis-h é
+   a altura da janela, medida em how-section.tsx; numa tela baixa demais,
+   ela gruda logo abaixo do menu. */
+.idp .how-vis{position:sticky;top:max(var(--how-top,112px),calc((100vh + var(--how-top,112px) - var(--vis-h,500px)) / 2))}
+@media (max-width: 1023px){.idp .how-vis{--how-top:156px}}
 /* A altura da janela segue a etapa (fixada em px por how-section.tsx) e
    anima na troca. */
 .idp .how-vis .bview{min-height:0;align-items:flex-start;padding:28px;overflow:hidden;transition:height .45s cubic-bezier(.22,1,.36,1)}
 .idp .pane-fit{width:100%}
-/* Login da fase 4, compacto. */
-.idp .how-vis .login{padding:18px 20px;gap:10px}
-.idp .how-vis .fld input{height:38px}
-.idp .how-vis .login-foot{padding-top:12px;margin-top:0}
+/* Fase 4: telinhas de login que se juntam em uma (login-merge.tsx). As
+   telinhas se centram por margem; o transform fica livre para o motion. */
+.idp .ml-stage{position:relative;height:320px}
+.idp .ml{position:absolute;left:50%;top:50%;width:88px;margin:-38px 0 0 -44px;padding:10px;border-radius:10px;background:var(--surface);border:1px solid var(--line-2);display:flex;flex-direction:column;gap:6px;box-shadow:0 14px 30px -18px rgba(0,0,0,.8)}
+.idp .ml-ico{display:flex;color:var(--ink-2);margin-bottom:2px}
+.idp .ml-ico svg{width:14px;height:14px}
+.idp .ml i{display:block;height:7px;border-radius:4px;background:var(--line-2)}
+.idp .ml b{display:block;height:9px;border-radius:4px;background:var(--ink-3);margin-top:2px}
+.idp .ml.big{width:150px;margin:-70px 0 0 -75px;padding:16px;gap:9px;border-color:var(--ink-3);z-index:1}
+.idp .ml.big .ml-ico{color:var(--ink)}
+.idp .ml.big .ml-ico svg{width:20px;height:20px}
+.idp .ml.big i{height:10px}
+.idp .ml.big b{height:14px;background:var(--ink)}
+.idp .ml-row{position:absolute;left:0;right:0;top:calc(50% + 86px);display:flex;justify-content:center;gap:14px;color:var(--ink-3)}
+.idp .ml-row span{display:flex}
+.idp .ml-row svg{width:15px;height:15px}
 .idp .pane{width:100%;display:flex;flex-direction:column;gap:12px;animation:idp-paneIn .6s cubic-bezier(.22,1,.36,1)}
 @keyframes idp-paneIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .idp .pane-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
@@ -133,6 +152,44 @@
 .idp .ck svg{width:10px;height:10px}
 .idp .ck.run{border-style:dashed;animation:idp-spin 6s linear infinite}
 @keyframes idp-spin{to{transform:rotate(360deg)}}
+/* Login em loop na faixa do celular: serviço → IdP → base → IdP → serviço. */
+@keyframes idp-rm-a{0%{left:0;opacity:0}4%{opacity:1}22%{left:calc(100% - 6px);opacity:1}26%,74%{left:calc(100% - 6px);opacity:0}78%{opacity:1}96%{left:0;opacity:1}100%{left:0;opacity:0}}
+@keyframes idp-rm-b{0%,26%{left:0;opacity:0}30%{opacity:1}46%,54%{left:calc(100% - 6px);opacity:1}70%{left:0;opacity:1}74%,100%{left:0;opacity:0}}
+/* "O que é um IdP" (role-section.tsx): serviços → IdP, com a base em cima. */
+.idp .role{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:56px;align-items:center}
+.idp .role-viz{display:grid;grid-template-columns:minmax(0,1fr) 80px 240px;align-items:end}
+.idp .node{transition:border-color .3s,color .3s,background .3s}
+.idp .node.on{border-color:var(--ink-3);background:var(--surface-2)}
+.idp .node.on svg{color:var(--ink)}
+.idp .role-conn{position:relative;height:244px}
+.idp .role-conn svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.idp .role-conn path{fill:none;stroke:var(--line-2);stroke-width:1}
+.idp .role-pkt{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:1px;background:var(--ink)}
+.idp .role-center{display:flex;flex-direction:column}
+.idp .role-db{justify-content:center;font-size:13px}
+.idp .role-v{position:relative;height:44px}
+.idp .role-v::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--line-2)}
+.idp .role-v .role-pkt{left:calc(50% - 3px)}
+.idp .core.role-core{height:244px;margin-top:0;justify-content:flex-end;transition:border-color .3s}
+.idp .core.role-core.on{border-color:var(--ink-3)}
+.idp .role-mini{display:none}
+.idp .role-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.idp .role-steps li{padding:14px 16px;border-radius:14px;border:1px solid transparent;opacity:.45;transition:opacity .3s,border-color .3s,background .3s}
+.idp .role-steps li:not(.on):hover{opacity:.75}
+.idp .role-steps button{all:unset;cursor:pointer;display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 12px;width:100%;box-sizing:border-box}
+.idp .role-steps button:focus-visible{outline:1px solid var(--ink-3);outline-offset:8px;border-radius:8px}
+.idp .role-bar{grid-column:2;display:block;height:2px;margin-top:10px;border-radius:2px;background:var(--line);overflow:hidden}
+.idp .role-fill{display:block;height:100%;background:var(--ink-3);transform-origin:left;transform:scaleX(0)}
+.idp .role-ctrl{display:flex;align-items:center;gap:8px;margin-top:14px;padding-left:16px}
+.idp .role-ctrl button{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);display:grid;place-items:center;transition:background .2s,border-color .2s}
+.idp .role-ctrl button:hover{background:var(--surface-2);border-color:var(--ink-3)}
+.idp .role-ctrl button:focus-visible{outline:1px solid var(--ink-3);outline-offset:3px}
+.idp .role-ctrl svg{width:16px;height:16px}
+.idp .role-ctrl .mono-s{margin-left:6px}
+.idp .role-steps li.on{opacity:1;border-color:var(--line);background:var(--surface)}
+.idp .role-steps .n{grid-row:span 2;padding-top:5px;font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:12px;color:var(--ink-3)}
+.idp .role-steps .t{font-family:'Domine',Georgia,serif;font-size:20px;font-weight:500}
+.idp .role-steps .d{color:var(--ink-2);font-size:15px;line-height:1.5}
 .idp .piece{display:grid;grid-template-columns:minmax(0,1fr) 96px 300px 96px minmax(0,1fr);align-items:center}
 .idp .col-t{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
 .idp .nodes{display:flex;flex-direction:column;gap:12px}
@@ -195,11 +252,19 @@
 .idp .opt.on{border-color:var(--ink);background:var(--surface-2)}
 .idp .opt .mono{width:26px;height:26px;border-radius:7px;border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink-3);flex:none}
 .idp .q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.idp .quiz-stack{display:grid;grid-template-columns:minmax(0,1fr);flex:1}
+.idp .quiz-view{grid-area:1/1;display:flex;flex-direction:column;gap:24px;visibility:hidden}
+.idp .quiz-view.on{visibility:visible}
+.idp .quiz-view.on > .res{animation:idp-paneIn .6s cubic-bezier(.22,1,.36,1)}
+.idp .quiz-lead{margin:16px 0 0;font-size:16px;line-height:1.6;max-width:420px}
+.idp .quiz-skip{position:relative;align-self:flex-start}
+.idp .res-pain{margin:0;padding:12px 14px;border-left:2px solid var(--ink-3);background:color-mix(in srgb,var(--ink) 4%,transparent);border-radius:0 8px 8px 0;font-size:15px;color:var(--ink)}
 .idp .linkbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:44px;font-size:14px;color:var(--ink-2)}
 .idp .linkbtn:hover{color:var(--ink)}
 .idp .linkbtn:focus-visible{outline:1px solid var(--ink-3);outline-offset:4px;border-radius:4px}
 .idp .linkbtn svg{width:14px;height:14px}
-.idp .res{display:flex;flex-direction:column;gap:20px;animation:idp-paneIn .6s cubic-bezier(.22,1,.36,1)}
+.idp .res{display:flex;flex-direction:column;gap:20px;flex:1}
+.idp .res-actions{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .idp .res-path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .idp .rp{padding:12px;border-radius:12px;border:1px solid var(--line-2);background:var(--canvas-2);display:flex;flex-direction:column;gap:6px;font-size:14px}
 .idp .notes{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
@@ -234,6 +299,14 @@
 .idp .silos-db{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;border:1px solid var(--line-2);background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--ink-2);animation:idp-float var(--float-dur,5s) ease-in-out var(--float-delay,0s) infinite alternate}
 .idp .silos-db svg{width:17px;height:17px}
 .idp .silos-idp{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:12px;padding:8px 13px;border-radius:999px;background:var(--ink);color:var(--canvas);box-shadow:0 0 0 6px color-mix(in srgb,var(--canvas) 70%,transparent);animation:idp-float var(--float-dur,5s) ease-in-out var(--float-delay,0s) infinite alternate}
+/* Benefícios › Gestão (stability-diagram.tsx): peças soltas que o IdP estabiliza. */
+.idp .silos.stab{height:auto;min-height:380px}
+.idp .stab-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 14px;border-radius:14px;border:1px solid var(--line-2);background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);white-space:nowrap;animation:idp-float 5s ease-in-out infinite alternate}
+.idp .stab-card.row{flex-direction:row;gap:10px;padding:8px 14px 8px 8px;border-radius:12px}
+.idp .stab-card.row .silos-db{width:32px;height:32px;border-radius:9px}
+.idp .stab-card.row .silos-db svg{width:15px;height:15px}
+.idp .stab-card.loose{border-style:dashed;animation:idp-wobble 2.6s ease-in-out infinite alternate;animation-delay:var(--wobble-delay,0s)}
+@keyframes idp-wobble{from{transform:translate(-5px,-4px) rotate(-3deg)}to{transform:translate(5px,4px) rotate(3deg)}}
 .idp .silos-toggle{position:absolute;top:14px;right:14px;z-index:3;display:inline-flex;gap:2px;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
 .idp .silos-toggle button{all:unset;cursor:pointer;font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:11px;padding:5px 10px;border-radius:999px;color:var(--ink-3);transition:color .25s cubic-bezier(.22,1,.36,1),background .25s cubic-bezier(.22,1,.36,1)}
 .idp .silos-toggle button:hover{color:var(--ink-2)}
@@ -244,7 +317,8 @@
   .idp .conn .pkt{display:none}
   .idp .ck.run{animation:none}
   .idp .how-vis .bview{transition:none}
-  .idp .silos-wire-flow,.idp .chip,.idp .silos-db,.idp .silos-idp{animation:none}
+  .idp .rm-pkt{display:none}
+  .idp .silos-wire-flow,.idp .chip,.idp .silos-db,.idp .silos-idp,.idp .stab-card{animation:none}
 }
 @media (max-width: 960px){
   .idp .h1{font-size:42px}
@@ -264,12 +338,44 @@
   .idp .how-vis{display:none}
   .idp .step{min-height:0;opacity:1;padding-bottom:36px}
   .idp .piece{grid-template-columns:minmax(0,1fr);gap:16px}
+  /* Celular: sem o diagrama; uma faixa compacta e os passos em lista. */
+  .idp .role{grid-template-columns:minmax(0,1fr);gap:20px}
+  .idp .role-viz{display:none}
+  .idp .role-mini{display:flex;align-items:flex-start;gap:6px}
+  .idp .rm-node{flex:none;width:76px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .idp .rm-node.rm-idp{width:88px}
+  .idp .rm-ico{position:relative;width:100%;height:80px;display:grid;place-items:center}
+  .idp .rm-tile{width:44px;height:44px;border-radius:12px;border:1px solid var(--line-2);background:var(--surface);display:grid;place-items:center;color:var(--ink-2)}
+  .idp .rm-tile svg{width:18px;height:18px}
+  .idp .rm-l{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:11px;line-height:1.3;color:var(--ink-3)}
+  .idp .rm-idp .rm-l{font-family:'Domine',Georgia,serif;font-size:14px;font-weight:600;color:var(--ink)}
+  .idp .rm-line{flex:1;position:relative;height:1px;margin-top:40px;background:var(--line-2)}
+  .idp .rm-pkt{position:absolute;top:-3px;left:0;width:6px;height:6px;border-radius:1px;background:var(--ink);opacity:0}
+  .idp .rm-pkt.rm-a{animation:idp-rm-a 3.6s ease-in-out infinite}
+  .idp .rm-pkt.rm-b{animation:idp-rm-b 3.6s ease-in-out infinite}
+  .idp .role-steps{gap:0}
+  .idp .role-steps li,.idp .role-steps li.on{opacity:1;padding:14px 0;border-radius:0;border:0;border-top:1px solid var(--line);background:none}
+  .idp .role-steps button{cursor:default}
+  .idp .role-bar,.idp .role-ctrl{display:none}
+  .idp .role-steps .t{font-size:18px}
   .idp .conn{display:none}
   .idp .core{margin-top:0}
   .idp .nodes.r .node{justify-content:flex-start;text-align:left}
   .idp .res-path{grid-template-columns:repeat(2,minmax(0,1fr))}
   .idp .proof-l,.idp .proof-r{padding:28px}
   .idp .quiz-intro,.idp .quiz-main{padding:24px;min-height:0}
+  /* Celular: o convite vira o cabeçalho do questionário — um card só, com o
+     pontilhado como faixa de capa no topo (sumindo antes do texto) e um
+     divisor antes das perguntas. */
+  .idp .quiz{gap:0}
+  .idp .quiz-intro{border-radius:24px 24px 0 0;border-bottom:0;padding-top:116px;background:var(--surface-2);gap:20px}
+  .idp .quiz-intro > .dither{top:0;bottom:auto;height:132px;opacity:.7 !important;-webkit-mask-image:linear-gradient(to bottom,#000 35%,transparent);mask-image:linear-gradient(to bottom,#000 35%,transparent)}
+  .idp .quiz-intro .h2{font-size:32px !important}
+  .idp .quiz-main{border-radius:0 0 24px 24px;border-top:1px solid var(--line-2)}
+  /* Ações do resultado: o envio ocupa a largura toda, refazer logo abaixo. */
+  .idp .res-actions{flex-direction:column-reverse;align-items:stretch;gap:4px}
+  .idp .res-actions > button:not(.linkbtn){white-space:normal}
+  .idp .res-actions .linkbtn{align-self:flex-start}
 }
 @media (max-width: 560px){
   /* Painel do "Problema" em tela estreita: títulos longos quebram em duas
@@ -278,6 +384,7 @@
   .idp .chip-pos{max-width:51%}
   .idp .chip{min-width:0}
   .idp .silos-toggle{top:10px;right:10px}
+  .idp .silos.stab{min-height:420px}
   .idp .wrap{padding:0 16px}
   .idp .h1{font-size:34px}
   .idp .hero-viz .nl{display:none}

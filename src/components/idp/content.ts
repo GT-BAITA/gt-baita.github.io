@@ -35,7 +35,7 @@ const pt = {
     statement: "Base de usuários desorganizada, sistemas de login desconexos e trabalho duplicado.",
     body: [
       "Sem identidade institucional, cada serviço guarda seus próprios usuários e senhas.",
-      "Com um IdP gerenciado pelo BAITA, a instituição passa a ter uma identidade única: um login para todos os sistemas e acesso aberto à CAFe.",
+      "Com um provedor de identidade (IdP) gerenciado pelo BAITA, a instituição passa a ter uma identidade única: um login para todos os sistemas e acesso aberto à CAFe.",
     ],
     vizLabel:
       "Antes, cada sistema com sua própria base de usuários; com o IdP BAITA, uma base unificada passa pelo IdP e chega a todos os sistemas",
@@ -43,6 +43,26 @@ const pt = {
     idp: "IdP BAITA",
     before: "Antes",
     after: "Com o IdP BAITA",
+  },
+  role: {
+    kicker: "O que é um IdP",
+    title: "Provedor de identidade (IdP): quem confirma quem é quem.",
+    lead: "O IdP é o serviço que guarda e confirma a identidade das pessoas da instituição. Os sistemas deixam de pedir senha por conta própria e passam a perguntar ao IdP.",
+    services: "Serviços",
+    // A confirmar com a equipe: quais serviços da CAFe citar.
+    serviceNodes: ["Ambiente Virtual de Aprendizagem", "Sistema acadêmico", "Periódicos CAPES", "Conferência web"],
+    base: "Base de usuários da instituição",
+    // Versão compacta do diagrama, no celular.
+    mini: { service: "Serviço", base: "Base de usuários" },
+    controls: { prev: "Passo anterior", next: "Próximo passo", play: "Reproduzir", pause: "Pausar", label: "Passos do login" },
+    vizLabel:
+      "Fluxo de login: o serviço encaminha a pessoa ao IdP, o IdP confere a identidade na base de usuários e devolve a confirmação ao serviço.",
+    steps: [
+      { t: "Acesso", d: "A pessoa abre um serviço da instituição ou da CAFe." },
+      { t: "Login no IdP", d: "O serviço não pede senha: encaminha a pessoa para o login da instituição, no IdP." },
+      { t: "Verificação", d: "O IdP confere a identidade na base de usuários da instituição." },
+      { t: "Resposta", d: "O IdP confirma quem é a pessoa e envia ao serviço só os dados de que ele precisa." },
+    ],
   },
   start: {
     kicker: "Qualquer ponto de partida",
@@ -141,13 +161,7 @@ const pt = {
     },
     access: {
       title: "Acesso unificado",
-      institution: "[Nome da instituição]",
-      prompt: "Entre para acessar o Ambiente Virtual de Aprendizagem",
-      user: "Usuário",
-      userHint: "nome.sobrenome",
-      password: "Senha",
-      submit: "Entrar",
-      foot: "O mesmo login vale para todos os sistemas e para a CAFe.",
+      label: "Várias telas de login, uma para cada sistema, se juntam em uma só.",
     },
   },
   piece: {
@@ -178,12 +192,12 @@ const pt = {
         d: "Desenvolvido pelo grupo de trabalho que está levando a CAFe ao OpenID Federation, com apoio da RNP.",
       },
       {
-        t: "Suporte brasileiro",
-        d: "Atendimento em português, no fuso e no contexto das instituições de ensino e pesquisa do país.",
+        t: "Soberania nacional",
+        d: "Feita no Brasil para as instituições do país: dados tratados conforme a LGPD, suporte em português e um entendimento profundo da realidade brasileira.",
       },
       {
-        t: "Nativo da CAFe",
-        d: "Nasce integrado à federação, sem adaptação de produto estrangeiro. Mesmo protocolo, mesmos atributos, mesma operação.",
+        t: "Adoção de protocolos modernos",
+        d: "O IdP nasce integrado à federação CAFe e suporta protocolos de autenticação modernos, como o OAuth e o OIDC.",
       },
     ],
   },
@@ -195,101 +209,115 @@ const pt = {
     management: {
       items: [
         { t: "Menos risco", d: "O acesso à CAFe deixa de depender de uma única pessoa na instituição." },
-        { t: "Continuidade", d: "Operação, atualizações e suporte sob responsabilidade do BAITA, com apoio da RNP." },
+        { t: "Continuidade", d: "Operação, atualizações e suporte sob responsabilidade do BAITA." },
         {
           t: "Ecossistema nacional",
           d: "Estudantes, docentes e servidores acessam os serviços federados da CAFe com a conta institucional.",
         },
       ],
-      before: "ANTES",
-      after: "DEPOIS",
-      owner: "1 responsável técnico",
-      access: "Acesso à CAFe",
-      spof: "ponto único de falha",
-      operation: "Operação BAITA + RNP",
-      continuous: "operação contínua",
+      // Diagrama da aba (stability-diagram.tsx).
+      nodes: { base: "Base de usuários", services: "Serviços institucionais" },
+      vizLabel:
+        "Antes, a base de usuários e os serviços institucionais ficam soltos; com o IdP BAITA, os dois se conectam a ele.",
     },
     it: {
       items: [
         { t: "Sem Shibboleth para operar", d: "Nenhum IdP para instalar, atualizar ou monitorar." },
         {
           t: "Nada rodando na infraestrutura da instituição",
-          d: "O IdP roda na infraestrutura do BAITA. A TI conecta sistemas, não mantém servidores.",
+          d: "O IdP roda na infraestrutura do BAITA. A TI só conecta os sistemas: não mantém diretório LDAP nem servidor de IdP na instituição.",
         },
       ],
-      label: "infraestrutura da instituição",
-      rows: [
-        ["Servidor de IdP", "não necessário"],
-        ["Shibboleth", "não necessário"],
-        ["Certificados e chaves", "com o BAITA"],
-      ],
-      integration: "Integração dos sistemas",
+      // Diagrama da aba (stability-diagram.tsx): o que deixa de ser preciso.
+      nodes: {
+        ldap: "Diretório LDAP",
+        shib: "Shibboleth",
+        server: "Servidor de IdP",
+        certs: "Certificados e chaves",
+        service: "Serviço",
+      },
+      vizLabel:
+        "Antes, o serviço depende de diretório LDAP, Shibboleth, servidor de IdP e certificados; com o IdP BAITA, nada disso é preciso e só ele se liga ao serviço.",
     },
   },
   quiz: {
-    kicker: "Diagnóstico rápido",
+    kicker: "Diagnóstico",
     title: "A instituição está pronta para a CAFe?",
-    intro: "Quatro perguntas indicam o caminho mais provável. O diagnóstico com a equipe confirma.",
+    intro:
+      "Responda nosso questionário de diagnóstico pra entender melhor o momento da sua instituição. As respostas também nos ajudam a chegar em uma solução que faça sentido para você.",
+    skip: "Prefere falar direto? Entre em contato",
     question: "Pergunta",
     of: "de",
     back: "Voltar",
-    noSignup: "Sem cadastro",
-    result: "Resultado",
-    path: "caminho indicado",
-    cta: "Quero saber mais",
+    send: "Enviar resultados para a equipe",
     restart: "Refazer",
-    disclaimer: "Resultado indicativo. O diagnóstico confirma o caminho.",
+    // `sum` é o rótulo da pergunta no resumo enviado ao formulário.
     questions: [
       {
         k: "Gestão de usuários",
+        sum: "Cadastro de usuários",
         t: "Onde está hoje o cadastro de usuários da instituição?",
         o: ["Planilha (Excel ou similar)", "Banco de dados de um sistema", "Diretório (LDAP ou Active Directory)"],
       },
       {
         k: "Serviços",
-        t: "Quantos sistemas internos pedem login hoje?",
+        sum: "Sistemas com login",
+        t: "Quantos sistemas da instituição necessitam de login hoje?",
         o: ["Até 5", "De 6 a 20", "Mais de 20", "Não há levantamento"],
       },
       {
         k: "Tipos de acesso",
-        t: "Quantas formas de login diferentes convivem na instituição?",
+        sum: "Telas de login por pessoa",
+        t: "Com quantas telas de login um usuário da instituição interage hoje?",
         o: ["Uma só", "Duas ou três", "Mais de três"],
       },
       {
         k: "Shibboleth",
+        sum: "Shibboleth",
         t: "A instituição já opera um IdP Shibboleth?",
         o: ["Sim, em operação", "Já operou, mas parou", "Não"],
       },
     ],
-    // Indexado pela resposta da primeira pergunta.
-    paths: [
-      {
-        title: "Partindo da planilha",
-        lead: "O primeiro passo é transformar a planilha em uma base estruturada. O BAITA conduz essa preparação antes de configurar o IdP.",
-        mid: "Estruturação da base",
+    // Resultado: o Shibboleth (4ª pergunta) decide; sem ele, a base (1ª).
+    results: {
+      active: {
+        v: "Já está na CAFe",
+        t: "O acesso existe, mas custa caro para manter.",
+        d: "Manter um Shibboleth exige servidor, atualizações e alguém que conheça bem a ferramenta. Com o IdP BAITA, a instituição continua na CAFe e essa manutenção deixa de ser da TI.",
       },
-      {
-        title: "Partindo do banco de dados",
-        lead: "O IdP é conectado à base existente, com os campos mapeados para os atributos usados na CAFe.",
-        mid: "Mapeamento de atributos",
+      stopped: {
+        v: "Acesso interrompido",
+        t: "A comunidade está sem acesso aos serviços da CAFe.",
+        d: "Quando o IdP local para, quem depende dele fica de fora. O IdP BAITA devolve esse acesso sem que a instituição precise reerguer um servidor.",
       },
-      {
-        title: "Partindo do diretório",
-        lead: "Com LDAP ou AD em uso, o caminho é conectar o diretório ao IdP BAITA e revisar os atributos.",
-        mid: "Conexão ao diretório",
+      directory: {
+        v: "Mais perto do que parece",
+        t: "O diretório que a instituição já usa é o ponto de partida.",
+        d: "Com LDAP ou Active Directory em uso, falta pouco para entrar na CAFe. O IdP BAITA se conecta a ele, sem servidor novo na instituição.",
       },
-    ],
-    stepNames: { first: "Diagnóstico", third: "Configuração", last: "Acesso unificado" },
-    notes: {
-      manySystems:
-        "Muitos sistemas com login próprio: a conexão pode ser feita em etapas, começando pelos mais usados.",
-      noInventory: "O diagnóstico inclui o levantamento dos sistemas que pedem login.",
-      duplicates:
-        "Formas de login diferentes indicam contas duplicadas: a preparação inclui a consolidação das identidades.",
-      shibActive:
-        "Com Shibboleth em operação, o diagnóstico planeja a transição do IdP atual para o IdP BAITA.",
-      shibStopped: "Com o IdP fora de operação, o IdP BAITA assume o acesso à CAFe.",
-      shibNone: "Sem Shibboleth, não há nada para instalar: o IdP roda na infraestrutura do BAITA.",
+      database: {
+        v: "Quase lá",
+        t: "Os usuários já estão organizados em um sistema.",
+        d: "O IdP BAITA usa essa base para dar a cada pessoa um login único e o acesso à CAFe, sem servidor novo na instituição.",
+      },
+      spreadsheet: {
+        v: "Dá para começar com o que já tem",
+        t: "Uma planilha de usuários já é suficiente para começar.",
+        d: "O BAITA ajuda a organizar essa base e, a partir dela, a instituição ganha um login único e o acesso à CAFe.",
+      },
+    },
+    // No máximo uma: as telas de login (3ª) têm prioridade sobre os sistemas (2ª).
+    pains: {
+      moreThanThree: "Hoje cada pessoa lida com mais de três telas de login. Com o IdP BAITA, passa a ser uma só.",
+      twoOrThree: "Hoje cada pessoa lida com duas ou três telas de login. Com o IdP BAITA, passa a ser uma só.",
+      manySystems: "Com tantos sistemas pedindo login, a conexão pode começar pelos mais usados.",
+      noInventory: "Ainda não sabe quantos sistemas pedem login? Esse levantamento faz parte do começo.",
+    },
+    // Mensagem que o resultado preenche no formulário de contato.
+    summary: {
+      hello: "Olá! Fiz o diagnóstico rápido do IdP BAITA.",
+      result: "Resultado",
+      bye: "Gostaria de conversar sobre a nossa situação.",
     },
   },
   faq: {
@@ -299,32 +327,31 @@ const pt = {
       {
         q: "Quem guarda as chaves criptográficas da instituição?",
         a: "No modelo gerenciado, as chaves são geradas e custodiadas na infraestrutura do BAITA, operada com apoio da RNP. A instituição não mantém certificados nem servidores de IdP.",
-        ph: "[Detalhar política de custódia, rotação e acesso às chaves]",
       },
       {
         q: "Como fica a LGPD?",
         a: "O tratamento de dados pessoais segue a LGPD, com liberação de atributos limitada ao necessário para cada serviço.",
-        ph: "[Confirmar papéis de controlador e operador, base legal e local de armazenamento]",
       },
       {
         q: "Qual o esforço de migração?",
         a: "Depende do ponto de partida. O diagnóstico dimensiona o esforço antes de qualquer mudança; a preparação da base e a configuração ficam com o BAITA, e a TI da instituição participa das validações.",
-        ph: "",
       },
       {
         q: "Onde o IdP roda?",
         a: "Na infraestrutura do BAITA. Nada é instalado nos servidores da instituição.",
-        ph: "",
       },
       {
         q: "E a continuidade do suporte?",
-        a: "Operação, atualizações e suporte ficam com o BAITA, com apoio da RNP, em português. O acesso deixa de depender de uma pessoa específica na instituição.",
-        ph: "[Confirmar modelo de suporte e níveis de atendimento]",
+        a: "Operação, atualizações e suporte ficam com o BAITA, com apoio da RNP. O acesso deixa de depender de uma pessoa específica na instituição.",
       },
       {
         q: "Qual o ponto de partida mínimo?",
-        a: "Uma lista de usuários, mesmo em planilha. Diretório, banco de dados ou planilha: o diagnóstico define o caminho a partir do que a instituição já tem.",
-        ph: "",
+        a: "Uma lista de usuários. Diretório, banco de dados ou planilha: o diagnóstico define o caminho a partir do que a instituição já tem.",
+      },
+      {
+        q: "Onde encontro os detalhes técnicos?",
+        a: "Os slides técnicos reúnem os detalhes da solução para a equipe de TI.",
+        link: { label: "Ver os slides técnicos", href: "https://drive.google.com/file/d/1Ee-rq1FxYanYe9W5dVmWKoR6FVd2z8gx/view?usp=sharing" },
       },
     ],
   },
@@ -375,7 +402,7 @@ const en: IdpContent = {
     statement: "Disorganized user base, disconnected login systems and duplicated work.",
     body: [
       "Without an institutional identity, every service keeps its own users and passwords.",
-      "With an IdP managed by BAITA, the institution gets a single identity: one login for every system and open access to CAFe.",
+      "With an identity provider (IdP) managed by BAITA, the institution gets a single identity: one login for every system and open access to CAFe.",
     ],
     vizLabel:
       "Before, every system with its own user database; with BAITA IdP, one unified database flows through the IdP to every system",
@@ -383,6 +410,24 @@ const en: IdpContent = {
     idp: "BAITA IdP",
     before: "Before",
     after: "With BAITA IdP",
+  },
+  role: {
+    kicker: "What is an IdP",
+    title: "Identity provider (IdP): the one that confirms who is who.",
+    lead: "The IdP is the service that keeps and confirms the identity of the people at the institution. Systems stop asking for passwords on their own and ask the IdP instead.",
+    services: "Services",
+    serviceNodes: ["Virtual Learning Environment", "Academic system", "CAPES journals", "Web conferencing"],
+    base: "Institution user base",
+    mini: { service: "Service", base: "User base" },
+    controls: { prev: "Previous step", next: "Next step", play: "Play", pause: "Pause", label: "Login steps" },
+    vizLabel:
+      "Login flow: the service sends the person to the IdP, the IdP checks the identity against the user base and returns the confirmation to the service.",
+    steps: [
+      { t: "Access", d: "The person opens a service from the institution or from CAFe." },
+      { t: "Sign in at the IdP", d: "The service doesn't ask for a password: it sends the person to the institution's sign-in, at the IdP." },
+      { t: "Verification", d: "The IdP checks the identity against the institution's user base." },
+      { t: "Response", d: "The IdP confirms who the person is and sends the service only the data it needs." },
+    ],
   },
   start: {
     kicker: "Any starting point",
@@ -481,13 +526,7 @@ const en: IdpContent = {
     },
     access: {
       title: "Unified access",
-      institution: "[Institution name]",
-      prompt: "Sign in to access the Virtual Learning Environment",
-      user: "Username",
-      userHint: "first.last",
-      password: "Password",
-      submit: "Sign in",
-      foot: "The same login works for every system and for CAFe.",
+      label: "Several login screens, one per system, merge into one.",
     },
   },
   piece: {
@@ -518,12 +557,12 @@ const en: IdpContent = {
         d: "Built by the working group taking CAFe to OpenID Federation, with support from RNP.",
       },
       {
-        t: "Brazilian support",
-        d: "Support in Portuguese, in the time zone and context of Brazil's teaching and research institutions.",
+        t: "National sovereignty",
+        d: "Built in Brazil for the country's institutions: data handled under the LGPD, support in Portuguese and a deep understanding of the Brazilian context.",
       },
       {
-        t: "CAFe-native",
-        d: "Built into the federation from day one, not adapted from a foreign product. Same protocol, same attributes, same operation.",
+        t: "Modern protocols",
+        d: "The IdP is integrated with the CAFe federation from day one and supports modern authentication protocols such as OAuth and OIDC.",
       },
     ],
   },
@@ -535,100 +574,108 @@ const en: IdpContent = {
     management: {
       items: [
         { t: "Less risk", d: "CAFe access no longer depends on a single person at the institution." },
-        { t: "Continuity", d: "Operation, updates and support are BAITA's responsibility, with support from RNP." },
+        { t: "Continuity", d: "Operation, updates and support are BAITA's responsibility." },
         {
           t: "National ecosystem",
           d: "Students, faculty and staff use CAFe federated services with their institutional account.",
         },
       ],
-      before: "BEFORE",
-      after: "AFTER",
-      owner: "1 technical lead",
-      access: "CAFe access",
-      spof: "single point of failure",
-      operation: "BAITA + RNP operation",
-      continuous: "continuous operation",
+      nodes: { base: "User base", services: "Institutional services" },
+      vizLabel: "Before, the user base and the institutional services drift apart; with BAITA IdP, both connect to it.",
     },
     it: {
       items: [
         { t: "No Shibboleth to run", d: "No IdP to install, update or monitor." },
         {
           t: "Nothing running on the institution's infrastructure",
-          d: "The IdP runs on BAITA's infrastructure. IT connects systems instead of maintaining servers.",
+          d: "The IdP runs on BAITA's infrastructure. IT only connects the systems: no LDAP directory or IdP server to maintain on site.",
         },
       ],
-      label: "institution infrastructure",
-      rows: [
-        ["IdP server", "not needed"],
-        ["Shibboleth", "not needed"],
-        ["Certificates and keys", "with BAITA"],
-      ],
-      integration: "System integration",
+      nodes: {
+        ldap: "LDAP directory",
+        shib: "Shibboleth",
+        server: "IdP server",
+        certs: "Certificates and keys",
+        service: "Service",
+      },
+      vizLabel:
+        "Before, the service depends on an LDAP directory, Shibboleth, an IdP server and certificates; with BAITA IdP, none of that is needed and only it connects to the service.",
     },
   },
   quiz: {
-    kicker: "Quick assessment",
+    kicker: "Assessment",
     title: "Is your institution ready for CAFe?",
-    intro: "Four questions point to the most likely path. An assessment with our team confirms it.",
+    intro:
+      "Answer our assessment questionnaire to better understand where your institution stands. Your answers also help us reach a solution that makes sense for you.",
+    skip: "Rather talk to us directly? Get in touch",
     question: "Question",
     of: "of",
     back: "Back",
-    noSignup: "No sign-up",
-    result: "Result",
-    path: "suggested path",
-    cta: "I want to know more",
+    send: "Send results to the team",
     restart: "Start over",
-    disclaimer: "Indicative result. The assessment confirms the path.",
     questions: [
       {
         k: "User management",
+        sum: "User registry",
         t: "Where is the institution's user registry today?",
         o: ["Spreadsheet (Excel or similar)", "A system's database", "Directory (LDAP or Active Directory)"],
       },
       {
         k: "Services",
-        t: "How many internal systems ask for a login today?",
-        o: ["Up to 5", "6 to 20", "More than 20", "Not surveyed yet"],
+        sum: "Systems with a login",
+        t: "How many of the institution's systems require a login today?",
+        o: ["Up to 5", "6 to 20", "More than 20", "No inventory yet"],
       },
       {
         k: "Access types",
-        t: "How many different ways of logging in coexist at the institution?",
+        sum: "Login screens per person",
+        t: "How many different login screens does a user at the institution deal with today?",
         o: ["Just one", "Two or three", "More than three"],
       },
       {
         k: "Shibboleth",
+        sum: "Shibboleth",
         t: "Does the institution already run a Shibboleth IdP?",
-        o: ["Yes, in operation", "It used to, but stopped", "No"],
+        o: ["Yes, in operation", "It did, but stopped", "No"],
       },
     ],
-    paths: [
-      {
-        title: "Starting from a spreadsheet",
-        lead: "The first step is turning the spreadsheet into a structured user base. BAITA leads this preparation before configuring the IdP.",
-        mid: "Structuring the data",
+    results: {
+      active: {
+        v: "Already in CAFe",
+        t: "Access is there, but it's costly to keep up.",
+        d: "Running Shibboleth takes a server, updates and someone who knows the tool well. With BAITA IdP, the institution stays in CAFe and that upkeep is no longer IT's job.",
       },
-      {
-        title: "Starting from a database",
-        lead: "The IdP connects to the existing database, with fields mapped to the attributes used in CAFe.",
-        mid: "Attribute mapping",
+      stopped: {
+        v: "Access interrupted",
+        t: "The community has lost access to CAFe services.",
+        d: "When the local IdP stops, everyone who depends on it is left out. BAITA IdP restores that access without the institution having to bring a server back up.",
       },
-      {
-        title: "Starting from a directory",
-        lead: "With LDAP or AD in place, the path is connecting the directory to BAITA IdP and reviewing the attributes.",
-        mid: "Directory connection",
+      directory: {
+        v: "Closer than it seems",
+        t: "The directory the institution already uses is the starting point.",
+        d: "With LDAP or Active Directory in place, joining CAFe is within reach. BAITA IdP connects to it, with no new server at the institution.",
       },
-    ],
-    stepNames: { first: "Assessment", third: "Configuration", last: "Unified access" },
-    notes: {
-      manySystems:
-        "Many systems with their own login: they can be connected in stages, starting with the most used.",
-      noInventory: "The assessment includes surveying which systems ask for a login.",
-      duplicates:
-        "Different ways of logging in point to duplicate accounts: preparation includes consolidating identities.",
-      shibActive:
-        "With Shibboleth in operation, the assessment plans the move from the current IdP to BAITA IdP.",
-      shibStopped: "With the IdP out of operation, BAITA IdP takes over CAFe access.",
-      shibNone: "Without Shibboleth, there is nothing to install: the IdP runs on BAITA's infrastructure.",
+      database: {
+        v: "Almost there",
+        t: "Users are already organised in a system.",
+        d: "BAITA IdP uses that base to give each person a single login and access to CAFe, with no new server at the institution.",
+      },
+      spreadsheet: {
+        v: "Start with what you have",
+        t: "A spreadsheet of users is enough to get started.",
+        d: "BAITA helps organise that base and, from it, the institution gets a single login and access to CAFe.",
+      },
+    },
+    pains: {
+      moreThanThree: "Today each person deals with more than three login screens. With BAITA IdP, it becomes just one.",
+      twoOrThree: "Today each person deals with two or three login screens. With BAITA IdP, it becomes just one.",
+      manySystems: "With this many systems asking for a login, the connection can start with the most used ones.",
+      noInventory: "Not sure how many systems ask for a login? Mapping them is part of getting started.",
+    },
+    summary: {
+      hello: "Hi! I took the BAITA IdP quick assessment.",
+      result: "Result",
+      bye: "I'd like to talk about our situation.",
     },
   },
   faq: {
@@ -638,32 +685,31 @@ const en: IdpContent = {
       {
         q: "Who holds the institution's cryptographic keys?",
         a: "In the managed model, keys are generated and held on BAITA's infrastructure, operated with support from RNP. The institution maintains no certificates or IdP servers.",
-        ph: "[Detail the key custody, rotation and access policy]",
       },
       {
         q: "What about the LGPD?",
         a: "Personal data is processed in line with the LGPD, Brazil's data protection law, with attribute release limited to what each service needs.",
-        ph: "[Confirm controller and processor roles, legal basis and storage location]",
       },
       {
         q: "How much effort does migration take?",
         a: "It depends on the starting point. The assessment sizes the effort before anything changes; data preparation and configuration are handled by BAITA, and the institution's IT takes part in validation.",
-        ph: "",
       },
       {
         q: "Where does the IdP run?",
         a: "On BAITA's infrastructure. Nothing is installed on the institution's servers.",
-        ph: "",
       },
       {
         q: "What about long-term support?",
-        a: "Operation, updates and support stay with BAITA, with support from RNP, in Portuguese. Access no longer depends on one specific person at the institution.",
-        ph: "[Confirm the support model and service levels]",
+        a: "Operation, updates and support stay with BAITA, with support from RNP. Access no longer depends on one specific person at the institution.",
       },
       {
         q: "What is the minimum starting point?",
-        a: "A list of users, even in a spreadsheet. Directory, database or spreadsheet: the assessment defines the path from what the institution already has.",
-        ph: "",
+        a: "A list of users. Directory, database or spreadsheet: the assessment defines the path from what the institution already has.",
+      },
+      {
+        q: "Where can I find the technical details?",
+        a: "The technical slides gather the details of the solution for the IT team.",
+        link: { label: "View the technical slides", href: "https://drive.google.com/file/d/1Ee-rq1FxYanYe9W5dVmWKoR6FVd2z8gx/view?usp=sharing" },
       },
     ],
   },

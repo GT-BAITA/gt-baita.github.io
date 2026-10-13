@@ -47,15 +47,15 @@ function before(): Blob[] {
 }
 
 /** Depois: um brilho no IdP e o resto em halo à volta dele. */
-function after(): Blob[] {
+function after(hub: P = IDP, base: P = DB): Blob[] {
   return SEEDS.map((s, i) => {
-    if (i === 0) return at(IDP, 70, 0.6);
-    if (i === 1) return at(DB, 44, 0.5);
+    if (i === 0) return at(hub, 70, 0.6);
+    if (i === 1) return at(base, 44, 0.5);
     const ang = (i / (N - 1)) * 6.2832 + s.phase * 0.2;
     const rad = 13 + 8 * s.size;
     return {
-      x: IDP.x + Math.cos(ang) * rad * 0.9,
-      y: IDP.y + Math.sin(ang) * rad,
+      x: hub.x + Math.cos(ang) * rad * 0.9,
+      y: hub.y + Math.sin(ang) * rad,
       r: 10 + 12 * s.size,
       a: 0.3 + 0.22 * s.size,
     };
@@ -97,12 +97,16 @@ void main() {
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
-export function SilosDither({ organized }: { organized: boolean }) {
+/**
+ * `hub` e `base` (em % do painel) dizem onde ficam os brilhos do "depois";
+ * por padrão, os do diagrama do Problema.
+ */
+export function SilosDither({ organized, hub = IDP, base = DB }: { organized: boolean; hub?: P; base?: P }) {
   const hostRef = useRef<HTMLDivElement>(null);
   // Estado vivo do laço, lido sem recriar o efeito a cada troca.
   const state = useRef({
-    target: organized ? after() : before(),
-    from: organized ? after() : before(),
+    target: organized ? after(hub, base) : before(),
+    from: organized ? after(hub, base) : before(),
     start: 0,
     organized,
   });
@@ -114,7 +118,7 @@ export function SilosDither({ organized }: { organized: boolean }) {
     const s = state.current;
     if (s.organized === organized) return;
     s.from = current(s, performance.now());
-    s.target = organized ? after() : before();
+    s.target = organized ? after(hub, base) : before();
     s.start = performance.now();
     s.organized = organized;
     redraw.current();

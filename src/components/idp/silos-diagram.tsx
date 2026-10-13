@@ -21,7 +21,7 @@ import { SilosDither } from "./silos-dither";
  * real de cada card (medido), então acompanham qualquer largura.
  */
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+export const EASE = [0.22, 1, 0.36, 1] as const;
 /**
  * Quando os fios começam a se desenhar. O movimento desacelera no fim, então
  * aqui os objetos já estão quase no lugar: o fio nasce enquanto eles
@@ -38,7 +38,7 @@ const STAGGER = 0.1;
  * zero, pronto para se redesenhar); ao passar a valer, espera `delay` — os
  * objetos chegarem — e se desenha. O pulso (`flow`) só começa depois.
  */
-function Wire({
+export function Wire({
   d,
   on,
   delay,
