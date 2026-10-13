@@ -15,9 +15,10 @@ import type { P } from "./silos-geometry";
  *
  *   Gestão — a base de usuários e os serviços institucionais flutuam
  *            soltos; o IdP BAITA chega e conecta os dois.
- *   TI     — diretório LDAP, Shibboleth, servidor de IdP e certificados,
- *            todos ligados ao serviço; com o IdP BAITA, eles somem e só ele
- *            se liga ao serviço.
+ *   TI     — o que a instituição mantém hoje: certificados e chaves no
+ *            Shibboleth e no servidor de IdP; o diretório LDAP alimentando
+ *            esses dois e o serviço; Shibboleth e IdP falando com o serviço.
+ *            Com o IdP BAITA, tudo isso some e só ele se liga ao serviço.
  *
  * Cada peça tem uma posição "antes" e, se continua, uma "depois" (em % do
  * painel); sem "depois", ela se desfaz na passagem. Em telas estreitas, cada
@@ -27,20 +28,30 @@ import type { P } from "./silos-geometry";
 type Icon = typeof Database;
 type Spot = P & { r?: number };
 type Piece = { key: string; Icon: Icon; before: Spot; after?: P; loose?: boolean; row?: boolean };
-type Layout = { hub: P; glow: P; pieces: Piece[]; wiresBefore: [string, string][]; wiresAfter: [string, string][] };
+/** Fio entre duas peças; o terceiro valor, se houver, é o arco (px) — negativo arqueia para o outro lado. */
+type WireSpec = [string, string, number?];
+type Layout = { hub: P; glow: P; pieces: Piece[]; wiresBefore: WireSpec[]; wiresAfter: WireSpec[] };
 type Scene = { wide: Layout; narrow: Layout };
 
 const HUB = "hub";
 
-const MANAGEMENT_WIRES: [string, string][] = [
+const MANAGEMENT_WIRES: WireSpec[] = [
   [HUB, "base"],
   [HUB, "services"],
 ];
-const IT_BEFORE: [string, string][] = [
+/**
+ * Shibboleth e IdP institucional ficam lado a lado, o LDAP logo abaixo e o
+ * serviço na base; os fios desses dois até o serviço arqueiam por fora do
+ * LDAP (arco em px), para não passarem por trás dele.
+ */
+const itBefore = (bend: number): WireSpec[] => [
+  ["certs", "shib"],
+  ["certs", "server"],
+  ["ldap", "shib"],
+  ["ldap", "server"],
   ["ldap", "service"],
-  ["shib", "service"],
-  ["server", "service"],
-  ["certs", "service"],
+  ["shib", "service", -bend],
+  ["server", "service", bend],
 ];
 
 const SCENES: Record<"management" | "it", Scene> = {
@@ -68,29 +79,29 @@ const SCENES: Record<"management" | "it", Scene> = {
   },
   it: {
     wide: {
-      hub: { x: 30, y: 52 },
-      glow: { x: 78, y: 52 },
+      hub: { x: 50, y: 40 },
+      glow: { x: 50, y: 82 },
       pieces: [
-        { key: "ldap", Icon: Database, row: true, before: { x: 27, y: 22 } },
-        { key: "shib", Icon: Shield, row: true, before: { x: 27, y: 41 } },
-        { key: "server", Icon: Monitor, row: true, before: { x: 27, y: 60 } },
-        { key: "certs", Icon: Key, row: true, before: { x: 27, y: 79 } },
-        { key: "service", Icon: Grid, before: { x: 78, y: 52 }, after: { x: 78, y: 52 } },
+        { key: "certs", Icon: Key, row: true, before: { x: 50, y: 18 } },
+        { key: "shib", Icon: Shield, row: true, before: { x: 25, y: 40 } },
+        { key: "server", Icon: Monitor, row: true, before: { x: 73, y: 40 } },
+        { key: "ldap", Icon: Database, row: true, before: { x: 50, y: 62 } },
+        { key: "service", Icon: Grid, before: { x: 50, y: 85 }, after: { x: 50, y: 82 } },
       ],
-      wiresBefore: IT_BEFORE,
+      wiresBefore: itBefore(80),
       wiresAfter: [[HUB, "service"]],
     },
     narrow: {
-      hub: { x: 50, y: 50 },
+      hub: { x: 50, y: 45 },
       glow: { x: 50, y: 82 },
       pieces: [
-        { key: "ldap", Icon: Database, row: true, before: { x: 38, y: 19 } },
-        { key: "shib", Icon: Shield, row: true, before: { x: 62, y: 32 } },
-        { key: "server", Icon: Monitor, row: true, before: { x: 38, y: 45 } },
-        { key: "certs", Icon: Key, row: true, before: { x: 62, y: 58 } },
-        { key: "service", Icon: Grid, before: { x: 50, y: 82 }, after: { x: 50, y: 82 } },
+        { key: "certs", Icon: Key, row: true, before: { x: 50, y: 19 } },
+        { key: "shib", Icon: Shield, row: true, before: { x: 27, y: 36 } },
+        { key: "server", Icon: Monitor, row: true, before: { x: 68, y: 49 } },
+        { key: "ldap", Icon: Database, row: true, before: { x: 50, y: 66 } },
+        { key: "service", Icon: Grid, before: { x: 50, y: 87 }, after: { x: 50, y: 82 } },
       ],
-      wiresBefore: IT_BEFORE,
+      wiresBefore: itBefore(135),
       wiresAfter: [[HUB, "service"]],
     },
   },
@@ -112,11 +123,11 @@ function useNarrow() {
   return narrow;
 }
 
-/** Fio levemente curvo entre dois pontos (px), arqueando para o lado. */
-const arc = (a: P, b: P) => {
+/** Fio curvo entre dois pontos (px), arqueando para o lado (por padrão, de leve). */
+const arc = (a: P, b: P, bend = 14) => {
   const vertical = Math.abs(b.y - a.y) > Math.abs(b.x - a.x);
-  const mx = (a.x + b.x) / 2 + (vertical ? 14 : 0);
-  const my = (a.y + b.y) / 2 - (vertical ? 0 : 14);
+  const mx = (a.x + b.x) / 2 + (vertical ? bend : 0);
+  const my = (a.y + b.y) / 2 - (vertical ? 0 : bend);
   return `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)}, ${b.x.toFixed(1)} ${b.y.toFixed(1)}`;
 };
 
@@ -175,7 +186,7 @@ export function StabilityDiagram({ scene }: { scene: "management" | "it" }) {
   };
 
   return (
-    <div className="panel silos stab" ref={panelRef}>
+    <div className={`panel silos stab ${scene}`} ref={panelRef}>
       <div className="silos-toggle">
         <button type="button" aria-pressed={!calm} onClick={() => pick(false)}>
           {problem.before}
@@ -190,19 +201,19 @@ export function StabilityDiagram({ scene }: { scene: "management" | "it" }) {
 
         {size && (
           <svg className="silos-lines" viewBox={`0 0 ${size.w} ${size.h}`}>
-            {L.wiresBefore.map(([a, b], i) => (
+            {L.wiresBefore.map(([a, b, bend], i) => (
               <Wire
                 key={`antes-${a}-${b}`}
-                d={arc(px(spot(a, false)), px(spot(b, false)))}
+                d={arc(px(spot(a, false)), px(spot(b, false)), bend)}
                 on={!calm}
                 delay={SETTLE + i * 0.08}
                 reduce={reduce}
               />
             ))}
-            {L.wiresAfter.map(([a, b], i) => (
+            {L.wiresAfter.map(([a, b, bend], i) => (
               <Wire
                 key={`depois-${a}-${b}`}
-                d={arc(px(spot(a, true)), px(spot(b, true)))}
+                d={arc(px(spot(a, true)), px(spot(b, true)), bend)}
                 on={calm}
                 delay={SETTLE + i * 0.12}
                 reduce={reduce}

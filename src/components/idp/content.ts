@@ -35,7 +35,7 @@ const pt = {
     statement: "Base de usuários desorganizada, sistemas de login desconexos e trabalho duplicado.",
     body: [
       "Sem identidade institucional, cada serviço guarda seus próprios usuários e senhas.",
-      "Com um provedor de identidade (IdP) gerenciado pelo BAITA, a instituição passa a ter uma identidade única: um login para todos os sistemas e acesso aberto à CAFe.",
+      "Com um provedor de identidade (IdP) gerenciado pelo BAITA, a instituição passa a ter uma identidade única: um login para todos os sistemas e com acesso à CAFe.",
     ],
     vizLabel:
       "Antes, cada sistema com sua própria base de usuários; com o IdP BAITA, uma base unificada passa pelo IdP e chega a todos os sistemas",
@@ -46,8 +46,8 @@ const pt = {
   },
   role: {
     kicker: "O que é um IdP",
-    title: "Provedor de identidade (IdP): quem confirma quem é quem.",
-    lead: "O IdP é o serviço que guarda e confirma a identidade das pessoas da instituição. Os sistemas deixam de pedir senha por conta própria e passam a perguntar ao IdP.",
+    title: "Provedor de identidade (IdP): autentica usuários e garante sua identidade.",
+    lead: "O IdP é o serviço que guarda e confirma a identidade dos usuários da organização. Os sistemas deixam de autenticar o usuário por conta própria e delegam a autenticação ao IdP.",
     services: "Serviços",
     // A confirmar com a equipe: quais serviços da CAFe citar.
     serviceNodes: ["Ambiente Virtual de Aprendizagem", "Sistema acadêmico", "Periódicos CAPES", "Conferência web"],
@@ -56,12 +56,12 @@ const pt = {
     mini: { service: "Serviço", base: "Base de usuários" },
     controls: { prev: "Passo anterior", next: "Próximo passo", play: "Reproduzir", pause: "Pausar", label: "Passos do login" },
     vizLabel:
-      "Fluxo de login: o serviço encaminha a pessoa ao IdP, o IdP confere a identidade na base de usuários e devolve a confirmação ao serviço.",
+      "Fluxo de login: o serviço encaminha o usuário ao IdP, o IdP confere a identidade na base de usuários e devolve a confirmação ao serviço.",
     steps: [
-      { t: "Acesso", d: "A pessoa abre um serviço da instituição ou da CAFe." },
-      { t: "Login no IdP", d: "O serviço não pede senha: encaminha a pessoa para o login da instituição, no IdP." },
-      { t: "Verificação", d: "O IdP confere a identidade na base de usuários da instituição." },
-      { t: "Resposta", d: "O IdP confirma quem é a pessoa e envia ao serviço só os dados de que ele precisa." },
+      { t: "Acesso", d: "O usuário abre um serviço da instituição ou da CAFe." },
+      { t: "Login no IdP", d: "O serviço não pede senha: encaminha o usuário para o login da instituição, no IdP." },
+      { t: "Verificação", d: "O IdP confirma a identidade na base de usuários da instituição." },
+      { t: "Resposta", d: "O IdP envia ao serviço apenas os dados necessários." },
     ],
   },
   start: {
@@ -225,19 +225,19 @@ const pt = {
         { t: "Sem Shibboleth para operar", d: "Nenhum IdP para instalar, atualizar ou monitorar." },
         {
           t: "Nada rodando na infraestrutura da instituição",
-          d: "O IdP roda na infraestrutura do BAITA. A TI só conecta os sistemas: não mantém diretório LDAP nem servidor de IdP na instituição.",
+          d: "O IdP roda na infraestrutura do BAITA. A TI só conecta os sistemas e opcionalmente mantém o diretório de usuários.",
         },
       ],
       // Diagrama da aba (stability-diagram.tsx): o que deixa de ser preciso.
       nodes: {
         ldap: "Diretório LDAP",
         shib: "Shibboleth",
-        server: "Servidor de IdP",
+        server: "IdP institucional",
         certs: "Certificados e chaves",
         service: "Serviço",
       },
       vizLabel:
-        "Antes, o serviço depende de diretório LDAP, Shibboleth, servidor de IdP e certificados; com o IdP BAITA, nada disso é preciso e só ele se liga ao serviço.",
+        "Antes, o serviço depende de diretório LDAP, Shibboleth, IdP institucional e certificados; com o IdP BAITA, nada disso é preciso e só ele se liga ao serviço.",
     },
   },
   quiz: {
