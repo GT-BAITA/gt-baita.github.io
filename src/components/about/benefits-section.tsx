@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
+import { EYEBROW } from "@/lib/typography";
 
 export function BenefitsSection() {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export function BenefitsSection() {
     <section id="benefits" className="pb-11">
       <div className="flex flex-col gap-6">
         <motion.p
-          className="font-geist text-base uppercase tracking-[0.02em] text-neutral-500"
+          className={EYEBROW}
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: "easeOut" }}

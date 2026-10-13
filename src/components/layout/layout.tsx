@@ -2,9 +2,17 @@ import { Footer } from "./components/footer";
 import { Header } from "./components/header";
 import { ClarityNotice } from "./components/clarity-notice";
 import { useSmoothScroll } from "@/hooks/useSmoothScroll";
+import { useApplyTheme, useRouteChrome } from "@/lib/route-theme";
+import { useThemeTransitionLinks } from "@/lib/theme-transition";
+import { HeroBackdrop } from "@/components/shared/hero-dither";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  useSmoothScroll();
+  // Um único chassi para o site todo; o que muda por rota (tema, rolagem
+  // suave, largura) vem de route-theme.ts.
+  const chrome = useRouteChrome();
+  useApplyTheme(chrome.theme);
+  useThemeTransitionLinks();
+  useSmoothScroll(chrome.smoothScroll);
 
   return (
     <div>
@@ -15,10 +23,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <Header />
 
       <div id="smooth-wrapper">
-        <div id="smooth-content">
-          <div className="min-h-screen max-w-[1264px] mx-auto px-4 pb-3.5">
-            {children}
-          </div>
+        <div id="smooth-content" className="relative">
+          {/* Um canvas para os heroes do site inteiro: as páginas só pedem a
+              forma (useHeroBackdrop), e ele se transforma entre elas. */}
+          <HeroBackdrop />
+          {chrome.fullBleed ? (
+            children
+          ) : (
+            <div className="min-h-screen max-w-[1264px] mx-auto px-4 pb-3.5">
+              {children}
+            </div>
+          )}
           <Footer />
         </div>
       </div>

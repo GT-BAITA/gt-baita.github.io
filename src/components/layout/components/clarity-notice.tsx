@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { CONSENT_KEY, sendConsent, storeConsent } from "./consent";
+import { Button } from "@/components/ui/button";
 
 export function ClarityNotice() {
   const { t } = useTranslation();
@@ -41,37 +42,41 @@ export function ClarityNotice() {
         isMounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
-      <div className="rounded-xl border border-neutral-800 bg-neutral-950 p-6 shadow-2xl">
+      {/* Ilha escura nos dois modos: os tokens dentro dela são os escuros. */}
+      <div className="dark rounded-xl border border-line bg-canvas p-6 shadow-2xl">
         <h2
           id="clarity-notice-title"
-          className="font-domine text-lg text-neutral-50"
+          className="font-domine text-lg text-ink"
         >
           {t("clarityNotice.title")}
         </h2>
 
-        <p className="mt-2 font-geist text-sm leading-relaxed text-neutral-400">
+        <p className="mt-2 font-geist text-sm leading-relaxed text-ink-3">
           {t("clarityNotice.description")}{" "}
           <Link
             to="/privacy"
-            className="text-neutral-200 underline underline-offset-2 transition-colors hover:text-white"
+            className="text-ink-2 underline underline-offset-2 transition-colors hover:text-ink"
           >
             {t("clarityNotice.link")}
           </Link>
         </p>
 
         <div className="mt-5 flex gap-3 sm:justify-end">
-          <button
+          <Button
+            variant="secondary"
+            size="md"
             onClick={() => handleChoice(false)}
-            className="flex-1 h-10 rounded-lg border border-neutral-700 bg-transparent px-4 font-geist text-sm font-medium text-neutral-200 transition-colors hover:bg-neutral-800 sm:flex-none"
+            className="flex-1 px-4 sm:flex-none"
           >
             {t("clarityNotice.reject")}
-          </button>
-          <button
+          </Button>
+          <Button
+            size="md"
             onClick={() => handleChoice(true)}
-            className="flex-1 h-10 rounded-lg bg-neutral-50 px-4 font-geist text-sm font-medium text-neutral-900 transition-colors hover:bg-white sm:flex-none"
+            className="flex-1 px-4 sm:flex-none"
           >
             {t("clarityNotice.accept")}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ function CardOne() {
         </p>
         <Button
           onClick={handleScrollToRoadmap}
-          className="bg-neutral-950 text-white hover:bg-neutral-900 rounded-lg font-geist w-[139px] p-0 flex items-center justify-center gap-1 transition-all duration-300"
+          className="w-[139px] p-0 gap-1"
         >
           <Link
             to="/about"

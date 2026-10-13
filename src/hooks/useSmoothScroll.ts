@@ -17,9 +17,13 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
  * É totalmente desabilitada com prefers-reduced-motion: a suavização separa
  * a página do dispositivo de entrada, exatamente o que essa configuração
  * pede que não façamos. O toque permanece nativo pelo mesmo motivo.
+ *
+ * `enabled` = false desliga por rota: o microsite do IdP usa
+ * `position: sticky`, que o conteúdo transformado do smoother quebraria.
  */
-export function useSmoothScroll() {
+export function useSmoothScroll(enabled = true) {
   useLayoutEffect(() => {
+    if (!enabled) return;
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
@@ -44,5 +48,5 @@ export function useSmoothScroll() {
     });
 
     return () => mm.revert();
-  }, []);
+  }, [enabled]);
 }

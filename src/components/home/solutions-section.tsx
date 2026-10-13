@@ -11,6 +11,7 @@ import {
   handOffStart,
   restProgress,
 } from "@/lib/scrub-schedule";
+import { buttonVariants } from "@/components/ui/button";
 
 /**
  * "O que estamos construindo" — nó 1058:35764 do Figma.
@@ -137,12 +138,10 @@ function SolutionCard({
 }) {
   const { ref, hasEntered } = useEnterOnce<HTMLLIElement>();
 
-  const ctaClass = [
-    "inline-flex min-h-9 shrink-0 items-center justify-center gap-2 rounded-lg px-4 py-[7.5px] font-geist text-sm font-medium transition-colors",
-    solution.cta?.variant === "primary"
-      ? "bg-neutral-900 text-neutral-50 hover:bg-neutral-800"
-      : "border border-neutral-200 bg-white/40 text-neutral-950 shadow-sm hover:bg-white/80",
-  ].join(" ");
+  const ctaClass = buttonVariants({
+    variant: solution.cta?.variant === "primary" ? "primary" : "secondary",
+    className: "shrink-0",
+  });
 
   // Um CTA de contato é um botão, não um link: a aplicação monta um
   // HashRouter, então um href "#contact-form" seria lido como uma rota.
@@ -153,7 +152,7 @@ function SolutionCard({
       className={ctaClass}
     >
       {solution.cta.label}
-      <ArrowRight className="h-4 w-4" />
+      <ArrowRight />
     </button>
   ) : (
     <a
@@ -163,7 +162,7 @@ function SolutionCard({
       className={ctaClass}
     >
       {solution.cta.label}
-      <ArrowRight className="h-4 w-4" />
+      <ArrowRight />
     </a>
   );
 
