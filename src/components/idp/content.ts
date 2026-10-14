@@ -184,8 +184,8 @@ const pt = {
     title: "Identidade federada, entregue por quem está modernizando a CAFe.",
     cards: [
       {
-        t: "Expertise como produto",
-        d: "O conhecimento de identidade federada, hoje concentrado em poucos especialistas, entregue como serviço gerenciado.",
+        t: "Especialistas em identidade",
+        d: "Uma equipe de especialistas e pesquisadores em gestão de identidade federada, que une prática e pesquisa acadêmica para cuidar do IdP da instituição.",
       },
       {
         t: "Conhecimento de dentro da RNP e da CAFe",
@@ -549,8 +549,8 @@ const en: IdpContent = {
     title: "Federated identity, delivered by the team modernising CAFe.",
     cards: [
       {
-        t: "Expertise as a product",
-        d: "Federated identity know-how, today concentrated in a handful of specialists, delivered as a managed service.",
+        t: "Identity experts",
+        d: "A team of experts and scholars in federated identity management, combining hands-on practice and academic research to run your institution's IdP.",
       },
       {
         t: "Insider knowledge of RNP and CAFe",
