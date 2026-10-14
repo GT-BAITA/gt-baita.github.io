@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useIdpContent } from "./content";
-import { CheckMark } from "./how-section";
-import { ArrowRight } from "./icons";
 import { Kicker, rv } from "./primitives";
+import { StabilityDiagram } from "./stability-diagram";
 
 function BenefitList({ items }: { items: { t: string; d: string }[] }) {
   return (
@@ -21,7 +20,7 @@ function BenefitList({ items }: { items: { t: string; d: string }[] }) {
 }
 
 export function BenefitsSection() {
-  const { benefits: c, brand } = useIdpContent();
+  const { benefits: c } = useIdpContent();
   const [tab, setTab] = useState(0);
   const m = c.management;
   const it = c.it;
@@ -57,49 +56,12 @@ export function BenefitsSection() {
         {tab === 0 ? (
           <div className="tabpanel" role="tabpanel" id="idp-tabpanel-0" aria-labelledby="idp-tab-0" key="g">
             <BenefitList items={m.items} />
-            <div className="panel gridbg bv">
-              <div className="ba">
-                <span className="mono-s">{m.before}</span>
-                <div className="flow">
-                  <span className="box solo">{m.owner}</span>
-                  <ArrowRight />
-                  <span className="box">{m.access}</span>
-                  <span className="pill dim">{m.spof}</span>
-                </div>
-              </div>
-              <div className="ba">
-                <span className="mono-s">{m.after}</span>
-                <div className="flow">
-                  <span className="box">{m.operation}</span>
-                  <ArrowRight />
-                  <span className="box">{brand}</span>
-                  <ArrowRight />
-                  <span className="box">{m.access}</span>
-                  <span className="pill solid">{m.continuous}</span>
-                </div>
-              </div>
-            </div>
+            <StabilityDiagram scene="management" />
           </div>
         ) : (
           <div className="tabpanel" role="tabpanel" id="idp-tabpanel-1" aria-labelledby="idp-tab-1" key="t">
             <BenefitList items={it.items} />
-            <div className="panel gridbg bv">
-              <div className="mono-s">{it.label}</div>
-              <div className="list log">
-                {it.rows.map(([label, status]) => (
-                  <div key={label} className="li">
-                    <CheckMark state="ok" />
-                    <span>{label}</span>
-                    <span className="pill">{status}</span>
-                  </div>
-                ))}
-                <div className="li">
-                  <CheckMark state="todo" />
-                  <span>{it.integration}</span>
-                  <span className="pill solid">OIDC</span>
-                </div>
-              </div>
-            </div>
+            <StabilityDiagram scene="it" />
           </div>
         )}
       </div>

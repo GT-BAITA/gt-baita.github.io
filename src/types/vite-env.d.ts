@@ -15,10 +15,12 @@ interface GtagConsentSettings {
 }
 
 interface Window {
-  clarity?: (
-    command: "consentv2",
-    settings: ClarityConsentV2Settings,
-  ) => void;
+  clarity?: {
+    (command: "consentv2", settings: ClarityConsentV2Settings): void;
+    /** Marcação anônima de sessão (chave, valor). */
+    (command: "set", key: string, value: string): void;
+    (command: "event", name: string): void;
+  };
   gtag?: (
     command: "consent",
     action: "default" | "update",

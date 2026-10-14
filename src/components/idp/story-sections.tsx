@@ -5,14 +5,14 @@ import {
   Books,
   Building,
   Cap,
-  Chat,
+  Flag,
   Database,
   Globe,
   Grid,
+  Key,
   Mail,
   Monitor,
   Person,
-  Plug,
   Share,
   Shield,
 } from "./icons";
@@ -246,7 +246,7 @@ export function PieceSection() {
   );
 }
 
-const WHY_ICONS = [Shield, Share, Chat, Plug];
+const WHY_ICONS = [Shield, Share, Flag, Key];
 
 export function WhySection() {
   const c = useIdpContent().why;

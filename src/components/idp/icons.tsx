@@ -34,6 +34,12 @@ export const ChevronLeft = (p: IconProps) => (
 export const ArrowRight = (p: IconProps) => (
   <Icon {...p}><path d="M5 12h14M13 6l6 6-6 6" /></Icon>
 );
+export const Play = (p: IconProps) => (
+  <Icon {...p}><path d="M8 5.5v13a.5.5 0 0 0 .77.42l10-6.5a.5.5 0 0 0 0-.84l-10-6.5A.5.5 0 0 0 8 5.5Z" /></Icon>
+);
+export const Pause = (p: IconProps) => (
+  <Icon {...p}><path d="M9 5v14M15 5v14" /></Icon>
+);
 export const Check = (p: IconProps) => (
   <Icon strokeWidth={3} {...p}><path d="m5 12 5 5 9-10" /></Icon>
 );
@@ -92,9 +98,12 @@ export const Database = (p: IconProps) => (
 export const Shield = (p: IconProps) => (
   <Icon {...p}><path d="M12 3 4 7v5c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V7l-8-4Z" /><path d="m9 12 2 2 4-4" /></Icon>
 );
+export const Flag = (p: IconProps) => (
+  <Icon {...p}><path d="M5 21V4M5 4h11l-2 4 2 4H5" /></Icon>
+);
 export const Chat = (p: IconProps) => (
   <Icon {...p}><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z" /></Icon>
 );
-export const Plug = (p: IconProps) => (
-  <Icon {...p}><path d="M9 3v4M15 3v4M7 7h10v4a5 5 0 0 1-10 0V7ZM12 16v5" /></Icon>
+export const Key = (p: IconProps) => (
+  <Icon {...p}><circle cx="7.5" cy="15.5" r="5.5" /><path d="m21 2-9.6 9.6" /><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4" /></Icon>
 );

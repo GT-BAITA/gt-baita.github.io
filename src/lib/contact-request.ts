@@ -13,20 +13,31 @@ import { scrollToSection } from "./scroll-to-section";
 const EVENT = "baita:contact-request";
 const FORM_TARGET = "#contact-form";
 
+/** O que um CTA manda ao formulário: a mensagem visível e campos ocultos. */
+type ContactDetail = { message: string; fields: Record<string, string> };
+
 /**
  * @param message Preenche o campo de mensagem do formulário. Não passe nada
  * para um CTA neutro — ele ainda limpa uma mensagem injetada por um CTA
  * anterior, para que o visitante nunca chegue com o texto de um botão que não
  * foi o último clicado.
+ * @param fields Campos ocultos enviados junto com o formulário (ex.: o
+ * resultado padronizado do diagnóstico do IdP). Um CTA sem eles limpa os de
+ * um CTA anterior.
  */
-export function requestContact(message = "") {
-  window.dispatchEvent(new CustomEvent(EVENT, { detail: message }));
+export function requestContact(message = "", fields: Record<string, string> = {}) {
+  window.dispatchEvent(
+    new CustomEvent<ContactDetail>(EVENT, { detail: { message, fields } })
+  );
   scrollToSection(FORM_TARGET);
 }
 
-export function onContactRequest(handler: (message: string) => void) {
+export function onContactRequest(
+  handler: (message: string, fields: Record<string, string>) => void
+) {
   const listener = (event: Event) => {
-    handler((event as CustomEvent<string>).detail);
+    const { message, fields } = (event as CustomEvent<ContactDetail>).detail;
+    handler(message, fields);
   };
 
   window.addEventListener(EVENT, listener);
