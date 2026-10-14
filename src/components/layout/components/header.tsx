@@ -297,7 +297,9 @@ export function Header() {
         ref={headerRef}
         className={cn(
           "page-frame fixed top-7 left-1/2 -translate-x-1/2 z-50 transition-transform duration-300 ease-out",
-          !isVisible ? "-translate-y-[140%] focus-within:translate-y-0" : "translate-y-0",
+          // Escondido, só volta por foco de teclado (:focus-visible): o foco
+          // que um clique de mouse deixa no link não pode prender o menu.
+          !isVisible ? "-translate-y-[140%] has-[:focus-visible]:translate-y-0" : "translate-y-0",
         )}
       >
         <nav
