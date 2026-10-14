@@ -233,6 +233,45 @@ html.theme-switching footer * {
   html.theme-switching footer * { transition: none !important; }
 }
 
+/* Moldura única da página: cabeçalho, conteúdo e rodapé com a mesma
+   largura máxima e as mesmas margens laterais, para tudo alinhar. Acima de
+   --page-max a página para de crescer e centraliza. */
+:root {
+  --page-max: 1232px;
+  --page-gutter: 16px;
+}
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: 24px;
+  }
+}
+.page-frame {
+  width: 100%;
+  max-width: calc(var(--page-max) + 2 * var(--page-gutter));
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* Rodapé: o card sobe e acende ao entrar na tela (footer.tsx). */
+.footer-rise {
+  transform: translateY(56px) scale(0.98);
+  opacity: 0.35;
+  transition:
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.footer-rise[data-in] {
+  transform: none;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .footer-rise {
+    transform: none;
+    opacity: 1;
+    transition: none;
+  }
+}
+
 /* Virada de tema por View Transition (src/lib/theme-transition.ts): sem o
    cross-fade padrão; a página nova entra pelo círculo animado em JS. */
 ::view-transition-old(root),

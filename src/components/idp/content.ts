@@ -113,22 +113,22 @@ const pt = {
     steps: [
       {
         t: "Diagnóstico",
-        d: "Levantamento de onde estão os usuários, quais sistemas pedem login e quais vínculos existem na instituição.",
+        d: "Levantamos onde estão os usuários da instituição, quais sistemas pedem login e quais vínculos existem.",
         tags: ["Origem dos dados", "Sistemas", "Vínculos"],
       },
       {
         t: "Preparação",
-        d: "A base é organizada e os campos são mapeados para os atributos usados na CAFe.",
+        d: "Organizamos a base de usuários e mapeamos os campos para os atributos usados na CAFe.",
         tags: ["Limpeza da base", "Mapeamento de atributos"],
       },
       {
         t: "Configuração",
-        d: "O BAITA provisiona o IdP na própria infraestrutura, conecta os sistemas internos e registra a instituição na federação.",
+        d: "Provisionamos o IdP na infraestrutura do BAITA, conectamos os sistemas internos e registramos a instituição na federação.",
         tags: ["OIDC", "OpenID Federation", "CAFe"],
       },
       {
         t: "Acesso unificado",
-        d: "A comunidade acadêmica entra nos sistemas da instituição e nos serviços da CAFe com uma só conta. O usuário interage com uma única interface de autenticação.",
+        d: "Entregamos o acesso: a comunidade acadêmica entra nos sistemas da instituição e nos serviços da CAFe com uma só conta, por uma única tela de login.",
         tags: ["Login único", "Serviços federados"],
       },
     ],
@@ -402,7 +402,7 @@ const en: IdpContent = {
     statement: "Disorganized user base, disconnected login systems and duplicated work.",
     body: [
       "Without an institutional identity, every service keeps its own users and passwords.",
-      "With an identity provider (IdP) managed by BAITA, the institution gets a single identity: one login for every system and open access to CAFe.",
+      "With an identity provider (IdP) managed by BAITA, the institution gets a single identity: one login for every system, with access to CAFe.",
     ],
     vizLabel:
       "Before, every system with its own user database; with BAITA IdP, one unified database flows through the IdP to every system",
@@ -413,20 +413,20 @@ const en: IdpContent = {
   },
   role: {
     kicker: "What is an IdP",
-    title: "Identity provider (IdP): the one that confirms who is who.",
-    lead: "The IdP is the service that keeps and confirms the identity of the people at the institution. Systems stop asking for passwords on their own and ask the IdP instead.",
+    title: "Identity provider (IdP): authenticates users and guarantees their identity.",
+    lead: "The IdP is the service that keeps and confirms the identity of the organisation's users. Systems stop authenticating users on their own and delegate authentication to the IdP.",
     services: "Services",
     serviceNodes: ["Virtual Learning Environment", "Academic system", "CAPES journals", "Web conferencing"],
     base: "Institution user base",
     mini: { service: "Service", base: "User base" },
     controls: { prev: "Previous step", next: "Next step", play: "Play", pause: "Pause", label: "Login steps" },
     vizLabel:
-      "Login flow: the service sends the person to the IdP, the IdP checks the identity against the user base and returns the confirmation to the service.",
+      "Login flow: the service sends the user to the IdP, the IdP checks the identity against the user base and returns the confirmation to the service.",
     steps: [
-      { t: "Access", d: "The person opens a service from the institution or from CAFe." },
-      { t: "Sign in at the IdP", d: "The service doesn't ask for a password: it sends the person to the institution's sign-in, at the IdP." },
-      { t: "Verification", d: "The IdP checks the identity against the institution's user base." },
-      { t: "Response", d: "The IdP confirms who the person is and sends the service only the data it needs." },
+      { t: "Access", d: "The user opens a service from the institution or from CAFe." },
+      { t: "Sign in at the IdP", d: "The service doesn't ask for a password: it sends the user to the institution's sign-in, at the IdP." },
+      { t: "Verification", d: "The IdP confirms the identity against the institution's user base." },
+      { t: "Response", d: "The IdP sends the service only the data it needs." },
     ],
   },
   start: {
@@ -478,22 +478,22 @@ const en: IdpContent = {
     steps: [
       {
         t: "Assessment",
-        d: "We map where your users live, which systems ask for a login and which affiliations exist at the institution.",
+        d: "We map where the institution's users are, which systems ask for a login and which affiliations exist.",
         tags: ["Data source", "Systems", "Affiliations"],
       },
       {
         t: "Preparation",
-        d: "The user base is organised and fields are mapped to the attributes used in CAFe.",
+        d: "We organise the user base and map its fields to the attributes used in CAFe.",
         tags: ["Data clean-up", "Attribute mapping"],
       },
       {
         t: "Configuration",
-        d: "BAITA provisions the IdP on its own infrastructure, connects internal systems and registers the institution in the federation.",
+        d: "We provision the IdP on BAITA's infrastructure, connect the internal systems and register the institution in the federation.",
         tags: ["OIDC", "OpenID Federation", "CAFe"],
       },
       {
         t: "Unified access",
-        d: "The academic community signs in to the institution's systems and to CAFe services with a single account. Users interact with a single sign-in screen.",
+        d: "We deliver access: the academic community signs in to the institution's systems and to CAFe services with a single account, through one sign-in screen.",
         tags: ["Single sign-on", "Federated services"],
       },
     ],
@@ -588,18 +588,18 @@ const en: IdpContent = {
         { t: "No Shibboleth to run", d: "No IdP to install, update or monitor." },
         {
           t: "Nothing running on the institution's infrastructure",
-          d: "The IdP runs on BAITA's infrastructure. IT only connects the systems: no LDAP directory or IdP server to maintain on site.",
+          d: "The IdP runs on BAITA's infrastructure. IT only connects the systems and, optionally, maintains the user directory.",
         },
       ],
       nodes: {
         ldap: "LDAP directory",
         shib: "Shibboleth",
-        server: "IdP server",
+        server: "Institutional IdP",
         certs: "Certificates and keys",
         service: "Service",
       },
       vizLabel:
-        "Before, the service depends on an LDAP directory, Shibboleth, an IdP server and certificates; with BAITA IdP, none of that is needed and only it connects to the service.",
+        "Before, the service depends on an LDAP directory, Shibboleth, an institutional IdP and certificates; with BAITA IdP, none of that is needed and only it connects to the service.",
     },
   },
   quiz: {

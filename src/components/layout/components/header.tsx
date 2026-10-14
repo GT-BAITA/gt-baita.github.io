@@ -139,8 +139,8 @@ export function Header() {
   const location = useLocation();
   const chrome = useRouteChrome();
   const navRef = useRef<HTMLDivElement | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const headerRef = useRef<HTMLElement>(null);
 
   // As três frentes do site: o BAITA em geral, o barramento e o IdP (que
   // vira o modo escuro). Sem links para seções: cada página é um destino.
@@ -184,51 +184,99 @@ export function Header() {
     </h1>
   );
 
+  // Some ao rolar para baixo e volta ao rolar para cima, em qualquer
+  // largura. A direção vem do gesto de quem lê (roda, toque, teclado), não
+  // da posição da rolagem: o site também rola sozinho (o snap da página
+  // inicial, os saltos para seções), e isso não deve mostrar o menu. No
+  // rodapé (que já tem a navegação e o contato) ele fica escondido até o
+  // rodapé sair da tela. Perto do topo, sempre visível. Com mouse, levar o
+  // ponteiro até o alto da tela também traz o menu de volta (e ele fica
+  // enquanto o ponteiro estiver sobre ele).
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-
-    const syncViewport = () => {
-      const mobile = mediaQuery.matches;
-      setIsMobile(mobile);
-
-      if (!mobile) {
-        setIsVisible(true);
-      }
-    };
-
-    syncViewport();
-
-    let lastScrollY = window.scrollY;
-    const scrollThreshold = 12;
     const topOffset = 24;
+    /** Faixa no alto da tela que chama o menu (px). */
+    const hotZone = 72;
+    let wantsUp = true;
+    let footerInView = false;
+    let hoverTop = false;
+    let touchY = 0;
 
-    const handleScroll = () => {
-      if (!mediaQuery.matches) {
-        setIsVisible(true);
-        lastScrollY = window.scrollY;
-        return;
-      }
-
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
-
-      if (Math.abs(scrollDelta) < scrollThreshold) return;
-
-      if (currentScrollY <= topOffset) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(scrollDelta < 0);
-      }
-
-      lastScrollY = currentScrollY;
+    const apply = () =>
+      setIsVisible(hoverTop || ((window.scrollY <= topOffset || wantsUp) && !footerInView));
+    const intent = (up: boolean) => {
+      if (wantsUp === up) return;
+      wantsUp = up;
+      apply();
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    mediaQuery.addEventListener("change", syncViewport);
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > 2) intent(e.deltaY < 0);
+    };
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const dy = e.touches[0].clientY - touchY;
+      if (Math.abs(dy) < 10) return;
+      intent(dy > 0); // dedo descendo = rolagem para cima
+      touchY = e.touches[0].clientY;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest("input, textarea, select, [contenteditable]")) return;
+      if (["ArrowDown", "PageDown", "End"].includes(e.key) || (e.key === " " && !e.shiftKey)) intent(false);
+      if (["ArrowUp", "PageUp", "Home"].includes(e.key) || (e.key === " " && e.shiftKey)) intent(true);
+    };
+    const onScroll = () => apply();
+    const onPointer = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      // Com o menu à vista por causa do mouse, a faixa se estende até o fim
+      // dele, para não piscar ao descer o ponteiro pelos itens.
+      // Fim do menu na posição final (sem a animação de entrada): `top` do
+      // fixed + a altura dele.
+      const h = headerRef.current;
+      const menuBottom = h ? parseFloat(getComputedStyle(h).top) + h.offsetHeight : hotZone;
+      const bottom = hoverTop ? Math.max(hotZone, menuBottom + 16) : hotZone;
+      const next = e.clientY <= bottom;
+      if (next === hoverTop) return;
+      hoverTop = next;
+      apply();
+    };
+    const onLeave = () => {
+      if (!hoverTop) return;
+      hoverTop = false;
+      apply();
+    };
 
+    const footer = document.querySelector("footer");
+    const io = footer
+      ? new IntersectionObserver(
+          ([e]) => {
+            footerInView = e.isIntersecting;
+            apply();
+          },
+          // Conta como "no rodapé" quando ele ocupa uma faixa razoável da tela.
+          { rootMargin: "0px 0px -35% 0px" }
+        )
+      : null;
+    if (footer && io) io.observe(footer);
+
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    document.documentElement.addEventListener("pointerleave", onLeave);
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      mediaQuery.removeEventListener("change", syncViewport);
+      window.removeEventListener("pointermove", onPointer);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", onScroll);
+      io?.disconnect();
     };
   }, []);
 
@@ -237,9 +285,10 @@ export function Header() {
       <ScrollToSectionOnLoad />
 
       <header
+        ref={headerRef}
         className={cn(
-          "fixed top-7 left-1/2 -translate-x-1/2 z-50 w-full max-w-[1264px] px-4 transition-transform duration-300 ease-out",
-          isMobile && !isVisible ? "-translate-y-[140%] md:translate-y-0" : "translate-y-0",
+          "page-frame fixed top-7 left-1/2 -translate-x-1/2 z-50 transition-transform duration-300 ease-out",
+          !isVisible ? "-translate-y-[140%] focus-within:translate-y-0" : "translate-y-0",
         )}
       >
         <nav

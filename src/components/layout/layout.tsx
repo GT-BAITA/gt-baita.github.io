@@ -30,7 +30,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           {chrome.fullBleed ? (
             children
           ) : (
-            <div className="min-h-screen max-w-[1264px] mx-auto px-4 pb-3.5">
+            <div className="page-frame min-h-screen pb-3.5">
               {children}
             </div>
           )}
