@@ -204,6 +204,15 @@ export function Header() {
     const apply = () =>
       setIsVisible(hoverTop || ((window.scrollY <= topOffset || wantsUp) && !footerInView));
     const intent = (up: boolean) => {
+      // Rolar para baixo também cancela o "mouse no topo": quem acabou de
+      // clicar no menu fica com o ponteiro parado sobre ele, e o menu não
+      // pode ficar preso na tela. Ele volta quando o mouse se mexer no topo.
+      if (!up && hoverTop) {
+        hoverTop = false;
+        wantsUp = false;
+        apply();
+        return;
+      }
       if (wantsUp === up) return;
       wantsUp = up;
       apply();
