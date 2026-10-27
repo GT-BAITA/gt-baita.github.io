@@ -7,6 +7,13 @@ import { requestContact } from "@/lib/contact-request";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useHeroBackdrop } from "@/components/shared/hero-dither";
 
+/**
+ * Tamanho de public/svgs/management-system-{pt,en}.svg (atributos width e
+ * height da raiz). Se um deles for reexportado, atualize aqui, ou a área
+ * reservada não bate e a página volta a pular quando a imagem chega.
+ */
+const SHOT_SIZE = { pt: [1472, 1048], en: [1434, 1046] } as const;
+
 export function InitSection() {
   const { t, i18n } = useTranslation();
   const assetLanguage = i18n.language.startsWith("pt") ? "pt" : "en";
@@ -48,6 +55,9 @@ export function InitSection() {
               ref={shotRef}
               src={`/svgs/management-system-${assetLanguage}.svg`}
               alt="Management System Image"
+              // Reserva a altura antes de o SVG chegar.
+              width={SHOT_SIZE[assetLanguage][0]}
+              height={SHOT_SIZE[assetLanguage][1]}
               className="mt-10 block h-auto w-full max-w-[1062px]"
             />
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type R
 import { useTranslation } from "react-i18next";
 import { Dithering, type DitheringParams } from "@paper-design/shaders-react";
 import { requestContact } from "@/lib/contact-request";
-import { DITHER_CELL, readInk } from "@/lib/dither";
+import { DITHER_CELL, isSoftwareGL, readInk } from "@/lib/dither";
 import { EYEBROW } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
@@ -160,7 +160,7 @@ function PaperDither({
       colorFront={ink}
       type="8x8"
       size={DITHER_CELL}
-      speed={reduce ? 0 : speed}
+      speed={reduce || isSoftwareGL() ? 0 : speed}
       {...shape}
     />
   );

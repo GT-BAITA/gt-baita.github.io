@@ -85,14 +85,48 @@ export function useContactForm(t: TFunction) {
     setIsSucceeded(false);
   }, []);
 
+  // O reCAPTCHA (~350 KB, mais o iframe) só carrega quando o formulário
+  // chega perto da tela ou recebe foco — não em toda página que alguém abre.
+  // Ao carregar, ele procura o botão .g-recaptcha e se liga a ele.
   useEffect(() => {
-    if (document.querySelector("#recaptcha-script")) return;
-    const script = document.createElement("script");
-    script.id = "recaptcha-script";
-    script.src = "https://www.google.com/recaptcha/api.js";
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+    const form = formRef.current;
+    if (!form) return;
+    const load = () => {
+      io.disconnect();
+      form.removeEventListener("focusin", load);
+      if (document.querySelector("#recaptcha-script")) return;
+      const script = document.createElement("script");
+      script.id = "recaptcha-script";
+      script.src = "https://www.google.com/recaptcha/api.js";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    };
+    // Enviado antes de o reCAPTCHA se ligar ao botão, o formulário iria
+    // direto para o Formspree, sem o token: segura e garante o carregamento.
+    const holdUntilReady = (e: SubmitEvent) => {
+      if ("grecaptcha" in window) return;
+      e.preventDefault();
+      load();
+    };
+    const io = new IntersectionObserver(
+      ([e]) => e.isIntersecting && load(),
+      { rootMargin: "800px 0px" }
+    );
+    // Só observa depois da primeira rolagem: na entrada, enquanto a página
+    // ainda está no Suspense (que ocupa uma tela só), o rodapé fica perto o
+    // bastante para disparar o carregamento sem ninguém ter rolado até ele.
+    // Em página curta, sem rolagem, o foco e o envio cobrem.
+    const watch = () => io.observe(form);
+    window.addEventListener("scroll", watch, { once: true, passive: true });
+    form.addEventListener("focusin", load);
+    form.addEventListener("submit", holdUntilReady);
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", watch);
+      form.removeEventListener("focusin", load);
+      form.removeEventListener("submit", holdUntilReady);
+    };
   }, []);
 
   return {

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ShaderMount } from "@paper-design/shaders";
-import { DITHER_CELL, readInk } from "@/lib/dither";
+import { DITHER_CELL, ditherLoop, isSoftwareGL, readInk } from "@/lib/dither";
 import {
   BRAZIL_ASPECT,
   BRAZIL_CITIES,
@@ -150,10 +150,12 @@ export function BrazilDither({ className }: { className?: string }) {
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    // Sem GPU, cada quadro custa caro na CPU: fica como no movimento
+    // reduzido. A consulta usa o contexto do próprio shader, quando ele existir.
+    let reduce = (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
 
     let mount: ShaderMount | null = null;
-    let raf = 0;
+    let stop = () => {};
     let visible = true;
     let cancelled = false;
     const cells = () =>
@@ -190,22 +192,21 @@ export function BrazilDither({ className }: { className?: string }) {
         return;
       }
       mount.canvasElement.style.imageRendering = "pixelated";
+      reduce ||= isSoftwareGL(mount.canvasElement.getContext("webgl2"));
       io.observe(host);
       ro.observe(host);
       if (reduce) {
         mount.setUniforms({ u_t: 2.2 });
         return;
       }
-      const loop = (now: number) => {
-        raf = requestAnimationFrame(loop);
+      stop = ditherLoop((now) => {
         if (visible && !document.hidden) mount!.setUniforms({ u_t: now / 1000 });
-      };
-      raf = requestAnimationFrame(loop);
+      });
     });
 
     return () => {
       cancelled = true;
-      cancelAnimationFrame(raf);
+      stop();
       io.disconnect();
       ro.disconnect();
       if (mount) {

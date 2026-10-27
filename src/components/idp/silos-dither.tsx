@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ShaderMount } from "@paper-design/shaders";
-import { DITHER_CELL, readInk } from "@/lib/dither";
+import { DITHER_CELL, ditherLoop, isSoftwareGL, readInk } from "@/lib/dither";
 import { DB, IDP, type P } from "./silos-geometry";
 
 /**
@@ -127,7 +127,9 @@ export function SilosDither({ organized, hub = IDP, base = DB }: { organized: bo
   useEffect(() => {
     const host = hostRef.current;
     if (!host) return;
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    // Sem GPU, cada quadro custa caro na CPU: fica como no movimento
+    // reduzido. A consulta usa o contexto do próprio shader, logo abaixo.
+    let reduce = (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
     let w = host.clientWidth;
     let h = host.clientHeight;
     const cells = () => Math.max(64, Math.ceil(w / DITHER_CELL) * Math.ceil(h / DITHER_CELL));
@@ -162,6 +164,7 @@ export function SilosDither({ organized, hub = IDP, base = DB }: { organized: bo
       return;
     }
     mount.canvasElement.style.imageRendering = "pixelated";
+    reduce ||= isSoftwareGL(mount.canvasElement.getContext("webgl2"));
 
     const ro = new ResizeObserver(() => {
       w = host.clientWidth;
@@ -176,12 +179,11 @@ export function SilosDither({ organized, hub = IDP, base = DB }: { organized: bo
     });
     io.observe(host);
 
-    let raf = 0;
-    const loop = (now: number) => {
-      raf = requestAnimationFrame(loop);
-      if (visible && !document.hidden) mount.setUniforms(uniforms(now));
-    };
-    if (!reduce) raf = requestAnimationFrame(loop);
+    const stop = reduce
+      ? () => {}
+      : ditherLoop((now) => {
+          if (visible && !document.hidden) mount.setUniforms(uniforms(now));
+        });
     // Sem laço, a troca de forma vai direto ao estado final.
     redraw.current = () => {
       if (reduce) state.current.start = 0;
@@ -189,7 +191,7 @@ export function SilosDither({ organized, hub = IDP, base = DB }: { organized: bo
     };
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
       io.disconnect();
       redraw.current = () => {};
