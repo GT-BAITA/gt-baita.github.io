@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { preloadPath } from "./lazy-pages";
 import { getRouteChrome } from "./route-theme";
 
 /**
@@ -49,19 +50,22 @@ export function useThemeTransitionLinks() {
       const root = document.documentElement;
       root.style.setProperty("--vt-x", `${((cx / innerWidth) * 100).toFixed(2)}%`);
       root.style.setProperty("--vt-y", `${((cy / innerHeight) * 100).toFixed(2)}%`);
-      // A animação do círculo é CSS (global.css, html.theme-vt), não JS: vale
-      // desde o primeiro quadro da transição. Disparada por JS no `ready`,
-      // ela chegava um quadro atrasada, e a página nova aparecia inteira
-      // nesse quadro — uma piscada.
-      root.classList.add("theme-vt");
-
       active = true;
-      const vt = document.startViewTransition(() => {
-        flushSync(() => navigate(to));
-      });
-      vt.finished.finally(() => {
-        active = false;
-        root.classList.remove("theme-vt");
+      // A página de destino precisa estar carregada antes da foto: senão o
+      // círculo revela o espaço vazio do Suspense e o conteúdo surge depois.
+      void preloadPath(to.split(/[?#]/)[0]).then(() => {
+        // A animação do círculo é CSS (global.css, html.theme-vt), não JS:
+        // vale desde o primeiro quadro da transição. Disparada por JS no
+        // `ready`, ela chegava um quadro atrasada, e a página nova aparecia
+        // inteira nesse quadro — uma piscada.
+        root.classList.add("theme-vt");
+        const vt = document.startViewTransition(() => {
+          flushSync(() => navigate(to));
+        });
+        vt.finished.finally(() => {
+          active = false;
+          root.classList.remove("theme-vt");
+        });
       });
     };
 

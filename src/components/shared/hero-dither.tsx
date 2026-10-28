@@ -1,6 +1,6 @@
 import { useEffect, useRef, type RefObject } from "react";
 import { ShaderMount } from "@paper-design/shaders";
-import { DITHER_CELL, mixRgba, readInk, type Rgba } from "@/lib/dither";
+import { DITHER_CELL, ditherLoop, isSoftwareGL, mixRgba, readInk, type Rgba } from "@/lib/dither";
 
 /**
  * Fundo pontilhado dos heroes — o elo visual entre a página inicial e o IdP.
@@ -308,6 +308,8 @@ uniform float u_quietN;
 uniform float u_quietIn;
 uniform float u_opacity;
 uniform float u_dustTone;
+// Quantos pontos de poeira estão acesos: os de peso zero ficam fora do laço.
+uniform float u_dustN;
 
 out vec4 fragColor;
 
@@ -357,6 +359,7 @@ void main() {
 
   float dust = 0.0;
   for (int i = 0; i < ${DUST_N}; i++) {
+    if (float(i) >= u_dustN) break;
     vec3 p = u_dust[i];
     vec2 d = P - p.xy / ${CELL};
     dust = max(dust, p.z * exp(-dot(d, d) / 2.42));
@@ -440,7 +443,9 @@ export function HeroBackdrop() {
     const host = hostRef.current;
     if (!host) return;
 
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    // Sem GPU, cada quadro custa caro na CPU: fica como no movimento
+    // reduzido. A consulta usa o contexto do próprio shader, logo abaixo.
+    let reduce = (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false);
 
     let inkTo = readInk(host);
     let ink = inkTo;
@@ -580,10 +585,14 @@ export function HeroBackdrop() {
       const mx = pointer.x - rect.left;
       const my = pointer.y - rect.top;
       const over = pointer.inside && mx >= 0 && mx <= rect.width && my >= 0 && my <= rect.height;
-      mouseK += ((over ? 1 : 0) - mouseK) * 0.1;
-      const life = scene.life;
       const dt = Math.min(0.05, Math.max(0, T - lastT));
       lastT = T;
+      // Suavizações por quadro escritas para 60 fps; o expoente as mantém
+      // iguais a qualquer taxa de quadros.
+      const ease = (k: number) => 1 - (1 - k) ** (dt * 60);
+      const glowK = ease(0.2);
+      mouseK += ((over ? 1 : 0) - mouseK) * ease(0.1);
+      const life = scene.life;
 
       /**
        * Deriva errante (frequências que não se repetem, então nada gira em
@@ -616,7 +625,7 @@ export function HeroBackdrop() {
         vel[ix + 1] += ((ty - off[ix + 1]) * SPRING_K - vel[ix + 1] * SPRING_D) * dt;
         off[ix] += vel[ix] * dt;
         off[ix + 1] += vel[ix + 1] * dt;
-        glow[k] += (f - glow[k]) * 0.2;
+        glow[k] += (f - glow[k]) * glowK;
         return [x + off[ix], y + off[ix + 1], glow[k]];
       };
 
@@ -646,6 +655,7 @@ export function HeroBackdrop() {
         u_quietIn: quietIn,
         u_opacity: scene.opacity,
         u_dustTone: scene.dustTone,
+        u_dustN: scene.extraW > 0.001 ? DUST_N : STAR_DUST,
       };
     };
 
@@ -662,6 +672,7 @@ export function HeroBackdrop() {
       return;
     }
     mount.canvasElement.style.imageRendering = "pixelated";
+    reduce ||= isSoftwareGL(mount.canvasElement.getContext("webgl2"));
 
     // O ShaderMount só registra os uniforms passados na criação; daí em
     // diante, um setUniforms por quadro (que já desenha). Com a cena
@@ -717,14 +728,12 @@ export function HeroBackdrop() {
     observeRegistered();
     frame(performance.now());
 
-    let raf = 0;
+    let stop = () => {};
     let visible = true;
-    const loop = (now: number) => {
-      raf = requestAnimationFrame(loop);
-      if (visible && !document.hidden) frame(now);
-    };
     if (!reduce) {
-      raf = requestAnimationFrame(loop);
+      stop = ditherLoop((now) => {
+        if (visible && !document.hidden) frame(now);
+      });
       window.addEventListener("pointermove", onPointer, { passive: true });
       document.addEventListener("pointerleave", onLeave);
     }
@@ -735,7 +744,7 @@ export function HeroBackdrop() {
 
     return () => {
       listeners.delete(onRegistration);
-      cancelAnimationFrame(raf);
+      stop();
       cancelAnimationFrame(pendingRetarget);
       cancelAnimationFrame(pendingResize);
       ro.disconnect();

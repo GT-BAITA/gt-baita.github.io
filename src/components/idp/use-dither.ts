@@ -1,5 +1,5 @@
 import { useEffect, type RefObject } from "react";
-import { bayer8, DITHER_CELL, packRgba, readInk } from "@/lib/dither";
+import { bayer8, DITHER_CELL, ditherLoop, packRgba, readInk } from "@/lib/dither";
 
 /**
  * Anima os <canvas data-dither="orb"> dentro de `rootRef` com
@@ -33,7 +33,6 @@ type Field = {
 };
 
 const CELL = DITHER_CELL;
-const FRAME_MS = 42;
 
 function pre(o: Field) {
   const w = o.w, h = o.h, N = w * h, a = w / h, px = 1 / h;
@@ -136,21 +135,15 @@ export function useDither(rootRef: RefObject<HTMLElement | null>, reduceMotion: 
       size(o);
     });
 
-    let raf = 0;
-    if (!reduceMotion) {
-      let last = 0;
-      const loop = (now: number) => {
-        raf = requestAnimationFrame(loop);
-        if (now - last < FRAME_MS) return;
-        last = now;
-        const T = now / 1000;
-        for (const o of fields.values()) if (o.vis && o.w && o.ctx) draw(o, B, T, ON);
-      };
-      raf = requestAnimationFrame(loop);
-    }
+    const stop = reduceMotion
+      ? () => {}
+      : ditherLoop((now) => {
+          const T = now / 1000;
+          for (const o of fields.values()) if (o.vis && o.w && o.ctx) draw(o, B, T, ON);
+        });
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       vio.disconnect();
       ro.disconnect();
     };

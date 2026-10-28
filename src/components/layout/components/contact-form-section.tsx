@@ -95,12 +95,6 @@ export function ContactFormSection() {
       id="contact-form"
       className="flex flex-col gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-20"
     >
-      <script
-        src="https://www.google.com/recaptcha/api.js"
-        async
-        defer
-      ></script>
-
       <div className="space-y-6 lg:max-w-[500px]">
         <motion.h2
           key={title}

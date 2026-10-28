@@ -7,6 +7,64 @@
 /** Tamanho da célula, em px CSS: cada pixel do canvas vira um quadrado de 3px. */
 export const DITHER_CELL = 3;
 
+/**
+ * Intervalo entre quadros dos fundos animados (~30 fps): o grão de 3px e a
+ * deriva lenta não ganham nada a 60, e o custo cai pela metade.
+ */
+export const DITHER_FRAME_MS = 33;
+
+/**
+ * Folga sobre o intervalo: os carimbos do rAF variam alguns décimos de ms,
+ * e dois quadros de 60 Hz às vezes somam 32,9 ms. Sem folga, o laço
+ * alternaria entre 30 e 20 fps.
+ */
+const FRAME_SLACK_MS = 4;
+
+/**
+ * Laço de animação dos fundos pontilhados, a ~30 fps. `draw` decide se
+ * desenha (visibilidade, aba oculta). Devolve a função que o encerra.
+ */
+export function ditherLoop(draw: (now: number) => void): () => void {
+  let raf = 0;
+  let last = -Infinity;
+  const tick = (now: number) => {
+    raf = requestAnimationFrame(tick);
+    if (now - last < DITHER_FRAME_MS - FRAME_SLACK_MS) return;
+    last = now;
+    draw(now);
+  };
+  raf = requestAnimationFrame(tick);
+  return () => cancelAnimationFrame(raf);
+}
+
+let software: boolean | undefined;
+
+/**
+ * WebGL sem GPU (SwiftShader, llvmpipe…): o Chrome cai nele quando a placa
+ * está bloqueada, e cada quadro de shader passa a custar ~100 ms de CPU.
+ * Nesse caso os fundos desenham um quadro parado, como com movimento
+ * reduzido.
+ *
+ * Usa o contexto já aberto, quando houver; só sem ele cria um de consulta.
+ * A resposta vale para a página toda.
+ */
+export function isSoftwareGL(existing?: WebGL2RenderingContext | null): boolean {
+  if (software !== undefined) return software;
+  software = false;
+  try {
+    const gl = existing ?? document.createElement("canvas").getContext("webgl2");
+    if (gl) {
+      const info = gl.getExtension("WEBGL_debug_renderer_info");
+      const name = gl.getParameter(info ? info.UNMASKED_RENDERER_WEBGL : gl.RENDERER);
+      software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(String(name));
+      if (!existing) gl.getExtension("WEBGL_lose_context")?.loseContext();
+    }
+  } catch {
+    // Sem como perguntar: segue animando.
+  }
+  return software;
+}
+
 /** Limiar de Bayer 8×8 normalizado (0–1), indexado por (y & 7) << 3 | (x & 7). */
 export function bayer8(): Float32Array {
   const b = [0, 2, 3, 1];
