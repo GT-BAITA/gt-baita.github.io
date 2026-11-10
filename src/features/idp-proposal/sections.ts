@@ -15,10 +15,14 @@ export const COVER_ID = "cover";
 export const PROPOSAL_PATH = "/idp-proposal";
 
 type ProposalSlide = { id: string; labelKey: string; Screen: ComponentType };
-type ProposalSection = { labelKey: string; slides: ProposalSlide[] };
+type ProposalSection = {
+  labelKey: string;
+  slides: ProposalSlide[];
+  hidden?: boolean;
+};
 
 /** Rotas estáveis; os rótulos vêm do mesmo catálogo de idiomas do site. */
-export const SECTIONS: ProposalSection[] = [
+const ALL_SECTIONS: ProposalSection[] = [
   {
     labelKey: "proposal.navigation.introduction",
     slides: [
@@ -73,6 +77,8 @@ export const SECTIONS: ProposalSection[] = [
   },
   {
     labelKey: "proposal.navigation.nextSteps",
+    // TODO: revisar o conteúdo de Processo em um próximo PR antes de reexibi-lo.
+    hidden: true,
     slides: [
       {
         id: "process",
@@ -83,9 +89,13 @@ export const SECTIONS: ProposalSection[] = [
   },
   {
     labelKey: "proposal.faq.questions",
+    // TODO: revisar o conteúdo do FAQ em um próximo PR antes de reexibi-lo.
+    hidden: true,
     slides: [{ id: "faq", labelKey: "proposal.faq.title", Screen: FaqScreen }],
   },
 ];
+
+export const SECTIONS = ALL_SECTIONS.filter((section) => !section.hidden);
 
 /** A navegação por teclado inclui a capa antes da primeira seção. */
 export const SLIDES = [
