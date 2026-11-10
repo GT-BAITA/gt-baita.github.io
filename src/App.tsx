@@ -3,7 +3,14 @@ import { Routes, Route, Outlet, useLocation } from "react-router-dom";
 import NotFound from "./pages/not-found";
 import { Layout } from "./components/layout/layout";
 import RandomRedirect from "./pages/redirect";
-import { AboutPage, Home, IdpSaasPage, PrivacyPage, usePreloadPages } from "./lib/lazy-pages";
+import {
+  AboutPage,
+  Home,
+  IdpSaasPage,
+  IdpProposalPage,
+  PrivacyPage,
+  usePreloadPages,
+} from "./lib/lazy-pages";
 
 /** Quando a página foi recarregada pela última vez por falha de módulo. */
 const RELOADED_AT = "page-module-reload";
@@ -14,7 +21,10 @@ const RELOADED_AT = "page-module-reload";
  * atual, em vez de deixar o site em branco. Outros erros (e uma segunda
  * falha seguida) ficam contidos aqui: cabeçalho e rodapé seguem de pé.
  */
-class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class PageErrorBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
   state = { failed: false };
 
   static getDerivedStateFromError() {
@@ -22,10 +32,12 @@ class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 
   componentDidCatch(error: unknown) {
-    const missingModule = /dynamically imported module|module script failed/i.test(String(error));
+    const missingModule =
+      /dynamically imported module|module script failed/i.test(String(error));
     if (!missingModule) return;
     try {
-      if (Date.now() - Number(sessionStorage.getItem(RELOADED_AT)) < 10_000) return;
+      if (Date.now() - Number(sessionStorage.getItem(RELOADED_AT)) < 10_000)
+        return;
       sessionStorage.setItem(RELOADED_AT, String(Date.now()));
     } catch {
       return; // Sem sessionStorage, não há como evitar recarregar em laço.
@@ -34,29 +46,43 @@ class PageErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
   }
 
   render() {
-    return this.state.failed ? <div className="min-h-screen" /> : this.props.children;
+    return this.state.failed ? (
+      <div className="min-h-screen" />
+    ) : (
+      this.props.children
+    );
   }
 }
 
-function App() {
+function SiteLayout() {
   usePreloadPages();
   const { pathname } = useLocation();
   return (
+    <Layout>
+      {/* A chave zera o erro ao trocar de rota. */}
+      <PageErrorBoundary key={pathname}>
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <Outlet />
+        </Suspense>
+      </PageErrorBoundary>
+    </Layout>
+  );
+}
+
+function App() {
+  return (
     <Routes>
       <Route
+        path="/idp-proposal/:slide?"
         element={
-          <Layout>
-            {/* Enquanto o pedaço da página chega, a altura de uma tela
-                segura o rodapé lá embaixo. A chave zera o erro ao trocar
-                de rota. */}
-            <PageErrorBoundary key={pathname}>
-              <Suspense fallback={<div className="min-h-screen" />}>
-                <Outlet />
-              </Suspense>
-            </PageErrorBoundary>
-          </Layout>
+          <PageErrorBoundary>
+            <Suspense fallback={<div className="min-h-screen" />}>
+              <IdpProposalPage />
+            </Suspense>
+          </PageErrorBoundary>
         }
-      >
+      />
+      <Route element={<SiteLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
