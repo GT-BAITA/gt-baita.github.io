@@ -12,13 +12,13 @@ export type FaqItem = {
  * Lista de perguntas frequentes do site — a mesma no modo claro e no
  * escuro, porque só usa tokens (ink, line…).
  *
- * Uma pergunta aberta por vez, e a primeira já começa aberta: quem chega à
- * seção vê de cara o formato da resposta. O Radix cuida de teclado,
- * aria-expanded e da altura animada.
+ * Uma pergunta aberta por vez, todas fechadas ao chegar (`defaultOpen`
+ * abre uma, se precisar). O Radix cuida de teclado, aria-expanded e da
+ * altura animada.
  */
 export function Faq({
   items,
-  defaultOpen = 0,
+  defaultOpen = -1,
   className,
 }: {
   items: FaqItem[];

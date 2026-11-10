@@ -13,7 +13,8 @@
    antes do body, e o pontilhado (que segue a cor do body) sumiria nele. */
 .idp{background:transparent;color:var(--ink);font-family:'Geist',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100%;overflow-x:clip}
 .idp *{box-sizing:border-box}
-.idp .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+/* Mesma moldura do resto do site (.page-frame, em global.css). */
+.idp .wrap{max-width:calc(var(--page-max) + 2 * var(--page-gutter));margin:0 auto;padding:0 var(--page-gutter)}
 .idp .sec{padding:120px 0;position:relative}
 .idp .sec[id],.idp .hero{scroll-margin-top:120px}
 .idp .kicker{margin:0 0 20px}
@@ -387,7 +388,6 @@
   .idp .chip{min-width:0}
   .idp .silos-toggle{top:10px;right:10px}
   .idp .silos.stab{min-height:420px}
-  .idp .wrap{padding:0 16px}
   .idp .h1{font-size:34px}
   .idp .hero-viz .nl{display:none}
   .idp .hero-viz .nl-c{display:inline-flex}

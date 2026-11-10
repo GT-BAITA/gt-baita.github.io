@@ -1,4 +1,5 @@
 import { Mail } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ContactFormSection } from "./contact-form-section";
@@ -11,13 +12,31 @@ const NAV_LINK =
 
 export function Footer() {
   const { t } = useTranslation();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // O card sobe e acende ao entrar na tela, marcando o fim da página. Volta
+  // ao estado inicial quando sai por baixo, para tocar de novo na próxima
+  // chegada.
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) card.dataset.in = "";
+        else if (e.boundingClientRect.top > 0) delete card.dataset.in;
+      },
+      { rootMargin: "0px 0px -12% 0px" }
+    );
+    io.observe(card);
+    return () => io.disconnect();
+  }, []);
 
   return (
     // Ilha escura: a classe `dark` troca os tokens só aqui dentro, então o
     // rodapé é o mesmo bloco escuro no site claro e um painel no microsite
     // do IdP, que já é escuro.
-    <footer className="dark px-4 pb-4 md:px-6 md:pb-6">
-      <div className="mx-auto max-w-[1440px] rounded-3xl border border-line bg-surface px-6 py-16 md:px-16 md:py-20">
+    <footer className="dark page-frame pb-4 md:pb-6">
+      <div ref={cardRef} className="footer-rise rounded-3xl border border-line bg-surface px-6 py-16 md:px-16 md:py-20">
         <ContactFormSection />
 
         <hr className="my-14 border-line md:my-20" />
