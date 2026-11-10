@@ -30,9 +30,19 @@ function lazyPage(load: () => Promise<ComponentType>) {
 }
 
 export const Home = lazyPage(() => import("@/pages").then((m) => m.Home));
-export const AboutPage = lazyPage(() => import("@/pages/about").then((m) => m.AboutPage));
-export const PrivacyPage = lazyPage(() => import("@/pages/privacy").then((m) => m.PrivacyPage));
-export const IdpSaasPage = lazyPage(() => import("@/pages/idp-saas").then((m) => m.IdpSaasPage));
+export const AboutPage = lazyPage(() =>
+  import("@/pages/about").then((m) => m.AboutPage)
+);
+export const PrivacyPage = lazyPage(() =>
+  import("@/pages/privacy").then((m) => m.PrivacyPage)
+);
+export const IdpSaasPage = lazyPage(() =>
+  import("@/pages/idp-saas").then((m) => m.IdpSaasPage)
+);
+// A apresentação usa o mesmo carregador, mas não participa do preload do menu.
+export const IdpProposalPage = lazyPage(() =>
+  import("@/pages/idp-proposal").then((m) => m.IdpProposalPage)
+);
 
 const BY_PATH: Record<string, { preload: () => Promise<unknown> }> = {
   "/": Home,
@@ -64,7 +74,8 @@ export function usePreloadPages() {
     const schedule = () => {
       timer = window.setTimeout(() => {
         // Safari não tem requestIdleCallback.
-        if (typeof requestIdleCallback === "function") idle = requestIdleCallback(go, { timeout: 5000 });
+        if (typeof requestIdleCallback === "function")
+          idle = requestIdleCallback(go, { timeout: 5000 });
         else go();
       }, PRELOAD_DELAY_MS);
     };

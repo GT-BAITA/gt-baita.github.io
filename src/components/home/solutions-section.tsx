@@ -1,17 +1,15 @@
 import { ArrowRight } from "lucide-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ProductScreen } from "@/components/home/demos/product-screen";
 import { useEnterOnce } from "@/hooks/useEnterOnce";
 import { requestContact } from "@/lib/contact-request";
 import { useScrollPin } from "@/hooks/useScrollPin";
-import {
-  HAND_OFF,
-  handOffStart,
-  restProgress,
-} from "@/lib/scrub-schedule";
+import { HAND_OFF, handOffStart, restProgress } from "@/lib/scrub-schedule";
 import { buttonVariants } from "@/components/ui/button";
+import { IDP_PATH } from "@/lib/route-theme";
 
 /**
  * "O que estamos construindo" — nó 1058:35764 do Figma.
@@ -36,7 +34,7 @@ type Solution = {
   description: string;
   cta?: {
     label: string;
-    /** URL externa ou "" quando o CTA abre o formulário de contato. */
+    /** Rota interna, URL externa ou "" quando o CTA abre o formulário de contato. */
     href: string;
     /** Preenche o campo de mensagem do formulário. Implica o formulário. */
     message?: string;
@@ -54,7 +52,6 @@ const PORTAL_URL = "https://servicos.baita.testbeds.rnp.br/";
  * estável.
  */
 const VIEWPORTS_PER_CARD = 0.9;
-
 
 function useSolutions(): Solution[] {
   const { t } = useTranslation();
@@ -90,8 +87,7 @@ function useSolutions(): Solution[] {
       description: t("solutions.card3.description"),
       cta: {
         label: t("solutions.card3.cta"),
-        href: "",
-        message: t("solutions.card3.message"),
+        href: IDP_PATH,
         variant: "primary",
       },
     },
@@ -154,6 +150,11 @@ function SolutionCard({
       {solution.cta.label}
       <ArrowRight />
     </button>
+  ) : solution.cta.href.startsWith("/") ? (
+    <Link to={solution.cta.href} className={ctaClass}>
+      {solution.cta.label}
+      <ArrowRight />
+    </Link>
   ) : (
     <a
       href={solution.cta.href}

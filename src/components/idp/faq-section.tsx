@@ -1,4 +1,5 @@
 import { Faq } from "@/components/shared/faq";
+import { Link } from "react-router-dom";
 import { useIdpContent } from "./content";
 import { ArrowUpRight } from "./icons";
 import { Kicker, rv } from "./primitives";
@@ -13,15 +14,15 @@ export function FaqSection() {
         <p>{f.a}</p>
         {f.link && (
           <p>
-            <a
-              href={f.link.href}
+            <Link
+              to={f.link.href}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-ink underline underline-offset-4 hover:text-ink-hover"
             >
               {f.link.label}
               <ArrowUpRight className="size-4" />
-            </a>
+            </Link>
           </p>
         )}
       </>

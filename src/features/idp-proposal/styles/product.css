@@ -1,0 +1,1375 @@
+/* ══════════════════════════════════════════════════════════════════
+   Telas do produto (IdP SaaS), dentro da janela do navegador dos slides.
+   Tokens do protótipo do console (shadcn, neutros), em modo claro: a tela
+   do produto se destaca do fundo escuro do deck. Tudo sob .pui.
+   ══════════════════════════════════════════════════════════════════ */
+.idp-proposal .pframe {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #fff;
+}
+.idp-proposal .pui {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --accent: #f5f5f5;
+  --sidebar: #fafafa;
+  --sidebar-border: #e5e5e5;
+  --sidebar-accent: #f0f0f0;
+  --ring: #a3a3a3;
+  --ok: #16a34a;
+  --radius: 10px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+.idp-proposal .pui * {
+  box-sizing: border-box;
+}
+.idp-proposal .pui h1,
+.idp-proposal .pui h2,
+.idp-proposal .pui p {
+  margin: 0;
+}
+.idp-proposal .pui h1 {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.idp-proposal .pui h2 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.idp-proposal .p-muted {
+  color: var(--muted-foreground);
+}
+.idp-proposal .p-mono {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.idp-proposal .p-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.idp-proposal .p-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    transform 0.12s,
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.idp-proposal .p-btn--ghost {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+.idp-proposal .p-btn--block {
+  display: flex;
+  width: 100%;
+}
+/* Clique encenado: o botão afunda e ganha o anel de foco. */
+.idp-proposal .p-btn[data-pressed] {
+  transform: scale(0.97);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 45%, transparent);
+}
+.idp-proposal .p-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--input);
+  border-radius: 8px;
+  background: var(--background);
+  font-size: 14px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.idp-proposal .p-input[data-focus] {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
+}
+.idp-proposal .p-caret {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background: var(--foreground);
+  margin-left: -6px;
+  animation: proposal-p-blink 1s steps(1) infinite;
+}
+@keyframes proposal-p-blink {
+  50% {
+    opacity: 0;
+  }
+}
+.idp-proposal .p-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.idp-proposal .p-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+/* ── Fluxo de login ──────────────────────────────────────────────── */
+.idp-proposal .lf {
+  position: absolute;
+  inset: 0;
+}
+/* Páginas sobrepostas; a ativa entra com um leve deslize. */
+.idp-proposal .lf-page {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition:
+    opacity 0.45s var(--ease),
+    transform 0.45s var(--ease);
+}
+.idp-proposal .lf-page[data-on] {
+  opacity: 1;
+  transform: none;
+}
+.idp-proposal .lf-dots {
+  display: grid;
+  place-items: center;
+  background-color: #fff;
+  background-image: radial-gradient(#d9d9d9 1.1px, transparent 1.2px);
+  background-size: 22px 22px;
+}
+
+/* Biblioteca */
+.idp-proposal .lib-top,
+.idp-proposal .app-top {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 56px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--border);
+}
+.idp-proposal .lib-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+.idp-proposal .lib-top nav {
+  display: flex;
+  gap: 20px;
+  color: var(--muted-foreground);
+  flex: 1;
+}
+.idp-proposal .lib-main {
+  max-width: 620px;
+  margin: 48px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 24px;
+}
+.idp-proposal .lib-search {
+  height: 42px;
+}
+.idp-proposal .lib-gate {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 14px;
+  align-items: start;
+  padding: 20px;
+}
+.idp-proposal .lib-gate > svg {
+  margin-top: 2px;
+}
+.idp-proposal .lib-gate strong {
+  font-weight: 600;
+}
+.idp-proposal .lib-cta {
+  grid-column: 1 / -1;
+  position: relative;
+  justify-self: start;
+}
+/* O cursor parte de fora do botão, chega ao meio dele e clica. */
+.idp-proposal .p-cursor {
+  position: absolute;
+  left: 60%;
+  top: 60%;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
+}
+.idp-proposal .p-cursor[data-on] {
+  animation: proposal-p-cursor 1.5s var(--ease) 0.1s both;
+}
+@keyframes proposal-p-cursor {
+  from {
+    opacity: 0;
+    transform: translate(160px, 90px);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Login e segundo fator: o cartão das telas reais do IdP. */
+.idp-proposal .ac {
+  width: 660px;
+  height: 390px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 12px 32px -14px rgba(0, 0, 0, 0.18);
+}
+.idp-proposal .ac-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+  background: #f4f4f4;
+  text-align: center;
+}
+.idp-proposal .ac-brand strong {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.25;
+  max-width: 14em;
+}
+.idp-proposal .ac-form {
+  position: relative;
+  padding: 28px 34px;
+}
+.idp-proposal .ac-lang {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.idp-proposal .ac-body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+.idp-proposal .ac-body h2 {
+  font-size: 20px;
+}
+.idp-proposal .ac-body h2 + .p-muted {
+  margin-top: -6px;
+  font-size: 13px;
+}
+.idp-proposal .ac-req {
+  font-style: normal;
+  color: #ef4444;
+  margin-left: 2px;
+}
+.idp-proposal .ac-ph {
+  color: #a3a3a3;
+}
+.idp-proposal .ac-eye {
+  margin-left: auto;
+  color: var(--muted-foreground);
+}
+.idp-proposal .ac-submit {
+  margin-top: 8px;
+}
+.idp-proposal .ac-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--foreground);
+}
+.idp-proposal .ac-who {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+.idp-proposal .ac-who-av {
+  width: 20px;
+  height: 20px;
+  font-size: 8px;
+}
+/* Segundo fator: a escolha do método e o código entram um depois do outro. */
+.idp-proposal .ac-step {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: proposal-pv-in 0.35s var(--ease) both;
+}
+.idp-proposal .ac-methods {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.idp-proposal .ac-method {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  transition:
+    transform 0.15s,
+    box-shadow 0.2s;
+}
+.idp-proposal .ac-method-go {
+  align-self: center;
+  color: var(--muted-foreground);
+}
+.idp-proposal .ac-method span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.idp-proposal .ac-method strong {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.idp-proposal .ac-method small {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--muted-foreground);
+}
+.idp-proposal .ac-method[data-pressed] {
+  transform: scale(0.98);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 35%, transparent);
+}
+.idp-proposal .ac-method .p-cursor {
+  left: auto;
+  right: 4px;
+  top: 42%;
+}
+.idp-proposal .otp {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.idp-proposal .otp-cell {
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--input);
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.idp-proposal .otp-cell[data-active] {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent);
+}
+.idp-proposal .otp[data-ok] .otp-cell {
+  border-color: color-mix(in srgb, var(--ok) 55%, var(--input));
+}
+.idp-proposal .otp-ok {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  color: var(--ok);
+  font-weight: 500;
+  animation: proposal-pv-in 0.35s var(--ease) both;
+}
+
+/* Outro sistema, já conectado */
+.idp-proposal .app-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 3px;
+  width: 0;
+  background: var(--primary);
+  z-index: 2;
+  transition:
+    width 0.7s var(--ease),
+    opacity 0.3s 0.5s;
+}
+.idp-proposal .lf-app[data-on] .app-progress {
+  width: 100%;
+}
+.idp-proposal .app-progress[data-done] {
+  opacity: 0;
+}
+.idp-proposal .app-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-weight: 500;
+}
+.idp-proposal .app-main {
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease);
+}
+.idp-proposal .app-main[data-in] {
+  opacity: 1;
+  transform: none;
+}
+.idp-proposal .app-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 260px));
+  gap: 14px;
+  margin-top: 16px;
+}
+.idp-proposal .app-cards .p-card {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.idp-proposal .p-toast {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.4s var(--ease) 0.3s,
+    transform 0.4s var(--ease) 0.3s;
+}
+.idp-proposal .p-toast svg {
+  color: var(--ok);
+}
+.idp-proposal .p-toast[data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .lf-page,
+  .idp-proposal .app-main,
+  .idp-proposal .p-toast,
+  .idp-proposal .app-progress {
+    transition: none;
+  }
+  .idp-proposal .ac-step {
+    animation: none;
+  }
+  .idp-proposal .p-cursor[data-on],
+  .idp-proposal .p-caret {
+    animation: none;
+  }
+}
+
+/* ── Console (barra lateral recolhida) ───────────────────────────── */
+.idp-proposal .cs {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.idp-proposal .cs-rail {
+  flex: none;
+  width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 0;
+  background: var(--sidebar);
+  border-right: 1px solid var(--sidebar-border);
+}
+.idp-proposal .cs-rail nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.idp-proposal .cs-item {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 34px;
+  border-radius: 8px;
+  color: var(--muted-foreground);
+}
+.idp-proposal .cs-item[data-on] {
+  background: var(--sidebar-accent);
+  color: var(--foreground);
+}
+.idp-proposal .cs-sep {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--sidebar-border);
+  margin: 8px 0;
+}
+.idp-proposal .cs-settings {
+  margin-top: auto;
+}
+.idp-proposal .cs-admin {
+  border-radius: 8px;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--sidebar-border);
+}
+.idp-proposal .cs-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.idp-proposal .cs-top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border);
+}
+.idp-proposal .cs-vsep {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+}
+.idp-proposal .cs-crumbs {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
+.idp-proposal .cs-crumbs span + span::before {
+  content: "›";
+  margin-right: 8px;
+}
+.idp-proposal .cs-crumbs [data-last] {
+  color: var(--foreground);
+}
+.idp-proposal .cs-main {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Métricas: o painel do Grafana embutido no console ─────────────── */
+.idp-proposal .mx {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 10px;
+}
+.idp-proposal .mx-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.idp-proposal .mx-head h1 {
+  font-size: 22px;
+}
+.idp-proposal .mx-head .p-muted {
+  font-size: 12px;
+  margin-top: 2px;
+}
+.idp-proposal .gf {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  margin: 0 -8px;
+  border-top: 1px solid var(--border);
+}
+.idp-proposal .gf-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.idp-proposal .gf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #3a3a3a;
+  background: #fafafa;
+}
+.idp-proposal .gf-gap {
+  margin-left: 6px;
+}
+.idp-proposal .gf-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  background: #fff;
+  transition:
+    opacity 0.4s var(--ease),
+    box-shadow 0.4s var(--ease);
+}
+.idp-proposal .gf-panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 6px 8px 0;
+  font-size: 11px;
+  font-weight: 500;
+  color: #2c2c2c;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.idp-proposal .gf-panel h3 svg {
+  color: #8e8e8e;
+  flex: none;
+}
+.idp-proposal .gf-panel-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  padding: 4px 8px 8px;
+}
+.idp-proposal .gf-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) repeat(3, minmax(0, 0.86fr));
+  gap: 6px;
+  height: 78px;
+  transition: opacity 0.4s var(--ease);
+}
+.idp-proposal .gf-stat {
+  margin: auto;
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.idp-proposal .gf-stat small {
+  font-size: 0.5em;
+}
+.idp-proposal .gf-row {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  transition: opacity 0.4s var(--ease);
+}
+/* Passo do slide: o grupo aceso fica inteiro, o resto apaga. */
+.idp-proposal .gf [data-dim] {
+  opacity: 0.32;
+}
+
+/* Linha acumulada */
+.idp-proposal .gf-chart {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.idp-proposal .gf-plot {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 6px;
+}
+/* Nome de cada série na ponta da linha, em cor de texto (a legenda repete). */
+.idp-proposal .gf-direct {
+  position: absolute;
+  right: 2px;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+.idp-proposal .gf-direct i {
+  position: absolute;
+  right: 0;
+  translate: 0 -130%;
+  font-style: normal;
+  font-size: 8px;
+  color: #4a4a4a;
+  background: #fff;
+  padding: 0 3px;
+  white-space: nowrap;
+}
+.idp-proposal .gf-plot svg {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: visible;
+}
+.idp-proposal .gf-yaxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 9px;
+  color: #6e6e6e;
+}
+.idp-proposal .gf-yaxis i,
+.idp-proposal .gf-xaxis i {
+  font-style: normal;
+}
+.idp-proposal .gf-grid {
+  stroke: #eeeeee;
+  stroke-width: 1;
+}
+.idp-proposal .gf-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: proposal-pv-draw 1.4s var(--ease) 0.2s forwards;
+}
+.idp-proposal .gf-xaxis {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 18px;
+  font-size: 9px;
+  color: #6e6e6e;
+}
+.idp-proposal .gf-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 9px;
+  color: #4a4a4a;
+}
+.idp-proposal .gf-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.idp-proposal .gf-legend i {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Bar gauge por cliente */
+.idp-proposal .gf-gauges {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.idp-proposal .gf-gauges li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 34px;
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+}
+.idp-proposal .gf-gauge-t {
+  grid-column: 1 / -1;
+  font-size: 15px;
+  color: #2c2c2c;
+  line-height: 1.2;
+}
+.idp-proposal .gf-gauge-track {
+  height: 16px;
+  background: #f2f2f2;
+}
+.idp-proposal .gf-gauge {
+  display: block;
+  height: 100%;
+  transform-origin: left;
+  animation: proposal-mx-grow-x 0.7s var(--ease) both;
+  animation-delay: calc(var(--i) * 80ms);
+}
+.idp-proposal .gf-gauge-v {
+  font-size: 26px;
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+@keyframes proposal-mx-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+.idp-proposal .gf-foot {
+  margin: 0;
+  align-self: flex-end;
+  font-size: 10px;
+  color: #6e6e6e;
+}
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .gf-line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .idp-proposal .gf-gauge {
+    animation: none;
+  }
+  .idp-proposal .gf-stats,
+  .idp-proposal .gf-row,
+  .idp-proposal .gf-panel {
+    transition: none;
+  }
+}
+
+/* ── Página de usuário (portada do protótipo) ────────────────────── */
+.idp-proposal .up {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 26px;
+  overflow: hidden;
+}
+.idp-proposal .up-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.idp-proposal .up-head h1 {
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.idp-proposal .up-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 16px;
+  font-weight: 500;
+}
+.idp-proposal .up-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+.idp-proposal .up-switch {
+  display: inline-flex;
+  width: 36px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--primary);
+  justify-content: flex-end;
+}
+.idp-proposal .up-switch i {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #fff;
+}
+.idp-proposal .up-actions .p-btn {
+  margin-left: 6px;
+}
+.idp-proposal .up-tabs,
+.idp-proposal .up-subtabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.idp-proposal .up-tabs span,
+.idp-proposal .up-subtabs span {
+  position: relative;
+  padding: 0 2px 10px;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  transition: color 0.3s;
+}
+.idp-proposal .up-tabs span[data-on],
+.idp-proposal .up-subtabs span[data-on] {
+  color: var(--foreground);
+  font-weight: 500;
+}
+/* Sublinhado da aba ativa: cresce do centro quando a aba abre. */
+.idp-proposal .up-tabs span::after,
+.idp-proposal .up-subtabs span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--foreground);
+  transform: scaleX(0);
+  transition: transform 0.35s var(--ease);
+}
+.idp-proposal .up-tabs span[data-on]::after,
+.idp-proposal .up-subtabs span[data-on]::after {
+  transform: scaleX(1);
+}
+.idp-proposal .up-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  animation: proposal-pv-in 0.4s var(--ease) both;
+}
+.idp-proposal .up-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.idp-proposal .up-row {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 440px);
+  align-items: center;
+  gap: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.idp-proposal .up-ro {
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-weight: 400;
+}
+.idp-proposal .up-ro[data-mono] {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 13px;
+}
+.idp-proposal .up-sec {
+  margin-top: 6px;
+}
+.idp-proposal .up-sec h2 {
+  font-size: 17px;
+}
+.idp-proposal .up-sec p {
+  font-size: 13px;
+  margin-top: 2px;
+}
+.idp-proposal .up-table {
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--border);
+  overflow: hidden;
+}
+.idp-proposal .up-th,
+.idp-proposal .up-tr {
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.idp-proposal .up-th {
+  height: 40px;
+  background: var(--muted);
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.idp-proposal .up-tr {
+  min-height: 48px;
+  border-bottom: 1px solid var(--border);
+}
+.idp-proposal .up-table > :last-child,
+.idp-proposal .up-tr-group:last-child .up-tr {
+  border-bottom: 0;
+}
+.idp-proposal .up-tr > * {
+  min-width: 0;
+}
+.idp-proposal .up-ico {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.idp-proposal .up-ico svg {
+  color: var(--muted-foreground);
+  flex: none;
+}
+.idp-proposal .up-mono {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 13px;
+}
+.idp-proposal .up-end {
+  justify-self: end;
+  font-weight: 500;
+}
+.idp-proposal .up-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.idp-proposal .p-btn--sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  justify-self: start;
+}
+.idp-proposal .up-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 14px;
+}
+.idp-proposal .up-tools--end {
+  justify-content: flex-end;
+}
+.idp-proposal .up-search {
+  width: 260px;
+}
+.idp-proposal .up-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.idp-proposal .up-badges i {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 1px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.idp-proposal .up-okc {
+  color: var(--ok) !important;
+}
+.idp-proposal .up-details {
+  margin: 0;
+  padding: 10px 16px 12px 52px;
+  background: var(--muted);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+.idp-proposal .up-details div {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 16px;
+}
+.idp-proposal .up-details dt {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-weight: 600;
+}
+.idp-proposal .up-details dd {
+  margin: 0;
+  font-family: "Geist Mono", ui-monospace, monospace;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* "Encerrar": o passo Sessões aponta para a ação. */
+.idp-proposal .up-kill {
+  animation: proposal-up-kill 1.6s var(--ease) 0.6s both;
+}
+@keyframes proposal-up-kill {
+  40% {
+    background: var(--muted);
+    box-shadow: 0 0 0 4px var(--muted);
+    border-radius: 6px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .up-body,
+  .idp-proposal .up-kill {
+    animation: none;
+  }
+  .idp-proposal .up-tabs span::after {
+    transition: none;
+  }
+}
+
+/* Lista de usuários (passo 0) */
+.idp-proposal .up-enter {
+  animation: proposal-pv-in 0.4s var(--ease) both;
+}
+.idp-proposal .up-sub {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.idp-proposal .up-tools--start {
+  justify-content: flex-start;
+}
+.idp-proposal .up-avatar--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+.idp-proposal .up-tr--list {
+  min-height: 40px;
+}
+.idp-proposal .up-person {
+  position: relative;
+}
+/* O cursor chega à linha da Ana e ela acende, como antes do clique. */
+.idp-proposal .up-cursor {
+  left: auto;
+  right: -6px;
+  top: 55%;
+}
+.idp-proposal .up-cursor[data-on] {
+  animation: proposal-p-cursor 1.4s var(--ease) 0.3s both;
+}
+.idp-proposal .up-tr[data-pick] {
+  animation: proposal-up-pick 0.3s var(--ease) 1.5s both;
+}
+@keyframes proposal-up-pick {
+  to {
+    background: var(--accent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .up-enter,
+  .idp-proposal .up-tr[data-pick] {
+    animation: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Celular: a tela do produto tem 520 px em vez de 840 (ProductFrame.tsx marca
+   .pui com data-narrow). Mesmos dados, com o layout que um produto real
+   teria nessa largura: cartão de login em coluna, tabelas com menos
+   colunas, números das métricas em duas linhas.
+   ══════════════════════════════════════════════════════════════════ */
+/* Login */
+.idp-proposal .pui[data-narrow] .lib-top nav {
+  display: none;
+}
+.idp-proposal .pui[data-narrow] .lib-top {
+  justify-content: space-between;
+}
+.idp-proposal .pui[data-narrow] .lib-main {
+  margin-top: 32px;
+}
+.idp-proposal .pui[data-narrow] .ac {
+  width: calc(100% - 48px);
+  height: auto;
+  grid-template-columns: minmax(0, 1fr);
+}
+.idp-proposal .pui[data-narrow] .ac-brand {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 14px;
+  padding: 16px 24px;
+  text-align: left;
+}
+.idp-proposal .pui[data-narrow] .ac-brand strong {
+  font-size: 17px;
+}
+.idp-proposal .pui[data-narrow] .ac-form {
+  padding: 28px 28px 52px;
+}
+.idp-proposal .pui[data-narrow] .ac-body {
+  height: auto;
+  min-height: 300px;
+}
+.idp-proposal .pui[data-narrow] .app-cards {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Página de usuário */
+.idp-proposal .pui[data-narrow] .up {
+  padding: 18px 20px;
+  gap: 16px;
+}
+.idp-proposal .pui[data-narrow] .up-head h1 {
+  font-size: 20px;
+}
+.idp-proposal .pui[data-narrow] .up-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+.idp-proposal .pui[data-narrow] .up-actions .p-btn {
+  display: none;
+}
+.idp-proposal .pui[data-narrow] .up-tabs,
+.idp-proposal .pui[data-narrow] .up-subtabs {
+  gap: 14px;
+}
+.idp-proposal .pui[data-narrow] .up-tabs span,
+.idp-proposal .pui[data-narrow] .up-subtabs span {
+  font-size: 13px;
+}
+.idp-proposal .pui[data-narrow] .up-row {
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
+}
+.idp-proposal .pui[data-narrow] .up-search {
+  width: 200px;
+}
+.idp-proposal .pui[data-narrow] :is(.up-th, .up-tr) {
+  padding: 0 12px;
+  font-size: 13px;
+}
+.idp-proposal .pui[data-narrow] .up-details {
+  padding-left: 40px;
+}
+.idp-proposal .pui[data-narrow] .up-details div {
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 10px;
+}
+/* Colunas que saem no estreito (a mais secundária de cada tabela). */
+.idp-proposal .pui[data-narrow] [data-t="list"] {
+  --cols: minmax(0, 1fr) 84px !important;
+}
+.idp-proposal
+  .pui[data-narrow]
+  [data-t="list"]
+  :is(.up-th, .up-tr)
+  > :nth-child(3) {
+  display: none;
+}
+.idp-proposal .pui[data-narrow] [data-t="consents"] {
+  --cols: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr) 20px !important;
+}
+.idp-proposal
+  .pui[data-narrow]
+  [data-t="consents"]
+  :is(.up-th, .up-tr)
+  > :nth-child(4) {
+  display: none;
+}
+.idp-proposal .pui[data-narrow] [data-t="sessions"] {
+  --cols: minmax(0, 1fr) minmax(0, 1.15fr) minmax(0, 0.8fr) 62px !important;
+}
+.idp-proposal
+  .pui[data-narrow]
+  [data-t="sessions"]
+  :is(.up-th, .up-tr)
+  > :nth-child(2) {
+  display: none;
+}
+.idp-proposal .pui[data-narrow] [data-t="events"] {
+  --cols: 16px minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr) !important;
+}
+.idp-proposal
+  .pui[data-narrow]
+  [data-t="events"]
+  :is(.up-th, .up-tr)
+  > :nth-child(5) {
+  display: none;
+}
+.idp-proposal .pui[data-narrow] [data-t="groups"] {
+  --cols: minmax(0, 0.8fr) minmax(0, 1.2fr) 80px !important;
+}
+
+/* Métricas: os 7 números em duas linhas (4 + 3), maiores que espremidos
+   numa só. */
+.idp-proposal .pui[data-narrow] .mx {
+  padding: 14px 16px 10px;
+}
+.idp-proposal .pui[data-narrow] .mx-head h1 {
+  font-size: 20px;
+}
+.idp-proposal .pui[data-narrow] .gf-stats {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: 62px;
+  height: auto;
+}
+.idp-proposal .pui[data-narrow] .gf-stats > * {
+  grid-column: span 3;
+}
+.idp-proposal .pui[data-narrow] .gf-stats > :nth-child(n + 5) {
+  grid-column: span 4;
+}
+.idp-proposal .pui[data-narrow] .gf-stat {
+  font-size: 28px;
+}

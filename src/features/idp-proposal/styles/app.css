@@ -1,0 +1,2342 @@
+/* ══════════════════════════════════════════════════════════════════
+   IdP SaaS em conversa. Mesma linguagem do microsite /idp-saas do site
+   (gt-baita.github.io): tokens do modo escuro, Domine nos títulos, Geist
+   no corpo, Geist Mono nos rótulos e o pontilhado vivo ao fundo.
+   ══════════════════════════════════════════════════════════════════ */
+.idp-proposal {
+  /* Largura máxima do conteúdo das telas: em telas grandes ele para de
+     crescer e fica centrado. */
+  --frame-max: 1360px;
+  --canvas: #121210;
+  --canvas-2: #171714;
+  --surface: #1c1c19;
+  --surface-2: #24241f;
+  --bar: #2a2a25;
+  --line: #2c2c27;
+  --line-2: #3b3b35;
+  --ink: #f4f3ee;
+  --ink-hover: #ffffff;
+  --ink-2: #c4c2b9;
+  --ink-3: #97958c;
+  --dither-alpha: 0.91;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --serif: "Domine", Georgia, serif;
+  --sans: "Geist", system-ui, -apple-system, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  /* Tons das seções: dessaturados, só em fitas e na lombada. */
+  --tone-cover: #57564f;
+  --tone-0: #8fa58a;
+  --tone-1: #7f93ad;
+  --tone-2: #b48a74;
+  --tone-3: #b5a57f;
+  --tone-4: #a08aa6;
+  --tone-5: #7ea6a1;
+  color-scheme: dark;
+}
+.idp-proposal * {
+  box-sizing: border-box;
+}
+.idp-proposal {
+  height: 100%;
+  margin: 0;
+}
+.idp-proposal {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+.idp-proposal button {
+  font: inherit;
+  color: inherit;
+}
+.idp-proposal :focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 3px;
+}
+
+/* O reset do Tailwind do site remove os padrões usados pelo projeto original. */
+.idp-proposal :where(h1, h2, h3, h4, h5, h6) {
+  font-size: revert;
+  font-weight: revert;
+}
+.idp-proposal small {
+  font-size: smaller;
+}
+
+/* Só durante a apresentação: o restante das regras fica sob .idp-proposal. */
+body.idp-proposal-active {
+  background: #121210;
+  overflow: hidden;
+}
+@media (max-width: 700px) {
+  body.idp-proposal-active {
+    overflow: visible;
+    overflow-x: clip;
+  }
+}
+
+.idp-proposal .app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.idp-proposal .backdrop {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── Canto: tela cheia e marca ─────────────────────────────────── */
+.idp-proposal .corner {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.idp-proposal .wordmark {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.idp-proposal .proposal-language {
+  display: flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--canvas);
+}
+.idp-proposal .proposal-language button {
+  padding: 5px 7px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.idp-proposal .proposal-language button[aria-pressed="true"] {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+.idp-proposal .icon-btn {
+  all: unset;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-3);
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+.idp-proposal .icon-btn:hover {
+  color: var(--ink);
+  background: var(--surface);
+}
+.idp-proposal .icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.idp-proposal .icon-btn kbd {
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.idp-proposal .icon-btn:hover kbd {
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+.idp-proposal .icon-btn[aria-pressed="true"] kbd {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+/* ── Palco e tela ────────────────────────────────────────────────── */
+.idp-proposal .stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.idp-proposal .screen {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--frame-max) + 240px);
+  margin-inline: auto;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(32px, 5vw, 96px);
+  padding: 72px clamp(48px, 6vw, 112px) 112px clamp(72px, 7vw, 128px);
+}
+.idp-proposal .statement {
+  max-width: 620px;
+}
+.idp-proposal .big {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(36px, 3.7vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.idp-proposal .big .d1 {
+  color: var(--ink-2);
+}
+.idp-proposal .muted {
+  color: var(--ink-3);
+}
+.idp-proposal .viz {
+  position: relative;
+  aspect-ratio: 576/457;
+  width: 100%;
+  max-height: calc(100vh - 220px);
+  justify-self: center;
+}
+
+/* Rótulos da constelação (iguais aos do hero do IdP). */
+.idp-proposal .nl {
+  position: absolute;
+  translate: -50% 18px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--canvas) 94%, transparent);
+  border: 1px solid var(--line-2);
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  z-index: 2;
+}
+.idp-proposal .nl-c {
+  translate: -50% 48px;
+  background: var(--ink);
+  color: var(--canvas);
+  border-color: var(--ink);
+  padding: 6px 12px;
+}
+
+.idp-proposal .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--ink) 2%, transparent);
+}
+.idp-proposal .pill--dim {
+  color: var(--ink-3);
+  border-style: dashed;
+}
+
+/* Entrada: a tela chega do lado da viagem (--dx, maior entre seções) e
+   os blocos aparecem em cascata (--i). */
+.idp-proposal .rv {
+  animation: proposal-enter 0.7s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes proposal-enter {
+  from {
+    opacity: 0;
+    transform: translate(var(--dx, 0px), var(--dy, 18px));
+  }
+}
+
+/* ── Capa ────────────────────────────────────────────────────────
+   Texto à esquerda, globo à direita saindo pela borda. */
+.idp-proposal .cover {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 96px clamp(72px, 7vw, 128px) 120px;
+}
+.idp-proposal .cover-mark {
+  position: absolute;
+  left: clamp(72px, 7vw, 128px);
+  top: 30px;
+  font-size: 22px;
+}
+.idp-proposal .cover-orb {
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * min(9vw, 150px));
+  width: min(86vh, 56vw);
+  aspect-ratio: 1;
+  translate: 0 -50%;
+  image-rendering: pixelated;
+  pointer-events: none;
+  animation-delay: 0.1s;
+}
+.idp-proposal .cover-copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* Para antes do globo em qualquer largura. */
+  max-width: min(640px, 44vw);
+}
+.idp-proposal .cover-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(88px, 10.5vw, 168px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+.idp-proposal .cover-sub {
+  margin: 0;
+  max-width: 31em;
+  font-size: clamp(18px, 1.55vw, 23px);
+  line-height: 1.45;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.idp-proposal .cover-sub strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+.idp-proposal .cover-foot {
+  position: absolute;
+  left: clamp(72px, 7vw, 128px);
+  bottom: 40px;
+  display: flex;
+  gap: 32px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ── Setas ───────────────────────────────────────────────────────── */
+/* As setas ficam escondidas (o teclado é o caminho principal) e só
+   aparecem com o cursor no canto inferior direito ou com foco. A área de
+   hover vai até o canto da tela; os botões ficam no mesmo lugar. */
+.idp-proposal .arrows {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  display: flex;
+  gap: 8px;
+  padding: 72px 32px 40px 96px;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.idp-proposal .arrows:hover,
+.idp-proposal .arrows:focus-within {
+  opacity: 1;
+}
+.idp-proposal .arrow {
+  all: unset;
+  cursor: pointer;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+}
+.idp-proposal .arrow svg {
+  width: 20px;
+  height: 20px;
+}
+.idp-proposal .arrow--prev {
+  border: 1px solid var(--line-2);
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  color: var(--ink-2);
+  backdrop-filter: blur(6px);
+}
+.idp-proposal .arrow--prev:hover {
+  background: var(--surface-2);
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+.idp-proposal .arrow--next {
+  background: var(--ink);
+  color: var(--canvas);
+}
+.idp-proposal .arrow--next:hover {
+  background: var(--ink-hover);
+}
+.idp-proposal .arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.idp-proposal .arrow:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 3px;
+}
+
+/* ── Abas de índice ──────────────────────────────────────────────
+   Sempre à vista, estreitas, nome na vertical. Cada aba tem 38px e fica
+   8px recolhida para a esquerda; a atual sai inteira, o hover sai 4px. */
+.idp-proposal .index {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 44px;
+  transition:
+    transform 0.32s var(--ease),
+    opacity 0.32s var(--ease);
+}
+.idp-proposal .app[data-tabs="hidden"] .index {
+  transform: translateX(-40px);
+  opacity: 0;
+  pointer-events: none;
+}
+.idp-proposal .spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--spine);
+  opacity: 0.6;
+  transition: background 0.5s var(--ease);
+}
+.idp-proposal .index-list {
+  list-style: none;
+  margin: 0;
+  padding: 24px 0 24px 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.idp-proposal .index-list::-webkit-scrollbar {
+  display: none;
+}
+/* As abas nunca encolhem (o nome ficaria cortado); se não couberem, a
+   coluna rola. */
+.idp-proposal .index-list li {
+  display: flex;
+  flex: none;
+}
+.idp-proposal .index-list li[data-break] {
+  margin-top: 10px;
+}
+.idp-proposal .itab {
+  all: unset;
+  cursor: pointer;
+  box-sizing: border-box;
+  flex: none;
+  width: 38px;
+  max-height: 168px;
+  padding: 14px 0 14px 8px;
+  display: flex;
+  justify-content: center;
+  border-radius: 0 8px 8px 0;
+  /* A ponta leva o tom da seção, como divisória colorida. */
+  background: color-mix(in srgb, var(--tone) 22%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--tone) 26%, var(--line));
+  border-left: 0;
+  transform: translateX(-8px);
+  transition:
+    transform 0.25s var(--ease),
+    background 0.25s,
+    border-color 0.25s;
+}
+.idp-proposal .itab:hover {
+  transform: translateX(-4px);
+  background: color-mix(in srgb, var(--tone) 34%, var(--surface));
+}
+.idp-proposal .itab[aria-current="page"] {
+  transform: none;
+  background: color-mix(in srgb, var(--tone) 52%, var(--surface));
+  border-color: color-mix(in srgb, var(--tone) 80%, var(--line));
+}
+/* Lido de cima para baixo, como a lombada de um livro. */
+.idp-proposal .itab-label {
+  writing-mode: vertical-rl;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: var(--ink-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+.idp-proposal .itab:hover .itab-label {
+  color: var(--ink-2);
+}
+.idp-proposal .itab[aria-current="page"] .itab-label {
+  color: var(--ink);
+  font-weight: 500;
+}
+.idp-proposal .itab:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: -3px;
+}
+
+/* Tecla de atalho (o botão S no canto e o lembrete). */
+.idp-proposal kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1;
+  color: var(--ink-2);
+}
+.idp-proposal .tabs-hint {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  z-index: 5;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  animation: proposal-hint 2.8s var(--ease) both;
+}
+@keyframes proposal-hint {
+  0% {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  12%,
+  70% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .rv {
+    animation: none;
+  }
+  .idp-proposal .itab,
+  .idp-proposal .itab-label,
+  .idp-proposal .spine,
+  .idp-proposal .index {
+    transition: none;
+  }
+  .idp-proposal .tabs-hint {
+    animation-duration: 0s;
+    opacity: 0;
+  }
+}
+@media (max-width: 900px) {
+  .idp-proposal .screen {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: 32px;
+    padding-bottom: 120px;
+  }
+  .idp-proposal .viz {
+    max-height: 42vh;
+  }
+}
+
+/* ── Equipe ──────────────────────────────────────────────────────
+   Título em cima, as pessoas lado a lado com espaço para foto. */
+.idp-proposal .team {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--frame-max) + 240px);
+  margin-inline: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(32px, 5vh, 56px);
+  padding: 72px clamp(48px, 6vw, 112px) 112px clamp(72px, 7vw, 128px);
+}
+.idp-proposal .team-head {
+  max-width: 24em;
+}
+.idp-proposal .team-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+.idp-proposal .person {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.idp-proposal .photo {
+  aspect-ratio: 4/5;
+  max-height: 38vh;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.idp-proposal .photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.idp-proposal .photo-empty {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 44px);
+  color: var(--line-2);
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 10px,
+    color-mix(in srgb, var(--ink) 2%, transparent) 10px 11px
+  );
+}
+.idp-proposal .person-text p {
+  margin: 0;
+}
+.idp-proposal .person-name {
+  font-size: clamp(16px, 1.3vw, 19px);
+  font-weight: 500;
+  line-height: 1.3;
+}
+.idp-proposal .person-role {
+  margin-top: 4px !important;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.idp-proposal .person-title {
+  margin-top: 8px !important;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 22em;
+}
+@media (max-width: 900px) {
+  .idp-proposal .team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .idp-proposal .photo {
+    max-height: 22vh;
+  }
+}
+
+/* ── Telas em passos (StepSlide: ProblemScreen, Solução) ───────────────
+   Título em cima; à esquerda a lista (o item aberto mostra a
+   explicação), à direita o desenho do item aberto. */
+.idp-proposal .ss {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--frame-max) + 240px);
+  margin-inline: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(28px, 4.5vh, 48px);
+  padding: 72px clamp(48px, 6vw, 112px) 112px clamp(72px, 7vw, 128px);
+}
+.idp-proposal .ss-head {
+  max-width: 22em;
+}
+.idp-proposal .ss-body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: center;
+}
+.idp-proposal .ss-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.idp-proposal .ss-btn {
+  all: unset;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  opacity: 0.5;
+  transition:
+    opacity 0.3s var(--ease),
+    background 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.idp-proposal .ss-btn:hover {
+  opacity: 0.8;
+}
+.idp-proposal .ss-item[data-on] .ss-btn {
+  opacity: 1;
+  background: var(--surface);
+  border-color: var(--line-2);
+}
+.idp-proposal .ss-btn:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 2px;
+}
+.idp-proposal .ss-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 1.7vw, 26px);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+/* Abre e fecha pela altura da grade (0fr → 1fr), sem medir em JS. */
+.idp-proposal .ss-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s var(--ease);
+}
+.idp-proposal .ss-item[data-on] .ss-more {
+  grid-template-rows: 1fr;
+}
+.idp-proposal .ss-text {
+  overflow: hidden;
+  font-size: clamp(15px, 1.15vw, 17px);
+  line-height: 1.5;
+  color: var(--ink-2);
+  padding-top: 0;
+  transition: padding-top 0.4s var(--ease);
+}
+.idp-proposal .ss-item[data-on] .ss-text {
+  padding-top: 10px;
+}
+
+.idp-proposal .ss-viz {
+  position: relative;
+  height: min(46vh, 420px);
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  background-color: var(--canvas-2);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--ink) 3.5%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink) 3.5%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 24px 24px;
+}
+.idp-proposal .ss-pane {
+  position: absolute;
+  inset: 0;
+}
+
+/* Peças comuns dos desenhos. */
+.idp-proposal .pv {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  padding: 32px;
+}
+.idp-proposal .pv > *,
+.idp-proposal .pv-silo,
+.idp-proposal .pv-step {
+  animation: proposal-pv-in 0.6s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+@keyframes proposal-pv-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.idp-proposal .pv svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.idp-proposal .pv-cap {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  text-align: center;
+}
+.idp-proposal .pv-cap--abs {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+}
+.idp-proposal .pv-part,
+.idp-proposal .pv-user,
+.idp-proposal .pv-sys,
+.idp-proposal .pv-db,
+.idp-proposal .pv-level,
+.idp-proposal .pv-ticket {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line-2);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Caminho enrolado: a linha se desenha (pathLength = 1) e o ponto anda. */
+.idp-proposal .pv-time {
+  gap: 8px;
+}
+.idp-proposal .pv .pv-tangle {
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  overflow: visible;
+}
+.idp-proposal .pv-tangle-line {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: proposal-pv-draw 1.8s var(--ease) 0.2s forwards;
+}
+@keyframes proposal-pv-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.idp-proposal .pv-tangle-end {
+  fill: var(--ink-3);
+}
+.idp-proposal .pv-tangle-end--goal {
+  fill: var(--ink);
+}
+.idp-proposal .pv-tangle-dot {
+  fill: var(--ink);
+}
+.idp-proposal .pv-tangle-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  fill: var(--ink-3);
+}
+
+/* Peças soltas: balançam, como as do diagrama de estabilidade do site. */
+.idp-proposal .pv-infra {
+  display: block;
+}
+.idp-proposal .pv-part {
+  position: absolute;
+  translate: -50% -50%;
+  border-style: dashed;
+  animation:
+    proposal-pv-fade 0.5s var(--ease) both,
+    proposal-pv-wobble 2.6s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i, 0) * 90ms), var(--wobble-delay, 0s);
+}
+@keyframes proposal-pv-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes proposal-pv-wobble {
+  from {
+    transform: translate(-5px, -4px) rotate(-3deg);
+  }
+  to {
+    transform: translate(5px, 4px) rotate(3deg);
+  }
+}
+
+/* Bases separadas: três colunas iguais, alinhadas pelo topo; o cartão do
+   sistema tem altura fixa (ícone em cima, nome embaixo) para os nomes de
+   uma e de duas linhas ficarem do mesmo tamanho. */
+.idp-proposal .pv-logins {
+  gap: 0;
+}
+.idp-proposal .pv-cols {
+  --n: 3;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  align-items: start;
+}
+/* Conector em árvore: tronco da pessoa, barra até o centro das colunas
+   das pontas e uma descida por coluna (mesma grade de .pv-cols). */
+.idp-proposal .pv-branch {
+  --n: 3;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  height: 36px;
+}
+.idp-proposal .pv-branch::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 50%;
+  width: 1px;
+  background: var(--line-2);
+}
+/* Barra do centro da primeira coluna ao centro da última: meia coluna,
+   descontando os vãos de 14px. */
+.idp-proposal .pv-branch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  left: calc((100% - (var(--n) - 1) * 14px) / (2 * var(--n)));
+  right: calc((100% - (var(--n) - 1) * 14px) / (2 * var(--n)));
+  background: var(--line-2);
+}
+.idp-proposal .pv-branch i {
+  position: relative;
+}
+.idp-proposal .pv-branch i::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  bottom: 0;
+  width: 1px;
+  background: var(--line-2);
+}
+.idp-proposal .pv-silo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.idp-proposal .pv .pv-sys {
+  width: 100%;
+  height: 84px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  white-space: normal;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.25;
+}
+.idp-proposal .pv-pass {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.idp-proposal .pv .pv-pass svg {
+  width: 13px;
+  height: 13px;
+}
+.idp-proposal .pv-v {
+  width: 1px;
+  height: 18px;
+  background: var(--line-2);
+}
+.idp-proposal .pv .pv-db {
+  width: 100%;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--ink-2);
+  padding: 8px 10px;
+}
+
+/* A Solução: o caminho antigo fica apagado atrás do novo, reto. */
+.idp-proposal .pv-tangle-ghost {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 5;
+  opacity: 0.7;
+}
+.idp-proposal .pv-tangle-line--fast {
+  animation-duration: 0.9s;
+}
+/* As peças, firmes, dentro da nuvem do GT. */
+.idp-proposal .pv-cloud {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 22px 22px;
+  border-radius: 20px;
+  border: 1px solid var(--line-2);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  max-width: 90%;
+}
+.idp-proposal .pv-cloud-t {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.idp-proposal .pv-cloud-parts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.idp-proposal .pv-fixed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--surface-2);
+  font-size: 13px;
+  white-space: nowrap;
+  animation: proposal-pv-in 0.5s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+/* O IdP em destaque, como no hero do site. */
+.idp-proposal .pv-idp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--canvas);
+  font-family: var(--mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.idp-proposal .pv-idp small {
+  font-size: 10px;
+  opacity: 0.65;
+}
+.idp-proposal .pv .pv-sys--short {
+  height: 80px;
+  padding: 12px 10px;
+}
+.idp-proposal .pv-one .pv-v {
+  height: 14px;
+}
+/* Suporte direto: um elo longo, mensagens indo e voltando rápido. */
+.idp-proposal .pv .pv-link--direct {
+  width: clamp(80px, 12vw, 160px);
+}
+.idp-proposal .pv-pkt--fast {
+  animation-duration: 1.6s;
+}
+.idp-proposal .pv-pkt--back {
+  animation-name: proposal-pv-back;
+  animation-delay: 0.8s;
+}
+@keyframes proposal-pv-back {
+  0% {
+    left: calc(100% - 3px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    left: -4px;
+    opacity: 1;
+  }
+  38%,
+  100% {
+    left: -4px;
+    opacity: 0;
+  }
+}
+
+/* Fila de suporte: em linha, o pacote anda de um nível ao outro. */
+.idp-proposal .pv-row {
+  display: flex;
+  align-items: center;
+}
+.idp-proposal .pv-step {
+  display: flex;
+  align-items: center;
+}
+.idp-proposal .pv-link {
+  position: relative;
+  width: clamp(28px, 4vw, 56px);
+  height: 1px;
+  background: var(--line-2);
+}
+.idp-proposal .pv-pkt {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--ink);
+  opacity: 0;
+  animation: proposal-pv-drop 4.8s ease-in-out infinite;
+}
+@keyframes proposal-pv-drop {
+  0% {
+    left: -4px;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  30% {
+    left: calc(100% - 3px);
+    opacity: 1;
+  }
+  38%,
+  100% {
+    left: calc(100% - 3px);
+    opacity: 0;
+  }
+}
+.idp-proposal .pv-wait {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  translate: -50% 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.idp-proposal .pv-level,
+.idp-proposal .pv-ticket {
+  font-size: 13px;
+  padding: 9px 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .pv > *,
+  .idp-proposal .pv-silo,
+  .idp-proposal .pv-step,
+  .idp-proposal .pv-part,
+  .idp-proposal .pv-pkt {
+    animation: none;
+  }
+  .idp-proposal .pv-tangle-line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .idp-proposal .pv-fixed {
+    animation: none;
+  }
+  .idp-proposal .pv-tangle-dot {
+    display: none;
+  }
+  .idp-proposal .ss-more,
+  .idp-proposal .ss-text {
+    transition: none;
+  }
+}
+@media (max-width: 900px) {
+  .idp-proposal .ss-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .idp-proposal .ss-viz {
+    height: 34vh;
+  }
+}
+
+/* Explicação abaixo da frase principal. */
+.idp-proposal .statement .lead {
+  margin: 24px 0 0;
+  max-width: 30em;
+  font-size: clamp(16px, 1.35vw, 20px);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.idp-proposal .nowrap {
+  white-space: nowrap;
+}
+
+/* ── ArchitectureScreen ──────────────────────────────────────────────────
+   Antes e depois: título com a chave Antes/Depois, a linha de botões do
+   cenário (ou da opção), o diagrama de ícones (proporção fixa 1200 × 500)
+   e a legenda do estado atual. Fontes em cqw: crescem com o diagrama. */
+.idp-proposal .arch {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 48px clamp(40px, 4vw, 80px) 44px clamp(64px, 6vw, 104px);
+}
+.idp-proposal .arch-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vh, 16px);
+  width: min(100%, var(--frame-max), calc((100vh - 310px) * 1200 / 460));
+}
+.idp-proposal .arch-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.idp-proposal .arch-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(26px, 2.4vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* Chave Antes/Depois: a parte ativa preenchida, como as abas do site. */
+.idp-proposal .seg {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.idp-proposal .seg button {
+  all: unset;
+  cursor: pointer;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--ink-3);
+  transition:
+    color 0.25s,
+    background 0.25s;
+}
+.idp-proposal .seg button:hover {
+  color: var(--ink-2);
+}
+.idp-proposal .seg button[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--canvas);
+}
+.idp-proposal .seg button:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 2px;
+}
+
+.idp-proposal .arch-chips {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.idp-proposal .arch-chips-t {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-right: 6px;
+}
+.idp-proposal .chip {
+  all: unset;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  font-size: 13px;
+  color: var(--ink-3);
+  transition:
+    color 0.25s,
+    border-color 0.25s,
+    background 0.25s;
+}
+.idp-proposal .chip:hover {
+  color: var(--ink-2);
+  border-color: var(--ink-3);
+}
+.idp-proposal .chip[aria-pressed="true"] {
+  color: var(--ink);
+  border-color: var(--ink-3);
+  background: var(--surface-2);
+}
+.idp-proposal .chip:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 2px;
+}
+
+.idp-proposal .arch-canvas {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200/460;
+  container-type: inline-size;
+  font-size: clamp(10px, 1.2cqw, 16px);
+  /* Cor de cada área quando acesa: os tons das abas, um pouco mais
+     saturados para a área acesa se destacar. */
+  --lane-rnp: #86a6d4;
+  --lane-gt: #93bd8d;
+  --lane-inst: #d29f82;
+}
+.idp-proposal .arch-zone[data-zone="rnp"],
+.idp-proposal .anode[data-lane="rnp"],
+.idp-proposal .arch-caption[data-lane="rnp"] {
+  --c: var(--lane-rnp);
+}
+.idp-proposal .arch-zone[data-zone="gt"],
+.idp-proposal .anode[data-lane="gt"],
+.idp-proposal .arch-caption[data-lane="gt"] {
+  --c: var(--lane-gt);
+}
+.idp-proposal .arch-zone[data-zone="inst"],
+.idp-proposal .anode[data-lane="inst"],
+.idp-proposal .arch-caption[data-lane="inst"] {
+  --c: var(--lane-inst);
+}
+/* Áreas: clicáveis. Acesa, ganha a sua cor (borda, fundo e título); as
+   outras apagam. */
+.idp-proposal .arch-zone {
+  all: unset;
+  cursor: pointer;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border: 1px dashed var(--line-2);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 35%, transparent);
+  transition:
+    opacity 0.4s var(--ease),
+    border-color 0.4s,
+    background 0.4s,
+    left 0.6s var(--ease),
+    width 0.6s var(--ease);
+}
+.idp-proposal .arch-zone:not(:disabled):hover {
+  border-color: var(--ink-3);
+}
+.idp-proposal .arch-zone:disabled {
+  cursor: default;
+}
+.idp-proposal .arch-zone:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 3px;
+}
+/* No Antes não existe o GT: a área some e fica só o corte entre a RNP
+   e a instituição. */
+.idp-proposal .arch-zone[data-off] {
+  opacity: 0;
+  pointer-events: none;
+}
+.idp-proposal .arch-zone[data-dim] {
+  opacity: 0.35;
+}
+.idp-proposal .arch-zone[data-on] {
+  opacity: 1;
+  border-style: solid;
+  border-color: var(--c);
+  background: color-mix(in srgb, var(--c) 12%, transparent);
+  animation: proposal-lane-in 0.7s var(--ease);
+}
+@keyframes proposal-lane-in {
+  from {
+    background: color-mix(in srgb, var(--c) 26%, transparent);
+  }
+}
+.idp-proposal .arch-zone-t {
+  position: absolute;
+  left: 1em;
+  top: 0.9em;
+  font-family: var(--mono);
+  font-size: 0.78em;
+  color: var(--ink-3);
+  padding: 0.25em 0.7em;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  transition:
+    color 0.3s,
+    border-color 0.3s;
+}
+.idp-proposal .arch-zone:not(:disabled):hover .arch-zone-t {
+  color: var(--ink-2);
+  border-color: var(--ink-3);
+}
+/* No Antes as áreas não são clicáveis: título sem cara de botão. */
+.idp-proposal .arch-zone:disabled .arch-zone-t {
+  border-color: transparent;
+  padding-left: 0;
+}
+.idp-proposal .arch-zone[data-on] .arch-zone-t {
+  color: var(--c);
+  border-color: var(--c);
+}
+.idp-proposal .arch-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.idp-proposal .aline path {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+  transition: d 0.6s var(--ease);
+}
+.idp-proposal .aline[data-broken] path {
+  stroke: var(--line-2);
+  stroke-dasharray: 4 6;
+}
+.idp-proposal .aline[data-optional] path {
+  stroke: var(--ink-3);
+  stroke-dasharray: 2 5;
+}
+.idp-proposal .aline circle {
+  fill: var(--ink-2);
+  opacity: 0.6;
+}
+.idp-proposal .aline {
+  transition: opacity 0.4s var(--ease);
+}
+.idp-proposal .aline[data-dim] {
+  opacity: 0.15;
+}
+.idp-proposal .aline[data-off] {
+  opacity: 0;
+}
+.idp-proposal .arch-proto {
+  position: absolute;
+  translate: -50% -50%;
+  pointer-events: none;
+  transition:
+    left 0.6s var(--ease),
+    top 0.6s var(--ease),
+    opacity 0.4s var(--ease);
+  font-family: var(--mono);
+  font-size: 0.72em;
+  color: var(--ink);
+  background: var(--canvas);
+  padding: 0.15em 0.5em;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: opacity 0.4s var(--ease);
+}
+.idp-proposal .arch-proto[data-dim] {
+  opacity: 0.2;
+}
+.idp-proposal .arch-proto[data-off] {
+  opacity: 0;
+}
+
+/* Nós: cartões como os da tela O ProblemScreen (ícone em cima, nome dentro),
+   centrados no ponto do diagrama; o fundo opaco cobre as linhas que chegam
+   ao centro. */
+.idp-proposal .anode {
+  position: absolute;
+  translate: -50% -50%;
+  box-sizing: border-box;
+  width: 10.5em;
+  height: 7em;
+  padding: 0.7em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  text-align: center;
+  border-radius: 14px;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  pointer-events: none;
+  transition:
+    opacity 0.4s var(--ease),
+    scale 0.4s var(--ease),
+    border-color 0.4s,
+    top 0.6s var(--ease),
+    left 0.6s var(--ease);
+}
+/* Depois: os cartões balançam de leve, cada um no seu ritmo. */
+.idp-proposal .arch-canvas[data-after] .anode:not([data-off]) {
+  animation: proposal-anode-float var(--float-dur, 5s) ease-in-out
+    var(--float-delay, 0s) infinite alternate;
+}
+@keyframes proposal-anode-float {
+  from {
+    transform: translateY(-3px);
+  }
+  to {
+    transform: translateY(3px);
+  }
+}
+.idp-proposal .anode[data-dim] {
+  opacity: 0.25;
+}
+.idp-proposal .anode[data-off] {
+  opacity: 0;
+  scale: 0.9;
+}
+/* Na área acesa, os cartões pegam a cor dela. */
+.idp-proposal
+  .arch-canvas[data-lane="rnp"]
+  .anode[data-lane="rnp"]:not([data-variant="hero"]),
+.idp-proposal
+  .arch-canvas[data-lane="gt"]
+  .anode[data-lane="gt"]:not([data-variant="hero"]),
+.idp-proposal
+  .arch-canvas[data-lane="inst"]
+  .anode[data-lane="inst"]:not([data-variant="hero"]) {
+  border-color: var(--c);
+}
+.idp-proposal .anode-ico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  color: var(--ink-2);
+}
+.idp-proposal .anode-ico svg {
+  width: 1.9em;
+  height: 1.9em;
+}
+.idp-proposal .anode[data-variant="wide"] .anode-ico svg {
+  width: 1.6em;
+  height: 1.6em;
+}
+.idp-proposal .anode-t {
+  font-size: 1em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+/* O IdP SaaS em destaque, claro sobre o escuro, um pouco maior. */
+.idp-proposal .anode[data-variant="hero"] {
+  width: 15em;
+  height: 10em;
+  gap: 0.7em;
+  background: var(--ink);
+  border-color: var(--ink);
+}
+/* Anel que se expande do IdP, como um sinal saindo dele. */
+.idp-proposal .anode[data-variant="hero"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid var(--ink);
+  animation: proposal-anode-ring 2.8s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes proposal-anode-ring {
+  from {
+    opacity: 0.55;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.16;
+  }
+}
+/* No IdP, ícone, nome e recursos empilhados nessa ordem. */
+.idp-proposal .anode[data-variant="hero"] .anode-ico {
+  display: contents;
+  color: var(--canvas);
+}
+.idp-proposal .anode[data-variant="hero"] .anode-feats {
+  order: 2;
+}
+.idp-proposal .anode-feats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35em;
+  max-width: 13em;
+}
+.idp-proposal .anode-feats span {
+  font-family: var(--mono);
+  font-size: 0.7em;
+  padding: 0.25em 0.6em;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--canvas) 10%, transparent);
+  color: color-mix(in srgb, var(--canvas) 75%, transparent);
+  white-space: nowrap;
+}
+.idp-proposal .anode[data-variant="hero"] {
+  color: var(--canvas);
+}
+.idp-proposal .anode[data-variant="hero"] .anode-ico svg {
+  width: 2.3em;
+  height: 2.3em;
+}
+.idp-proposal .anode[data-variant="hero"] .anode-t {
+  color: var(--canvas);
+  font-weight: 500;
+  font-size: 1.2em;
+}
+.idp-proposal .anode[data-variant="x"],
+.idp-proposal .anode[data-variant="empty"] {
+  border-style: dashed;
+  background: var(--canvas);
+}
+.idp-proposal .anode[data-variant="x"] .anode-ico,
+.idp-proposal .anode[data-variant="empty"] .anode-ico,
+.idp-proposal .anode[data-variant="x"] .anode-t,
+.idp-proposal .anode[data-variant="empty"] .anode-t {
+  color: var(--ink-3);
+}
+
+.idp-proposal .arch-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 72ch;
+  min-height: 4.6em;
+  animation: proposal-pv-in 0.45s var(--ease) both;
+}
+.idp-proposal .arch-caption p {
+  margin: 0;
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.idp-proposal .arch-caption-t {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--c);
+}
+.idp-proposal .arch-caption-t--hint {
+  color: var(--ink-3);
+}
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .aline circle {
+    display: none;
+  }
+  .idp-proposal .arch-caption,
+  .idp-proposal .arch-zone[data-on],
+  .idp-proposal .arch-canvas[data-after] .anode:not([data-off]),
+  .idp-proposal .anode[data-variant="hero"]::after {
+    animation: none;
+  }
+  .idp-proposal .anode,
+  .idp-proposal .aline,
+  .idp-proposal .aline path,
+  .idp-proposal .arch-zone,
+  .idp-proposal .arch-proto {
+    transition: none;
+  }
+}
+
+/* ── Telas de produto (StepSlide com `screen`) ─────────────────────
+   Lista de passos estreita e uma janela de navegador grande, como as
+   capturas do microsite do IdP. */
+/* A janela tem a altura da tela do produto: não estica com a lista ao lado
+   (senão sobra uma faixa embaixo que muda de tamanho a cada passo). */
+.idp-proposal .ss[data-product] .ss-body {
+  grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr);
+  align-items: center;
+}
+.idp-proposal .browser {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
+}
+.idp-proposal .browser-bar {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 12px;
+  background: var(--bar);
+  border-bottom: 1px solid var(--line);
+}
+.idp-proposal .browser-dots {
+  display: flex;
+  gap: 5px;
+}
+.idp-proposal .browser-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-2);
+  display: block;
+}
+.idp-proposal .browser-view {
+  position: relative;
+  height: min(56vh, 560px);
+  overflow: hidden;
+  background: var(--canvas-2);
+}
+
+@media (max-width: 900px) {
+  .idp-proposal .ss[data-product] .ss-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .idp-proposal .browser-view {
+    height: 34vh;
+  }
+}
+
+/* ── Próximos passos ───────────────────────────────────────────────
+   Título com a chave do cenário e as fases numa linha só: a linha que liga
+   os pontos se preenche até a fase atual, que fica acesa; as outras ficam
+   apagadas, mas legíveis e clicáveis. */
+.idp-proposal .proc {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(28px, 6vh, 64px);
+  max-width: calc(var(--frame-max) + 240px);
+  margin: 0 auto;
+  padding: 48px clamp(40px, 4vw, 80px) 44px clamp(64px, 6vw, 104px);
+}
+.idp-proposal .proc-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+.idp-proposal .proc-head {
+  max-width: 20ch;
+}
+.idp-proposal .proc-top .seg {
+  flex: none;
+}
+.idp-proposal .proc-track {
+  --done: 0;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(16px, 2vw, 32px);
+}
+/* A linha passa pelo centro dos pontos (7px) e vai do primeiro ao último. */
+.idp-proposal .proc-track::before,
+.idp-proposal .proc-track::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 7px;
+  height: 1px;
+  width: calc(
+    (100% - 3 * clamp(16px, 2vw, 32px)) * 0.75 + 3 * clamp(16px, 2vw, 32px)
+  );
+  background: var(--line-2);
+}
+.idp-proposal .proc-track::after {
+  background: var(--tone-4);
+  transform-origin: left;
+  transform: scaleX(var(--done));
+  transition: transform 0.6s var(--ease);
+}
+.idp-proposal .proc-phase button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0.42;
+  transition: opacity 0.35s var(--ease);
+}
+.idp-proposal .proc-phase button:hover {
+  opacity: 0.7;
+}
+.idp-proposal .proc-phase[data-on] button {
+  opacity: 1;
+}
+.idp-proposal .proc-phase button:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 6px;
+  border-radius: 4px;
+}
+.idp-proposal .proc-dot {
+  position: relative;
+  z-index: 1;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--canvas);
+  margin-bottom: 14px;
+  transition:
+    background 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s;
+}
+.idp-proposal .proc-phase[data-past] .proc-dot {
+  background: var(--tone-4);
+  border-color: var(--tone-4);
+}
+.idp-proposal .proc-phase[data-on] .proc-dot {
+  background: var(--tone-4);
+  border-color: var(--tone-4);
+  box-shadow: 0 0 0 6px color-mix(in oklab, var(--tone-4) 22%, transparent);
+}
+.idp-proposal .proc-t {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(20px, 1.7vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.idp-proposal .proc-when {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--tone-4);
+}
+.idp-proposal .proc-body {
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.idp-proposal .proc-ask {
+  margin: 0;
+  max-width: 64ch;
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .proc-track::after,
+  .idp-proposal .proc-phase button,
+  .idp-proposal .proc-dot {
+    transition: none;
+  }
+}
+
+/* ── FaqScreen frequentes ──────────────────────────────────────────
+   Índice agrupado à esquerda (perguntas curtas, a atual acesa com a cor da
+   seção) e a resposta grande à direita, que entra a cada troca. */
+.idp-proposal .faq {
+  box-sizing: border-box;
+  height: 100%;
+  max-width: calc(var(--frame-max) + 240px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) 1.15fr;
+  gap: clamp(40px, 6vw, 120px);
+  align-items: center;
+  padding: 56px clamp(48px, 6vw, 112px) 56px clamp(72px, 7vw, 128px);
+}
+.idp-proposal .faq-title {
+  margin: 0 0 clamp(14px, 2.4vh, 28px);
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(26px, 2.4vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.idp-proposal .faq-index {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vh, 18px);
+  min-width: 0;
+}
+.idp-proposal .faq-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.idp-proposal .faq-group-t {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-left: 14px;
+}
+.idp-proposal .faq-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.idp-proposal .faq-group button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  padding: 3px 0 3px 13px;
+  border-left: 1px solid var(--line-2);
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.4;
+  color: var(--ink-3);
+  transition:
+    color 0.25s,
+    border-color 0.25s;
+}
+.idp-proposal .faq-group button:hover {
+  color: var(--ink-2);
+}
+.idp-proposal .faq-group button[data-on] {
+  color: var(--ink);
+  border-left-color: var(--tone-5);
+}
+.idp-proposal .faq-group button:focus-visible {
+  outline: 1px solid var(--ink-3);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.idp-proposal .faq-answer {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.4vh, 24px);
+  max-width: 36ch;
+  animation: proposal-pv-in 0.45s var(--ease) both;
+}
+.idp-proposal .faq-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--tone-5);
+}
+.idp-proposal .faq-q {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(30px, 3vw, 50px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.idp-proposal .faq-a {
+  margin: 0;
+  font-size: clamp(17px, 1.45vw, 22px);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+@media (prefers-reduced-motion: reduce) {
+  .idp-proposal .faq-answer {
+    animation: none;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Celular. A página inteira rola (o fundo pontilhado rola junto e fica
+   alinhado aos desenhos); uma barra fina no topo substitui as abas da
+   esquerda e o canto; as setas ficam sempre à vista, presas embaixo.
+   ══════════════════════════════════════════════════════════════════ */
+.idp-proposal .mbar,
+.idp-proposal .msheet {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .idp-proposal {
+    overflow: visible;
+    overflow-x: hidden;
+  }
+  html[data-proposal-lock],
+  html[data-proposal-lock] body {
+    overflow: hidden;
+  }
+  .idp-proposal .app {
+    position: relative;
+    inset: auto;
+    min-height: 100dvh;
+    overflow: clip;
+  }
+  .idp-proposal .stage {
+    position: relative;
+    inset: auto;
+    min-height: 100dvh;
+  }
+  .idp-proposal .index,
+  .idp-proposal .corner,
+  .idp-proposal .tabs-hint {
+    display: none;
+  }
+
+  /* Todas as telas: altura do conteúdo (no mínimo a da janela), com espaço
+     para a barra em cima e as setas embaixo. */
+  .idp-proposal .screen,
+  .idp-proposal .team,
+  .idp-proposal .ss,
+  .idp-proposal .arch,
+  .idp-proposal .proc,
+  .idp-proposal .faq,
+  .idp-proposal .cover {
+    height: auto;
+    min-height: 100dvh;
+    padding: 84px 20px 112px;
+  }
+  .idp-proposal .screen {
+    align-content: start;
+  }
+  .idp-proposal .viz {
+    max-height: none;
+  }
+  .idp-proposal .arch-stack {
+    width: 100%;
+  }
+  .idp-proposal .faq {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .idp-proposal .photo {
+    max-height: none;
+  }
+  .idp-proposal .cover-mark {
+    display: none;
+  }
+  .idp-proposal .cover-copy {
+    max-width: 100%;
+  }
+  .idp-proposal .cover-title {
+    font-size: clamp(64px, 22vw, 96px);
+  }
+  .idp-proposal .cover-orb {
+    opacity: 0.55;
+  }
+  .idp-proposal .cover-foot {
+    left: 20px;
+    right: 20px;
+    bottom: 104px;
+    justify-content: space-between;
+  }
+  .idp-proposal .big {
+    font-size: clamp(30px, 8.6vw, 40px);
+  }
+
+  /* Barra do topo. */
+  .idp-proposal .mbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 7;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px 0 20px;
+    background: color-mix(in srgb, var(--canvas) 82%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .idp-proposal .mbar-where {
+    all: unset;
+    cursor: pointer;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 100%;
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .idp-proposal .mbar-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+    background: var(--tone);
+  }
+  .idp-proposal .mbar-sec {
+    color: var(--ink-3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 0 1 auto;
+  }
+  .idp-proposal .mbar-sec::after {
+    content: "/";
+    margin-left: 8px;
+    color: var(--line-2);
+  }
+  .idp-proposal .mbar-sub {
+    color: var(--ink);
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 0 0 auto;
+    max-width: 60%;
+  }
+  .idp-proposal .mbar-btn {
+    all: unset;
+    cursor: pointer;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: var(--ink-2);
+  }
+  .idp-proposal .mbar-btn:active {
+    background: var(--surface);
+  }
+  .idp-proposal .mbar-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+  .idp-proposal .mbar-where:focus-visible,
+  .idp-proposal .mbar-btn:focus-visible {
+    outline: 1px solid var(--ink-3);
+    outline-offset: -2px;
+  }
+
+  /* Índice em folha cheia. */
+  .idp-proposal .msheet {
+    position: fixed;
+    inset: 0;
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    background: var(--canvas);
+    animation: proposal-msheet 0.32s var(--ease) both;
+  }
+  @keyframes proposal-msheet {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  .idp-proposal .msheet-head {
+    flex: none;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 0 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .idp-proposal .msheet-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 20px calc(32px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .idp-proposal .msheet-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 14px;
+    border-left: 2px solid var(--tone);
+  }
+  .idp-proposal .msheet-sec {
+    margin: 0 0 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--ink-3);
+  }
+  .idp-proposal .msheet-item {
+    all: unset;
+    cursor: pointer;
+    padding: 10px 0;
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--ink-2);
+  }
+  .idp-proposal .msheet-item--cover {
+    padding: 16px 0 4px;
+  }
+  .idp-proposal .msheet-item[aria-current="page"] {
+    color: var(--ink);
+  }
+  .idp-proposal .msheet-item[aria-current="page"]::after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-left: 10px;
+    vertical-align: middle;
+    border-radius: 99px;
+    background: var(--ink);
+  }
+  .idp-proposal .msheet-item:focus-visible {
+    outline: 1px solid var(--ink-3);
+    outline-offset: 2px;
+  }
+
+  /* Setas sempre à vista, presas no canto de baixo. */
+  .idp-proposal .arrows {
+    position: fixed;
+    opacity: 1;
+    padding: 0;
+    right: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+  .idp-proposal .arrow {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+  }
+  .idp-proposal .arrow--prev {
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+  }
+}
+@media (max-width: 700px) and (prefers-reduced-motion: reduce) {
+  .idp-proposal .msheet {
+    animation: none;
+  }
+}
+
+/* ── Celular, tela a tela ─────────────────────────────────────────── */
+@media (max-width: 700px) {
+  /* Telas em passos: a lista "se desfaz" (display: contents) e o desenho
+     entra logo abaixo do item aberto, pela ordem (`order` no StepSlide). */
+  .idp-proposal .ss {
+    gap: 28px;
+  }
+  .idp-proposal .ss-body,
+  .idp-proposal .ss[data-product] .ss-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: stretch;
+  }
+  .idp-proposal .ss-list {
+    display: contents;
+  }
+  .idp-proposal .ss-btn {
+    padding: 14px 16px;
+    scroll-margin-top: 68px;
+  }
+  .idp-proposal .ss-title {
+    font-size: 20px;
+  }
+  .idp-proposal .ss-text {
+    font-size: 15px;
+  }
+  .idp-proposal .ss-viz,
+  .idp-proposal .browser {
+    margin: 6px 0 14px;
+  }
+  .idp-proposal .ss-viz {
+    height: 300px;
+  }
+
+  /* Telas de produto: a tela do produto fica mais estreita (520 px, ver
+     ProductFrame.tsx) e mais alta, num formato de retrato. */
+  .idp-proposal .browser-view {
+    height: 440px;
+  }
+
+  /* ArchitectureScreen: o diagrama gira (áreas empilhadas, ver ArchitectureScreen.tsx). */
+  .idp-proposal .arch-top {
+    flex-wrap: wrap;
+  }
+  /* Mais baixo que o giro exato (460 × 1200): as posições são em %, e as
+     áreas ainda cabem os cartões. */
+  .idp-proposal .arch-canvas[data-vert] {
+    aspect-ratio: 460/740;
+    font-size: 10.5px;
+  }
+  .idp-proposal .arch-canvas[data-vert] .arch-zone {
+    left: 0;
+    right: 0;
+    bottom: auto;
+    transition:
+      opacity 0.4s var(--ease),
+      border-color 0.4s,
+      background 0.4s,
+      top 0.6s var(--ease),
+      height 0.6s var(--ease);
+  }
+  .idp-proposal .arch-caption {
+    min-height: 0;
+  }
+
+  /* ProcessScreen: linha do tempo vertical. Cada fase tem o ponto à esquerda e
+     um traço até a próxima, aceso até a fase atual. */
+  .idp-proposal .proc {
+    justify-content: flex-start;
+    gap: 32px;
+  }
+  .idp-proposal .proc-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .idp-proposal .proc-track {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .idp-proposal .proc-track::before,
+  .idp-proposal .proc-track::after {
+    display: none;
+  }
+  .idp-proposal .proc-phase {
+    position: relative;
+    padding-bottom: 28px;
+  }
+  .idp-proposal .proc-phase:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 20px;
+    bottom: -6px;
+    width: 1px;
+    background: var(--line-2);
+  }
+  .idp-proposal .proc-phase[data-past]::before {
+    background: var(--tone-4);
+  }
+  .idp-proposal .proc-phase button {
+    display: grid;
+    grid-template-columns: 13px minmax(0, 1fr);
+    column-gap: 18px;
+    row-gap: 6px;
+    opacity: 0.55;
+  }
+  .idp-proposal .proc-dot {
+    grid-row: 1 / span 3;
+    margin: 6px 0 0;
+  }
+  .idp-proposal .proc-t {
+    font-size: 22px;
+  }
+}
